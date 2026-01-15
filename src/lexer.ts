@@ -10,10 +10,12 @@ export const Set = createToken({ name: 'Set', pattern: /set/i });
 export const Section = createToken({ name: 'Section', pattern: /section/i });
 export const Multiple = createToken({ name: 'Multiple', pattern: /multiple/i });
 export const Follow = createToken({ name: 'Follow', pattern: /follow/i });
+export const Clone = createToken({ name: 'Clone', pattern: /clone/i });
 
 export const Equals = createToken({ name: 'Equals', pattern: /=/ });
 export const LParen = createToken({ name: 'LParen', pattern: /\(/ });
 export const RParen = createToken({ name: 'RParen', pattern: /\)/ });
+export const Comma = createToken({ name: 'Comma', pattern: /,/ });
 
 export const Identifier = createToken({
   name: 'Identifier',
@@ -38,9 +40,11 @@ export const allTokens = [
   Section,
   Multiple,
   Follow,
+  Clone,
   Equals,
   LParen,
   RParen,
+  Comma,
   Identifier,
 ];
 

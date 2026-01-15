@@ -121,6 +121,55 @@ describe('Morph Engine (Query-to-Code)', () => {
     });
   });
 
+  it('should handle full clone directive', () => {
+    const query = `
+      from static as json to return as xml 
+      transform 
+        clone
+    `;
+    const transform = compile(query);
+
+    const source = { a: 1, b: 'two', c: { nested: true } };
+    const result = transform(source);
+
+    expect(result).toEqual(source);
+  });
+
+  it('should handle selective clone directive', () => {
+    const query = `
+      from static as json to return as xml 
+      transform 
+        clone(a, c)
+    `;
+    const transform = compile(query);
+
+    const source = { a: 1, b: 'two', c: { nested: true } };
+    const result = transform(source);
+
+    expect(result).toEqual({ a: 1, c: { nested: true } });
+  });
+
+  it('should handle clone inside a section', () => {
+    const query = `
+      from static as json to return as xml 
+      transform 
+        section sub(
+          clone(x)
+          set y=mappedY
+        )
+    `;
+    const transform = compile(query);
+
+    const source = {
+      sub: { x: 10, z: 20, y: 30 },
+    };
+    const result = transform(source);
+
+    expect(result).toEqual({
+      sub: { x: 10, mappedY: 30 },
+    });
+  });
+
   it('should handle deeply nested sections (mixed objects and arrays)', () => {
     const query = `
       from static as json to return as xml 

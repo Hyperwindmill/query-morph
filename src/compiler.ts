@@ -37,6 +37,17 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     if (ctx.sectionRule) {
       return this.visit(ctx.sectionRule);
     }
+    if (ctx.cloneRule) {
+      return this.visit(ctx.cloneRule);
+    }
+  }
+
+  cloneRule(ctx: any) {
+    if (ctx.fields) {
+      const fieldNames = ctx.fields.map((f: any) => this.visit(f));
+      return fieldNames.map((f: string) => `target.${f} = source.${f};`).join('\n        ');
+    }
+    return `Object.assign(target, source);`;
   }
 
   setRule(ctx: any) {

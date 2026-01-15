@@ -30,7 +30,22 @@ export class MorphParser extends CstParser {
     this.OR([
       { ALT: () => this.SUBRULE(this.setRule) },
       { ALT: () => this.SUBRULE(this.sectionRule) },
+      { ALT: () => this.SUBRULE(this.cloneRule) },
     ]);
+  });
+
+  private cloneRule = this.RULE('cloneRule', () => {
+    this.CONSUME(t.Clone);
+    this.OPTION(() => {
+      this.CONSUME(t.LParen);
+      this.MANY_SEP({
+        SEP: t.Comma,
+        DEF: () => {
+          this.SUBRULE(this.anyIdentifier, { LABEL: 'fields' });
+        },
+      });
+      this.CONSUME(t.RParen);
+    });
   });
 
   private setRule = this.RULE('setRule', () => {
