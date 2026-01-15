@@ -47,6 +47,15 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     }
   }
 
+  literal(ctx: any) {
+    if (ctx.StringLiteral) {
+      return ctx.StringLiteral[0].image;
+    }
+    if (ctx.NumericLiteral) {
+      return ctx.NumericLiteral[0].image;
+    }
+  }
+
   action(ctx: any) {
     if (ctx.setRule) {
       return this.visit(ctx.setRule);
@@ -69,9 +78,13 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   setRule(ctx: any) {
     const left = this.visit(ctx.left);
-    const right = this.visit(ctx.right);
-    // set [left]=[right] means target.[left] = source.[right]
-    return `target.${left} = source.${right};`;
+    if (ctx.right) {
+      const right = this.visit(ctx.right);
+      return `target.${left} = source.${right};`;
+    } else {
+      const literal = this.visit(ctx.literal);
+      return `target.${left} = ${literal};`;
+    }
   }
 
   sectionRule(ctx: any) {

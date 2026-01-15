@@ -22,6 +22,11 @@ export const StringLiteral = createToken({
   pattern: /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/,
 });
 
+export const NumericLiteral = createToken({
+  name: 'NumericLiteral',
+  pattern: /-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/,
+});
+
 export const Identifier = createToken({
   name: 'Identifier',
   pattern: /[a-zA-Z_][a-zA-Z0-9_]*/,
@@ -51,6 +56,7 @@ export const allTokens = [
   RParen,
   Comma,
   StringLiteral,
+  NumericLiteral,
   Identifier,
 ];
 
