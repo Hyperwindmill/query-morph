@@ -35,17 +35,19 @@ export default function App() {
   const [sourceData, setSourceData] = useState(DEFAULT_DATA);
   const [copied, setCopied] = useState(false);
 
-  const { result, error } = useMemo(() => {
+  const { result, generatedCode, error } = useMemo(() => {
     try {
       const morph = compile(query);
       const output = morph(sourceData);
       return {
         result: typeof output === 'string' ? output : JSON.stringify(output, null, 2),
+        generatedCode: morph.code,
         error: null,
       };
     } catch (err: unknown) {
       return {
         result: '',
+        generatedCode: '',
         error: err instanceof Error ? err.message : String(err),
       };
     }
@@ -89,29 +91,58 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden">
-        {/* Left Panel: Query */}
+        {/* Left Panel: Query & JS */}
         <div className="w-1/2 flex flex-col border-r border-slate-800">
-          <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 border-b border-slate-800">
-            <FileCode className="w-4 h-4 text-indigo-400" />
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Morph Query
-            </span>
+          {/* Top Half: Query */}
+          <div className="h-1/2 flex flex-col border-b border-slate-800">
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 border-b border-slate-800">
+              <FileCode className="w-4 h-4 text-indigo-400" />
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Morph Query
+              </span>
+            </div>
+            <div className="flex-1 overflow-hidden pt-2">
+              <Editor
+                theme="vs-dark"
+                defaultLanguage="javascript"
+                value={query}
+                onChange={(v) => setQuery(v || '')}
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 13,
+                  lineNumbers: 'on',
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  padding: { top: 10 },
+                }}
+              />
+            </div>
           </div>
-          <div className="flex-1 overflow-hidden pt-2">
-            <Editor
-              theme="vs-dark"
-              defaultLanguage="javascript"
-              value={query}
-              onChange={(v) => setQuery(v || '')}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: 'on',
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                padding: { top: 10 },
-              }}
-            />
+
+          {/* Bottom Half: Generated JS */}
+          <div className="h-1/2 flex flex-col">
+            <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 border-b border-slate-800">
+              <Code className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                Generated JS
+              </span>
+            </div>
+            <div className="flex-1 overflow-hidden pt-2">
+              <Editor
+                theme="vs-dark"
+                defaultLanguage="javascript"
+                value={generatedCode}
+                options={{
+                  readOnly: true,
+                  minimap: { enabled: false },
+                  fontSize: 13,
+                  lineNumbers: 'on',
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                  padding: { top: 10 },
+                }}
+              />
+            </div>
           </div>
         </div>
 

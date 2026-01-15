@@ -70,8 +70,8 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   setRule(ctx: any) {
     const left = this.visit(ctx.left);
     const right = this.visit(ctx.right);
-    // set [left]=[right] means target.[right] = source.[left]
-    return `target.${right} = source.${left};`;
+    // set [left]=[right] means target.[left] = source.[right]
+    return `target.${left} = source.${right};`;
   }
 
   sectionRule(ctx: any) {

@@ -7,6 +7,7 @@ const isNode = typeof process !== 'undefined' && process.versions && process.ver
 
 export interface MorphEngine {
   (source: any): any;
+  code: string;
 }
 
 export function compile(queryString: string): MorphEngine {
@@ -35,7 +36,7 @@ export function compile(queryString: string): MorphEngine {
   const transform = factory() as (source: any) => any;
 
   // Return the format-aware engine
-  return (input: any) => {
+  const engine = ((input: any) => {
     let source = input;
 
     // Handle Source Parsing
@@ -65,7 +66,10 @@ export function compile(queryString: string): MorphEngine {
     }
 
     return result;
-  };
+  }) as MorphEngine;
+
+  engine.code = code;
+  return engine;
 }
 
 /**
