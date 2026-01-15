@@ -1,11 +1,9 @@
 import { MorphLexer } from './lexer.js';
 import { parser } from './parser.js';
 import { compiler } from './compiler.js';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { createHash } from 'node:crypto';
-import { create } from 'xmlbuilder2';
-import { XMLParser } from 'fast-xml-parser';
+import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+
+const isNode = typeof process !== 'undefined' && process.versions && process.versions.node;
 
 export interface MorphEngine {
   (source: any): any;
@@ -27,8 +25,10 @@ export function compile(queryString: string): MorphEngine {
 
   const { code, sourceType, targetType } = compiler.visit(cst);
 
-  // Cache the generated code to files for review
-  saveToCache(queryString, code);
+  // Cache the generated code for review only in Node environments
+  if (isNode) {
+    import('./node-cache.js').then((m) => m.saveToCache(queryString, code)).catch(() => {});
+  }
 
   // Create the base transformation function
   const factory = new Function(code);
@@ -57,30 +57,15 @@ export function compile(queryString: string): MorphEngine {
       return JSON.stringify(result, null, 2);
     } else if (targetType.name.toLowerCase() === 'xml') {
       const rootTag = targetType.parameter || 'root';
-      const doc = create({ [rootTag]: result });
-      return doc.end({ prettyPrint: true });
+      const builder = new XMLBuilder({
+        ignoreAttributes: false,
+        format: true,
+      });
+      return builder.build({ [rootTag]: result });
     }
 
     return result;
   };
-}
-
-function saveToCache(query: string, code: string) {
-  const cacheDir = path.resolve(process.cwd(), '.compiled');
-  if (!fs.existsSync(cacheDir)) {
-    fs.mkdirSync(cacheDir, { recursive: true });
-  }
-
-  const hash = createHash('sha256').update(query).digest('hex').substring(0, 12);
-  const filePath = path.join(cacheDir, `morph_${hash}.js`);
-
-  const content = `/* 
-Query:
-${query}
-*/
-
-${code}`;
-  fs.writeFileSync(filePath, content, 'utf8');
 }
 
 /**
