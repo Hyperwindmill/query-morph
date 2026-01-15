@@ -1,5 +1,5 @@
 /**
- * Query Morph - A modern TypeScript library for structural query transformations.
+ * Query Morph - A modern TypeScript engine for structural query transformations and data mapping.
  */
 
 export interface GreetOptions {
