@@ -15,6 +15,6 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     }
     const [str, start, end] = args;
     const endArg = end !== undefined ? `, ${end}` : '';
-    return `String(${str}).substring(${start}${endArg})`;
+    return `String(${str}).slice(${start}${endArg})`;
   },
 };

@@ -111,6 +111,14 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     return result;
   }
 
+  unaryExpression(ctx: any) {
+    const atomic = this.visit(ctx.atomic);
+    if (ctx.sign) {
+      return `-${atomic}`;
+    }
+    return atomic;
+  }
+
   atomic(ctx: any) {
     if (ctx.literal) {
       return this.visit(ctx.literal);

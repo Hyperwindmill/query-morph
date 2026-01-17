@@ -87,14 +87,21 @@ export class MorphParser extends CstParser {
   });
 
   private multiplication = this.RULE('multiplication', () => {
-    this.SUBRULE(this.atomic, { LABEL: 'lhs' });
+    this.SUBRULE(this.unaryExpression, { LABEL: 'lhs' });
     this.MANY(() => {
       this.OR([
         { ALT: () => this.CONSUME(t.Times, { LABEL: 'ops' }) },
         { ALT: () => this.CONSUME(t.Divide, { LABEL: 'ops' }) },
       ]);
-      this.SUBRULE1(this.atomic, { LABEL: 'rhs' });
+      this.SUBRULE1(this.unaryExpression, { LABEL: 'rhs' });
     });
+  });
+
+  private unaryExpression = this.RULE('unaryExpression', () => {
+    this.OPTION(() => {
+      this.CONSUME(t.Minus, { LABEL: 'sign' });
+    });
+    this.SUBRULE(this.atomic);
   });
 
   private atomic = this.RULE('atomic', () => {
