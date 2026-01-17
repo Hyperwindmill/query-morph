@@ -43,7 +43,7 @@ export default function App() {
     generatedCode: '',
     error: null,
   });
-
+  const sourceType = sourceData.startsWith('<') ? 'xml' : 'json';
   useEffect(() => {
     async function run() {
       try {
@@ -165,13 +165,13 @@ export default function App() {
             <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 border-b border-slate-800">
               <Database className="w-4 h-4 text-emerald-400" />
               <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                Source Data (JSON/XML)
+                Source Data ({sourceType.toUpperCase()})
               </span>
             </div>
             <div className="flex-1 overflow-hidden pt-2">
               <Editor
                 theme="vs-dark"
-                defaultLanguage="json"
+                language={sourceType === 'json' ? 'json' : 'xml'}
                 value={sourceData}
                 onChange={(v) => setSourceData(v || '')}
                 options={{
