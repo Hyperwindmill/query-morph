@@ -222,14 +222,15 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   sectionRule(ctx: any) {
     const sectionName = this.visit(ctx.sectionName);
-    const followPath = ctx.followPath ? this.visit(ctx.followPath) : sectionName;
+    const followPathName=(ctx.followPath ? this.visit(ctx.followPath) : sectionName);
+    const followPath = followPathName==='parent'?'':'.'+followPathName;
     const isMultiple = !!ctx.Multiple;
     const actions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
 
     if (isMultiple) {
       return `
-      if (source.${followPath} && Array.isArray(source.${followPath})) {
-        target.${sectionName} = source.${followPath}.map(item => {
+      if (source${followPath} && Array.isArray(source${followPath})) {
+        target.${sectionName} = source${followPath}.map(item => {
           const source = item;
           const target = {};
           ${actions.join('\n          ')}
@@ -239,13 +240,13 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       `;
     } else {
       return `
-      if (source.${followPath}) {
+      if (source${followPath}) {
         target.${sectionName} = (function(innerSource) {
           const source = innerSource;
           const target = {};
           ${actions.join('\n          ')}
           return target;
-        })(source.${followPath});
+        })(source${followPath});
       }
       `;
     }
