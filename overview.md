@@ -39,12 +39,15 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 - ✅ **Format Independence**: Supports `json`, `xml`, and `object`.
 - ✅ **Expressions**: Basic arithmetic (+, -, \*, /) and string concatenation in `set`.
 - ✅ **Unary Operators**: Support for negative literals (`-price`) and logical NOT (`!`).
-- ✅ **Conditional Logic**: `if(condition, true, false)` with `<`, `>`, `<=`, `>=`, `==`, `!=`, `&&`, `||`, `!`.
+- ✅ **Conditional Logic**:
+  - `if(condition, true, false)` expression.
+  - `if (condition) (...) else (...)` action statements.
+  - Operators: `<`, `>`, `<=`, `>=`, `==`, `!=`, `&&`, `||`, `!`.
 - ✅ **Functions**: Support for function calls like `substring` and `if`.
 - ✅ **Negative Indices**: Functions like `substring` support negative offsets from the end.
 - ✅ **Deep Nesting**: Unlimited recursive `section` directives.
 - ✅ **Full/Selective Cloning**: `clone` or `clone(a, b)`.
-- ✅ **Tests**: 40+ unit tests across multiple spec files.
+- ✅ **Tests**: 50+ unit tests across multiple spec files.
 - ✅ **Playground**: A Vite + React + Monaco environment (`npm run playground`).
 
 ## Next Development Steps

@@ -67,6 +67,23 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     if (ctx.cloneRule) {
       return this.visit(ctx.cloneRule);
     }
+    if (ctx.ifAction) {
+      return this.visit(ctx.ifAction);
+    }
+  }
+
+  ifAction(ctx: any) {
+    const condition = this.visit(ctx.condition);
+    const thenActions = ctx.thenActions
+      ? ctx.thenActions.map((a: any) => this.visit(a)).join('\n')
+      : '';
+    const elseBlock = ctx.elseActions
+      ? `else { ${ctx.elseActions.map((a: any) => this.visit(a)).join('\n')} }`
+      : '';
+
+    return `if (${condition}) {
+       ${thenActions}
+     } ${elseBlock}`;
   }
 
   cloneRule(ctx: any) {
@@ -160,7 +177,11 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       return this.visit(ctx.functionCall);
     }
     if (ctx.anyIdentifier) {
-      return `source.${this.visit(ctx.anyIdentifier)}`;
+      const id = this.visit(ctx.anyIdentifier);
+      if (['true', 'false', 'null'].includes(id)) {
+        return id;
+      }
+      return `source.${id}`;
     }
     if (ctx.expression) {
       return `(${this.visit(ctx.expression)})`;

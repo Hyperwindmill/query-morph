@@ -30,6 +30,8 @@ export const Multiple = createToken({
   longer_alt: Identifier,
 });
 export const Clone = createToken({ name: 'Clone', pattern: /clone/i, longer_alt: Identifier });
+export const If = createToken({ name: 'If', pattern: /if/i, longer_alt: Identifier });
+export const Else = createToken({ name: 'Else', pattern: /else/i, longer_alt: Identifier });
 
 // Comparison operators (must come before single-char operators)
 export const EqualsEquals = createToken({ name: 'EqualsEquals', pattern: /==/ });
@@ -72,6 +74,8 @@ export const allTokens = [
   Section,
   Multiple,
   Clone,
+  If,
+  Else,
   // Multi-character operators
   EqualsEquals,
   NotEquals,

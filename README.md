@@ -61,8 +61,20 @@ console.log(result);
 
 ### Conditional Logic
 
+**Expressions (Values):**
 `set status = if(age >= 18, "adult", "minor")`
-`set discount = if(isPremium && amount > 100, amount * 0.2, 0)`
+
+**Actions (Blocks):**
+
+```
+if (isPremium) (
+  set discount = amount * 0.2
+  set badge = "VIP"
+) else (
+  set discount = 0
+  set badge = "Standard"
+)
+```
 
 ### Functions & Negative Indices
 

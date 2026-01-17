@@ -43,7 +43,28 @@ export class MorphParser extends CstParser {
       { ALT: () => this.SUBRULE(this.setRule) },
       { ALT: () => this.SUBRULE(this.sectionRule) },
       { ALT: () => this.SUBRULE(this.cloneRule) },
+      { ALT: () => this.SUBRULE(this.ifAction) },
     ]);
+  });
+
+  private ifAction = this.RULE('ifAction', () => {
+    this.CONSUME(t.If);
+    this.CONSUME(t.LParen);
+    this.SUBRULE(this.expression, { LABEL: 'condition' });
+    this.CONSUME(t.RParen);
+    this.CONSUME2(t.LParen); // Start 'then' block
+    this.MANY(() => {
+      this.SUBRULE(this.action, { LABEL: 'thenActions' });
+    });
+    this.CONSUME2(t.RParen); // End 'then' block
+    this.OPTION(() => {
+      this.CONSUME(t.Else);
+      this.CONSUME3(t.LParen); // Start 'else' block
+      this.MANY2(() => {
+        this.SUBRULE2(this.action, { LABEL: 'elseActions' });
+      });
+      this.CONSUME3(t.RParen); // End 'else' block
+    });
   });
 
   private cloneRule = this.RULE('cloneRule', () => {
@@ -153,7 +174,10 @@ export class MorphParser extends CstParser {
   });
 
   private functionCall = this.RULE('functionCall', () => {
-    this.CONSUME(t.Identifier, { LABEL: 'name' });
+    this.OR([
+      { ALT: () => this.CONSUME(t.Identifier, { LABEL: 'name' }) },
+      { ALT: () => this.CONSUME(t.If, { LABEL: 'name' }) },
+    ]);
     this.CONSUME(t.LParen);
     this.MANY_SEP({
       SEP: t.Comma,
