@@ -78,12 +78,47 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   setRule(ctx: any) {
     const left = this.visit(ctx.left);
-    if (ctx.right) {
-      const right = this.visit(ctx.right);
-      return `target.${left} = source.${right};`;
-    } else {
-      const literal = this.visit(ctx.literal);
-      return `target.${left} = ${literal};`;
+    const right = this.visit(ctx.right);
+    return `target.${left} = ${right};`;
+  }
+
+  expression(ctx: any) {
+    return this.visit(ctx.addition);
+  }
+
+  addition(ctx: any) {
+    let result = this.visit(ctx.lhs);
+    if (ctx.rhs) {
+      for (let i = 0; i < ctx.rhs.length; i++) {
+        const op = ctx.ops[i].image;
+        const rhs = this.visit(ctx.rhs[i]);
+        result = `${result} ${op} ${rhs}`;
+      }
+    }
+    return result;
+  }
+
+  multiplication(ctx: any) {
+    let result = this.visit(ctx.lhs);
+    if (ctx.rhs) {
+      for (let i = 0; i < ctx.rhs.length; i++) {
+        const op = ctx.ops[i].image;
+        const rhs = this.visit(ctx.rhs[i]);
+        result = `${result} ${op} ${rhs}`;
+      }
+    }
+    return result;
+  }
+
+  atomic(ctx: any) {
+    if (ctx.literal) {
+      return this.visit(ctx.literal);
+    }
+    if (ctx.anyIdentifier) {
+      return `source.${this.visit(ctx.anyIdentifier)}`;
+    }
+    if (ctx.expression) {
+      return `(${this.visit(ctx.expression)})`;
     }
   }
 

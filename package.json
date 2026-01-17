@@ -23,7 +23,8 @@
     "test:watch": "vitest",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "playground": "npm run dev --prefix playground"
   },
   "keywords": [],
   "author": "",

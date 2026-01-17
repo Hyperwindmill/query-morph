@@ -68,9 +68,46 @@ export class MorphParser extends CstParser {
     this.CONSUME(t.Set);
     this.SUBRULE(this.anyIdentifier, { LABEL: 'left' });
     this.CONSUME(t.Equals);
+    this.SUBRULE(this.expression, { LABEL: 'right' });
+  });
+
+  private expression = this.RULE('expression', () => {
+    this.SUBRULE(this.addition);
+  });
+
+  private addition = this.RULE('addition', () => {
+    this.SUBRULE(this.multiplication, { LABEL: 'lhs' });
+    this.MANY(() => {
+      this.OR([
+        { ALT: () => this.CONSUME(t.Plus, { LABEL: 'ops' }) },
+        { ALT: () => this.CONSUME(t.Minus, { LABEL: 'ops' }) },
+      ]);
+      this.SUBRULE1(this.multiplication, { LABEL: 'rhs' });
+    });
+  });
+
+  private multiplication = this.RULE('multiplication', () => {
+    this.SUBRULE(this.atomic, { LABEL: 'lhs' });
+    this.MANY(() => {
+      this.OR([
+        { ALT: () => this.CONSUME(t.Times, { LABEL: 'ops' }) },
+        { ALT: () => this.CONSUME(t.Divide, { LABEL: 'ops' }) },
+      ]);
+      this.SUBRULE1(this.atomic, { LABEL: 'rhs' });
+    });
+  });
+
+  private atomic = this.RULE('atomic', () => {
     this.OR([
-      { ALT: () => this.SUBRULE1(this.anyIdentifier, { LABEL: 'right' }) },
-      { ALT: () => this.SUBRULE(this.literal, { LABEL: 'literal' }) },
+      { ALT: () => this.SUBRULE(this.literal) },
+      { ALT: () => this.SUBRULE(this.anyIdentifier) },
+      {
+        ALT: () => {
+          this.CONSUME(t.LParen);
+          this.SUBRULE(this.expression);
+          this.CONSUME(t.RParen);
+        },
+      },
     ]);
   });
 
