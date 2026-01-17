@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { Play, Code, Database, FileCode, Copy, Check, Info } from 'lucide-react';
 import { compile } from '../../src/index';
@@ -29,32 +29,44 @@ const DEFAULT_DATA = JSON.stringify(
   null,
   2
 );
-
+interface Result {
+  result: string;
+  generatedCode: string;
+  error: string | null;
+}
 export default function App() {
   const [query, setQuery] = useState(DEFAULT_QUERY);
   const [sourceData, setSourceData] = useState(DEFAULT_DATA);
   const [copied, setCopied] = useState(false);
+  const [result, setResult] = useState<Result>({
+    result: '',
+    generatedCode: '',
+    error: null,
+  });
 
-  const { result, generatedCode, error } = useMemo(() => {
-    try {
-      const morph = compile(query);
-      const output = morph(sourceData);
-      return {
-        result: typeof output === 'string' ? output : JSON.stringify(output, null, 2),
-        generatedCode: morph.code,
-        error: null,
-      };
-    } catch (err: unknown) {
-      return {
-        result: '',
-        generatedCode: '',
-        error: err instanceof Error ? err.message : String(err),
-      };
+  useEffect(() => {
+    async function run() {
+      try {
+        const morph = await compile(query);
+        const output = morph(sourceData);
+        setResult({
+          result: typeof output === 'string' ? output : JSON.stringify(output, null, 2),
+          generatedCode: morph.code,
+          error: null,
+        });
+      } catch (err: unknown) {
+        setResult({
+          result: '',
+          generatedCode: '',
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
     }
+    run();
   }, [query, sourceData]);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(result);
+    navigator.clipboard.writeText(result.result);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -131,7 +143,7 @@ export default function App() {
               <Editor
                 theme="vs-dark"
                 defaultLanguage="javascript"
-                value={generatedCode}
+                value={result.generatedCode}
                 options={{
                   readOnly: true,
                   minimap: { enabled: false },
@@ -196,19 +208,19 @@ export default function App() {
               </button>
             </div>
             <div className="flex-1 overflow-hidden pt-2 bg-[#1e1e1e]">
-              {error ? (
+              {result.error ? (
                 <div className="p-4 flex gap-3 text-red-400 bg-red-950/20 m-4 rounded-lg border border-red-900/50">
                   <Info className="w-5 h-5 flex-shrink-0" />
                   <div>
                     <p className="text-sm font-bold mb-1">Compilation/Execution Error</p>
-                    <p className="text-xs font-mono">{error}</p>
+                    <p className="text-xs font-mono">{result.error}</p>
                   </div>
                 </div>
               ) : (
                 <Editor
                   theme="vs-dark"
-                  language={result.trim().startsWith('<') ? 'xml' : 'json'}
-                  value={result}
+                  language={result.result.trim().startsWith('<') ? 'xml' : 'json'}
+                  value={result.result}
                   options={{
                     readOnly: true,
                     minimap: { enabled: false },
