@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { compile } from './index.js';
 
-describe('Morph Engine (Query-to-Code)', () => {
-  it('should compile and execute a simple transformation', () => {
+describe('Morph Engine (Query-to-Code)', async () => {
+  it('should compile and execute a simple transformation', async () => {
     const query = 'from json to object transform set newfield=field1';
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = { field1: 'hello' };
     const result = transform(source);
@@ -12,7 +12,7 @@ describe('Morph Engine (Query-to-Code)', () => {
     expect(result).toEqual({ newfield: 'hello' });
   });
 
-  it('should handle default section (object mapping)', () => {
+  it('should handle default section (object mapping)', async () => {
     const query = `
       from json to object 
       transform 
@@ -21,7 +21,7 @@ describe('Morph Engine (Query-to-Code)', () => {
           set name=name
         )
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = {
       header: { id: 123, name: 'Alice' },
@@ -34,7 +34,7 @@ describe('Morph Engine (Query-to-Code)', () => {
     });
   });
 
-  it('should handle section with from directive', () => {
+  it('should handle section with from directive', async () => {
     const query = `
       from json to object 
       transform 
@@ -42,7 +42,7 @@ describe('Morph Engine (Query-to-Code)', () => {
           set version=v
         ) from info
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = {
       info: { v: '1.0.0' },
@@ -55,7 +55,7 @@ describe('Morph Engine (Query-to-Code)', () => {
     });
   });
 
-  it('should handle multiple section (arrays)', () => {
+  it('should handle multiple section (arrays)', async () => {
     const query = `
       from json to object 
       transform 
@@ -63,7 +63,7 @@ describe('Morph Engine (Query-to-Code)', () => {
           set lineNo=id
         )
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = {
       lines: [{ id: 1 }, { id: 2 }],
@@ -76,7 +76,7 @@ describe('Morph Engine (Query-to-Code)', () => {
     });
   });
 
-  it('should handle multiple section with from', () => {
+  it('should handle multiple section with from', async () => {
     const query = `
       from json to object 
       transform 
@@ -84,7 +84,7 @@ describe('Morph Engine (Query-to-Code)', () => {
           set v=val
         ) from rawData
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = {
       rawData: [{ val: 'A' }, { val: 'B' }],
@@ -97,7 +97,7 @@ describe('Morph Engine (Query-to-Code)', () => {
     });
   });
 
-  it('should handle nested sections (arrays)', () => {
+  it('should handle nested sections (arrays)', async () => {
     const query = `
       from json to object 
       transform 
@@ -106,7 +106,7 @@ describe('Morph Engine (Query-to-Code)', () => {
           set lineNo=id
         )
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = {
       name: 'Test Project',
@@ -121,13 +121,13 @@ describe('Morph Engine (Query-to-Code)', () => {
     });
   });
 
-  it('should handle full clone directive', () => {
+  it('should handle full clone directive', async () => {
     const query = `
       from json to object 
       transform 
         clone
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = { a: 1, b: 'two', c: { nested: true } };
     const result = transform(source);
@@ -135,13 +135,13 @@ describe('Morph Engine (Query-to-Code)', () => {
     expect(result).toEqual(source);
   });
 
-  it('should handle selective clone directive', () => {
+  it('should handle selective clone directive', async () => {
     const query = `
       from json to object 
       transform 
         clone(a, c)
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = { a: 1, b: 'two', c: { nested: true } };
     const result = transform(source);
@@ -149,7 +149,7 @@ describe('Morph Engine (Query-to-Code)', () => {
     expect(result).toEqual({ a: 1, c: { nested: true } });
   });
 
-  it('should handle clone inside a section', () => {
+  it('should handle clone inside a section', async () => {
     const query = `
       from json to object 
       transform 
@@ -158,7 +158,7 @@ describe('Morph Engine (Query-to-Code)', () => {
           set mappedY=y
         )
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = {
       sub: { x: 10, z: 20, y: 30 },
@@ -170,7 +170,7 @@ describe('Morph Engine (Query-to-Code)', () => {
     });
   });
 
-  it('should handle deeply nested sections (mixed objects and arrays)', () => {
+  it('should handle deeply nested sections (mixed objects and arrays)', async () => {
     const query = `
       from json to object 
       transform 
@@ -184,7 +184,7 @@ describe('Morph Engine (Query-to-Code)', () => {
           ) from products
         )
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
 
     const source = {
       order: {

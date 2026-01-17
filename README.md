@@ -35,7 +35,18 @@ const query = `
     )
 `;
 
-const engine = compile(query);
+const query = `
+  from object to json
+  transform
+    set fullName = firstName + " " + lastName
+    set shortSku = substring(sku, 0, 3)
+    set total = (price * amount) - discount
+    section header(
+      set id = orderId
+    )
+`;
+
+const engine = await compile(query);
 
 const source = {
   firstName: 'John',

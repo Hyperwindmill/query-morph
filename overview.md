@@ -31,8 +31,11 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 ### 5. Runtime / Index (`src/index.ts`)
 
 - **Isomorphic**: Runs in both Node.js and the Browser.
-- Handles source parsing (JSON/XML) and target serialization.
-- Integrates `js-beautify` for readable generated code.
+- **Handles source parsing**: JSON/XML and target serialization.
+- **Beautify code**:Integrates `js-beautify` for readable generated code.
+- **Async Compilation**: Returns a Promise that resolves to the engine.
+- **Adapter System**: Pluggable data format handlers (`src/adapters.ts`).
+- **Caching**: Supports custom caching strategies (e.g., File System in Node).
 
 ## Current Features & State
 

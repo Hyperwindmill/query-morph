@@ -14,11 +14,22 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     const sourceType = this.visit(ctx.sourceType);
     const targetType = this.visit(ctx.targetType);
 
+    // Helper to serialize types for generated code
+    const sourceTypeName = sourceType.name;
+    const targetTypeName = targetType.name;
+    const targetParam = targetType.parameter ? `'${targetType.parameter}'` : 'undefined';
+
     const code = `
-      return function transform(source) {
+      return function(input, env) {
+        // 1. Parse Input
+        const source = env.parse('${sourceTypeName}', input);
+        
+        // 2. Transform
         const target = {};
         ${actions.join('\n        ')}
-        return target;
+
+        // 3. Serialize Output
+        return env.serialize('${targetTypeName}', target, { rootGenerated: ${targetParam} });
       }
     `;
 

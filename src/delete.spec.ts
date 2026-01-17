@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { compile } from './index.js';
 
-describe('Delete Action', () => {
-  it('should delete a property from the target', () => {
+describe('Delete Action', async () => {
+  it('should delete a property from the target', async () => {
     const query = `
       from object to object
       transform
@@ -10,27 +10,27 @@ describe('Delete Action', () => {
         set b = 2
         delete a
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
     const result = engine({});
     expect(result.a).toBeUndefined();
     expect(result.b).toBe(2);
   });
 
-  it('should delete a property after clone', () => {
+  it('should delete a property after clone', async () => {
     const query = `
       from object to object
       transform
         clone
         delete unwanted
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
     const source = { keep: 'yes', unwanted: 'no' };
     const result = engine(source);
     expect(result.keep).toBe('yes');
     expect(result.unwanted).toBeUndefined();
   });
 
-  it('should work inside sections', () => {
+  it('should work inside sections', async () => {
     const query = `
       from object to object
       transform
@@ -40,13 +40,13 @@ describe('Delete Action', () => {
             delete hidden
         )
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
     const result = engine({ meta: {} });
     expect(result.meta.visible).toBe(true);
     expect(result.meta.hidden).toBeUndefined();
   });
 
-  it('should work inside if blocks', () => {
+  it('should work inside if blocks', async () => {
     const query = `
       from object to object
       transform
@@ -55,7 +55,7 @@ describe('Delete Action', () => {
             delete sensitive
         )
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
     expect(engine({ isPublic: true }).sensitive).toBeUndefined();
     expect(engine({ isPublic: false }).sensitive).toBe('secret');
   });

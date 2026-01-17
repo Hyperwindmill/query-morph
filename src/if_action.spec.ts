@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { compile } from './index.js';
 
-describe('Conditional Action Blocks (Statements)', () => {
-  it('should support if block (no else)', () => {
+describe('Conditional Action Blocks (Statements)', async () => {
+  it('should support if block (no else)', async () => {
     const query = `
       from object to object
       transform
@@ -11,14 +11,14 @@ describe('Conditional Action Blocks (Statements)', () => {
             set discount = 20
         )
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
     expect(engine({ isPremium: true }).discount).toBe(20);
     // If condition is false, discount should not be set (undefined)
     expect(engine({ isPremium: false }).discount).toBeUndefined();
     expect(engine({ isPremium: true }).base).toBe(100);
   });
 
-  it('should support if-else block', () => {
+  it('should support if-else block', async () => {
     const query = `
       from object to object
       transform
@@ -30,7 +30,7 @@ describe('Conditional Action Blocks (Statements)', () => {
             set canVote = false
         )
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
 
     const adult = engine({ age: 20 });
     expect(adult.type).toBe('adult');
@@ -41,7 +41,7 @@ describe('Conditional Action Blocks (Statements)', () => {
     expect(minor.canVote).toBe(false);
   });
 
-  it('should support nested if blocks', () => {
+  it('should support nested if blocks', async () => {
     const query = `
       from object to object
       transform
@@ -57,7 +57,7 @@ describe('Conditional Action Blocks (Statements)', () => {
             set access = "none"
         )
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
 
     const admin = engine({ active: true, role: 'admin' });
     expect(admin.status).toBe('active');
@@ -72,7 +72,7 @@ describe('Conditional Action Blocks (Statements)', () => {
     expect(inactive.access).toBe('none');
   });
 
-  it('should work inside sections', () => {
+  it('should work inside sections', async () => {
     const query = `
       from object to object
       transform
@@ -84,12 +84,12 @@ describe('Conditional Action Blocks (Statements)', () => {
             )
         )
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
     expect(engine({ meta: { public: true } }).meta.visible).toBe(true);
     expect(engine({ meta: { public: false } }).meta.visible).toBe(false);
   });
 
-  it('should work with complex conditions', () => {
+  it('should work with complex conditions', async () => {
     const query = `
       from object to object
       transform
@@ -97,7 +97,7 @@ describe('Conditional Action Blocks (Statements)', () => {
             set range = "medium"
         )
     `;
-    const engine = compile(query);
+    const engine = await compile(query);
     expect(engine({ val: 15 }).range).toBe('medium');
     expect(engine({ val: 5 }).range).toBeUndefined();
     expect(engine({ val: 25 }).range).toBeUndefined();

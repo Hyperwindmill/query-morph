@@ -1,17 +1,29 @@
 import { MorphLexer } from './lexer.js';
 import { parser } from './parser.js';
 import { compiler } from './compiler.js';
-import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+import { getAdapter } from './adapters.js';
+import { MQLCache } from './cache.js';
 import beautify from 'js-beautify';
 
-const isNode = typeof process !== 'undefined' && process.versions && process.versions.node;
-
 export interface MorphEngine {
-  (source: any): any;
+  (source: any): Promise<any> | any;
   code: string;
 }
 
-export function compile(queryString: string): MorphEngine {
+export interface CompileOptions {
+  cache?: MQLCache;
+}
+
+export async function compile(queryString: string, options?: CompileOptions): Promise<MorphEngine> {
+  // 1. Check Cache
+  if (options?.cache) {
+    const cachedCode = await options.cache.retrieve(queryString);
+    if (cachedCode) {
+      return createEngine(cachedCode);
+    }
+  }
+
+  // 2. Compile if miss
   const lexResult = MorphLexer.tokenize(queryString);
 
   if (lexResult.errors.length > 0) {
@@ -25,7 +37,7 @@ export function compile(queryString: string): MorphEngine {
     throw new Error(`Parsing errors: ${parser.errors[0].message}`);
   }
 
-  const { code: rawCode, sourceType, targetType } = compiler.visit(cst);
+  const { code: rawCode } = compiler.visit(cst);
 
   const code = beautify.js(rawCode, {
     indent_size: 2,
@@ -33,46 +45,32 @@ export function compile(queryString: string): MorphEngine {
     end_with_newline: true,
   });
 
-  // Cache the generated code for review only in Node environments
-  if (isNode) {
-    import('./node-cache.js').then((m) => m.saveToCache(queryString, code)).catch(() => {});
+  // 3. Save to Cache
+  if (options?.cache) {
+    await options.cache.save(queryString, code);
   }
 
+  return createEngine(code);
+}
+
+function createEngine(code: string): MorphEngine {
   // Create the base transformation function
   const factory = new Function(code);
-  const transform = factory() as (source: any) => any;
+  const transform = factory() as (source: any, env: any) => any;
+
+  // Environment with adapter lookups
+  const env = {
+    parse: (format: string, content: string) => {
+      return getAdapter(format).parse(content);
+    },
+    serialize: (format: string, data: any, options?: any) => {
+      return getAdapter(format).serialize(data, options);
+    },
+  };
 
   // Return the format-aware engine
   const engine = ((input: any) => {
-    let source = input;
-
-    // Handle Source Parsing
-    if (sourceType.name.toLowerCase() === 'json' && typeof input === 'string') {
-      source = JSON.parse(input);
-    } else if (sourceType.name.toLowerCase() === 'xml' && typeof input === 'string') {
-      const xmlParser = new XMLParser({
-        ignoreAttributes: false,
-        removeNSPrefix: true,
-      });
-      source = xmlParser.parse(input);
-    }
-
-    // Execute Mapping
-    const result = transform(source);
-
-    // Handle Target Serialization
-    if (targetType.name.toLowerCase() === 'json') {
-      return JSON.stringify(result, null, 2);
-    } else if (targetType.name.toLowerCase() === 'xml') {
-      const rootTag = targetType.parameter || 'root';
-      const builder = new XMLBuilder({
-        ignoreAttributes: false,
-        format: true,
-      });
-      return builder.build({ [rootTag]: result });
-    }
-
-    return result;
+    return transform(input, env);
   }) as MorphEngine;
 
   engine.code = code;

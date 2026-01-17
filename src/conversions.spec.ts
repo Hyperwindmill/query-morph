@@ -1,44 +1,44 @@
 import { describe, it, expect } from 'vitest';
 import { compile } from './index.js';
 
-describe('Morph Engine - Type Conversions', () => {
-  it('should convert JS object to JSON string', () => {
+describe('Morph Engine - Type Conversions', async () => {
+  it('should convert JS object to JSON string', async () => {
     const query = 'from object to json transform set foo=a';
-    const transform = compile(query);
+    const transform = await compile(query);
     const result = transform({ a: 'bar' });
 
     expect(typeof result).toBe('string');
     expect(JSON.parse(result as string)).toEqual({ foo: 'bar' });
   });
 
-  it('should convert JSON string to object and back to JSON', () => {
+  it('should convert JSON string to object and back to JSON', async () => {
     const query = 'from json to json transform set value=val';
-    const transform = compile(query);
+    const transform = await compile(query);
     const input = JSON.stringify({ val: 123 });
     const result = transform(input);
 
     expect(JSON.parse(result as string)).toEqual({ value: 123 });
   });
 
-  it('should convert object to XML with default root tag', () => {
+  it('should convert object to XML with default root tag', async () => {
     const query = 'from object to xml transform set userName=name';
-    const transform = compile(query);
+    const transform = await compile(query);
     const result = transform({ name: 'Alice' }) as string;
 
     expect(result).toContain('<root>');
     expect(result).toContain('<userName>Alice</userName>');
   });
 
-  it('should convert object to XML with custom root tag', () => {
+  it('should convert object to XML with custom root tag', async () => {
     const query = 'from object to xml("UserResponse") transform set userId=id';
-    const transform = compile(query);
+    const transform = await compile(query);
     const result = transform({ id: 1 }) as string;
 
     expect(result).toContain('<UserResponse>');
     expect(result).toContain('<userId>1</userId>');
   });
 
-  it('should handle complex object to XML conversion', () => {
+  it('should handle complex object to XML conversion', async () => {
     const query = `
       from object to xml("Order") 
       transform 
@@ -47,7 +47,7 @@ describe('Morph Engine - Type Conversions', () => {
           set sku=sku
         )
     `;
-    const transform = compile(query);
+    const transform = await compile(query);
     const source = {
       id: 'ORD-123',
       items: [{ sku: 'A' }, { sku: 'B' }],
@@ -61,9 +61,9 @@ describe('Morph Engine - Type Conversions', () => {
     expect(result).toContain('<sku>B</sku>');
   });
 
-  it('should convert XML string to JSON', () => {
+  it('should convert XML string to JSON', async () => {
     const query = 'from xml to json transform clone';
-    const transform = compile(query);
+    const transform = await compile(query);
     const input = `
       <root>
         <id>123</id>
