@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('If Function and Conditional Logic', async () => {
   it('should support basic if-then-else values', async () => {

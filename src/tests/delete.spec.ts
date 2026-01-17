@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('Delete Action', async () => {
   it('should delete a property from the target', async () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('Functions in expressions', async () => {
   it('should support substring with 3 arguments', async () => {

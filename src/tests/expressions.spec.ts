@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('Expressions in set directive', async () => {
   it('should support simple addition', async () => {

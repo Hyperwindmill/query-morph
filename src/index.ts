@@ -1,8 +1,8 @@
-import { MorphLexer } from './lexer.js';
-import { parser } from './parser.js';
-import { compiler } from './compiler.js';
-import { getAdapter } from './adapters.js';
-import { MQLCache } from './cache.js';
+import { MorphLexer } from './core/lexer.js';
+import { parser } from './core/parser.js';
+import { compiler } from './core/compiler.js';
+import { getAdapter } from './runtime/adapters.js';
+import { MQLCache } from './runtime/cache.js';
 import beautify from 'js-beautify';
 
 export interface MorphEngine {

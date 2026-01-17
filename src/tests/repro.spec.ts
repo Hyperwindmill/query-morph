@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('Clone Repro', async () => {
   it('should not modify the source object when using clone', async () => {

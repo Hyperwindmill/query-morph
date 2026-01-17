@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('Morph Engine (Query-to-Code)', async () => {
   it('should compile and execute a simple transformation', async () => {

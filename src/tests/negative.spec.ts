@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('Negative numbers and unary minus', async () => {
   it('should support negative numeric literals in function arguments', async () => {

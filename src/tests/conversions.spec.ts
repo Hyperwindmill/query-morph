@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { compile } from './index.js';
+import { compile } from '../index.js';
 
 describe('Morph Engine - Type Conversions', async () => {
   it('should convert JS object to JSON string', async () => {
