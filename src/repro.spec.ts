@@ -3,7 +3,7 @@ import { compile } from './index.js';
 
 describe('Clone Repro', () => {
   it('should not modify the source object when using clone', () => {
-    const query = 'from static as object to return as object transform set extra="val" clone';
+    const query = 'from object to object transform set extra="val" clone';
     const transform = compile(query);
     const source = { a: 1 };
     const sourceClone = JSON.parse(JSON.stringify(source));
@@ -18,7 +18,7 @@ describe('Clone Repro', () => {
 
   it('should verify behavior of set then clone', () => {
     // If we set 'b' then clone, and source already had 'a'
-    const query = 'from static as object to return as object transform set b=a clone';
+    const query = 'from object to object transform set b=a clone';
     const transform = compile(query);
     const source = { a: 1 };
 
@@ -30,7 +30,7 @@ describe('Clone Repro', () => {
   });
 
   it('should verify behavior of clone then set', () => {
-    const query = 'from static as object to return as object transform clone set b=a';
+    const query = 'from object to object transform clone set b=a';
     const transform = compile(query);
     const source = { a: 1 };
 

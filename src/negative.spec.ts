@@ -4,8 +4,7 @@ import { compile } from './index.js';
 describe('Negative numbers and unary minus', () => {
   it('should support negative numeric literals in function arguments', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set last5 = substring(sku, -5)
     `;
@@ -17,8 +16,7 @@ describe('Negative numbers and unary minus', () => {
 
   it('should support unary minus with variables', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set invBalance = -balance
     `;
@@ -30,8 +28,7 @@ describe('Negative numbers and unary minus', () => {
 
   it('should support mixed unary and binary operators', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set result = a - -b
     `;
@@ -43,8 +40,7 @@ describe('Negative numbers and unary minus', () => {
 
   it('should support substring with negative start and positive end', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set mid = substring(sku, -5, -2)
     `;

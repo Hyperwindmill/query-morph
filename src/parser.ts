@@ -9,12 +9,8 @@ export class MorphParser extends CstParser {
 
   public query = this.RULE('query', () => {
     this.CONSUME(t.From);
-    this.SUBRULE(this.anyIdentifier, { LABEL: 'sourceName' });
-    this.CONSUME(t.As);
     this.SUBRULE(this.typeFormat, { LABEL: 'sourceType' });
     this.CONSUME(t.To);
-    this.CONSUME(t.Return);
-    this.CONSUME1(t.As);
     this.SUBRULE1(this.typeFormat, { LABEL: 'targetType' });
     this.CONSUME(t.Transform);
     this.MANY(() => {

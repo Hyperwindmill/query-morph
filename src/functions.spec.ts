@@ -4,8 +4,7 @@ import { compile } from './index.js';
 describe('Functions in expressions', () => {
   it('should support substring with 3 arguments', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set short = substring(sku, 0, 3)
     `;
@@ -17,8 +16,7 @@ describe('Functions in expressions', () => {
 
   it('should support substring with 2 arguments', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set rest = substring(sku, 3)
     `;
@@ -30,8 +28,7 @@ describe('Functions in expressions', () => {
 
   it('should support nested expressions in substring arguments', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set result = substring(sku, 0, a + b)
     `;
@@ -43,8 +40,7 @@ describe('Functions in expressions', () => {
 
   it('should support expressions as the string argument', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set result = substring(prefix + sku, 0, 5)
     `;
@@ -56,8 +52,7 @@ describe('Functions in expressions', () => {
 
   it('should throw error for unknown function', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set result = unknownFunc(sku)
     `;

@@ -3,7 +3,7 @@ import { compile } from './index.js';
 
 describe('Morph Engine - Type Conversions', () => {
   it('should convert JS object to JSON string', () => {
-    const query = 'from static as object to return as json transform set foo=a';
+    const query = 'from object to json transform set foo=a';
     const transform = compile(query);
     const result = transform({ a: 'bar' });
 
@@ -12,7 +12,7 @@ describe('Morph Engine - Type Conversions', () => {
   });
 
   it('should convert JSON string to object and back to JSON', () => {
-    const query = 'from static as json to return as json transform set value=val';
+    const query = 'from json to json transform set value=val';
     const transform = compile(query);
     const input = JSON.stringify({ val: 123 });
     const result = transform(input);
@@ -21,7 +21,7 @@ describe('Morph Engine - Type Conversions', () => {
   });
 
   it('should convert object to XML with default root tag', () => {
-    const query = 'from static as object to return as xml transform set userName=name';
+    const query = 'from object to xml transform set userName=name';
     const transform = compile(query);
     const result = transform({ name: 'Alice' }) as string;
 
@@ -30,7 +30,7 @@ describe('Morph Engine - Type Conversions', () => {
   });
 
   it('should convert object to XML with custom root tag', () => {
-    const query = 'from static as object to return as xml("UserResponse") transform set userId=id';
+    const query = 'from object to xml("UserResponse") transform set userId=id';
     const transform = compile(query);
     const result = transform({ id: 1 }) as string;
 
@@ -40,7 +40,7 @@ describe('Morph Engine - Type Conversions', () => {
 
   it('should handle complex object to XML conversion', () => {
     const query = `
-      from static as object to return as xml("Order") 
+      from object to xml("Order") 
       transform 
         set orderId=id
         section multiple items(
@@ -62,7 +62,7 @@ describe('Morph Engine - Type Conversions', () => {
   });
 
   it('should convert XML string to JSON', () => {
-    const query = 'from static as xml to return as json transform clone';
+    const query = 'from xml to json transform clone';
     const transform = compile(query);
     const input = `
       <root>

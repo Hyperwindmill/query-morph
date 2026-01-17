@@ -3,7 +3,7 @@ import { compile } from './index.js';
 
 describe('Morph Engine (Query-to-Code)', () => {
   it('should compile and execute a simple transformation', () => {
-    const query = 'from static as json to return as object transform set newfield=field1';
+    const query = 'from json to object transform set newfield=field1';
     const transform = compile(query);
 
     const source = { field1: 'hello' };
@@ -14,7 +14,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle default section (object mapping)', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         section header(
           set id=id
@@ -36,7 +36,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle section with follow directive', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         section meta(
           set version=v
@@ -57,7 +57,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle multiple section (arrays)', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         section multiple lines(
           set lineNo=id
@@ -78,7 +78,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle multiple section with follow', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         section multiple items(
           set v=val
@@ -99,7 +99,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle nested sections (arrays)', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         set fullName=name 
         section multiple lines(
@@ -123,7 +123,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle full clone directive', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         clone
     `;
@@ -137,7 +137,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle selective clone directive', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         clone(a, c)
     `;
@@ -151,7 +151,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle clone inside a section', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         section sub(
           clone(x)
@@ -172,7 +172,7 @@ describe('Morph Engine (Query-to-Code)', () => {
 
   it('should handle deeply nested sections (mixed objects and arrays)', () => {
     const query = `
-      from static as json to return as object 
+      from json to object 
       transform 
         section order(
           set orderId=orderId

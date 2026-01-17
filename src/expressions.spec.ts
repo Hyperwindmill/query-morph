@@ -4,8 +4,7 @@ import { compile } from './index.js';
 describe('Expressions in set directive', () => {
   it('should support simple addition', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set total = price + tax
     `;
@@ -17,8 +16,7 @@ describe('Expressions in set directive', () => {
 
   it('should support string concatenation', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set fullName = firstName + " " + lastName
     `;
@@ -30,8 +28,7 @@ describe('Expressions in set directive', () => {
 
   it('should support mixed arithmetic with precedence', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set result = a + b * c
     `;
@@ -44,8 +41,7 @@ describe('Expressions in set directive', () => {
 
   it('should support parentheses for precedence', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set result = (a + b) * c
     `;
@@ -58,8 +54,7 @@ describe('Expressions in set directive', () => {
 
   it('should support numeric literals in expressions', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set next = count + 1
     `;
@@ -71,8 +66,7 @@ describe('Expressions in set directive', () => {
 
   it('should support subtraction and division', () => {
     const query = `
-      from source as object
-      to return as object
+      from object to object
       transform
         set balance = income - expenses
         set ratio = a / b

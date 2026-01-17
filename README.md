@@ -24,8 +24,7 @@ npm install query-morph
 import { compile } from 'query-morph';
 
 const query = `
-  from source as object
-  to return as json
+  from object to json
   transform
     set fullName = firstName + " " + lastName
     set shortSku = substring(sku, 0, 3)

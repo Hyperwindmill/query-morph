@@ -3,8 +3,8 @@ import Editor from '@monaco-editor/react';
 import { Play, Code, Database, FileCode, Copy, Check, Info } from 'lucide-react';
 import { compile } from '../../src/index';
 
-const DEFAULT_QUERY = `from static as json 
-to return as xml("Order") 
+const DEFAULT_QUERY = `from json 
+to xml("Order") 
 transform 
   section order(
     set orderId=id
