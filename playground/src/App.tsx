@@ -104,7 +104,7 @@ export default function App() {
             <div className="flex-1 overflow-hidden pt-2">
               <Editor
                 theme="vs-dark"
-                defaultLanguage="sql"
+                defaultLanguage="plaintext"
                 value={query}
                 onChange={(v) => setQuery(v || '')}
                 options={{

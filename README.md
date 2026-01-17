@@ -1,6 +1,6 @@
 # query-morph
 
-A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
+A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Query Language** (MQL) to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
 
 ## Key Features
 
