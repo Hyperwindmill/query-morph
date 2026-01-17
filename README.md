@@ -60,7 +60,8 @@ console.log(result);
 
 ### Functions & Negative Indices
 
-`set lastChars = substring(sku, -5)`
+`set lastChars = substring(sku, -5)` - Get last 5 characters  
+`set first3 = substring(sku, 0, 3)` - Get first 3 characters (start, length)
 
 ### Array Mapping
 

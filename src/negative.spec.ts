@@ -38,16 +38,16 @@ describe('Negative numbers and unary minus', () => {
     expect(result.result).toBe(15);
   });
 
-  it('should support substring with negative start and positive end', () => {
+  it('should support substring with negative start and length', () => {
     const query = `
       from object to object
       transform
-        set mid = substring(sku, -5, -2)
+        set mid = substring(sku, -5, 3)
     `;
     const engine = compile(query);
     const source = { sku: 'ABC12345' };
     const result = engine(source);
-    // last 5 are "12345", from -5 to -2 is "123"
+    // last 5 are "12345", from -5 with length 3 is "123"
     expect(result.mid).toBe('123');
   });
 });

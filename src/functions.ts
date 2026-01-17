@@ -13,8 +13,12 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     if (args.length < 2) {
       throw new Error('substring() requires at least 2 arguments (string, start, [length])');
     }
-    const [str, start, end] = args;
-    const endArg = end !== undefined ? `, ${end}` : '';
-    return `String(${str}).slice(${start}${endArg})`;
+    const [str, start, length] = args;
+    if (length !== undefined) {
+      // Third parameter is length, so calculate end as start + length
+      return `String(${str}).slice(${start}, (${start}) + (${length}))`;
+    }
+    // Only 2 arguments: slice from start to end of string
+    return `String(${str}).slice(${start})`;
   },
 };
