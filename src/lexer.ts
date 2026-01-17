@@ -31,6 +31,19 @@ export const Multiple = createToken({
 });
 export const Clone = createToken({ name: 'Clone', pattern: /clone/i, longer_alt: Identifier });
 
+// Comparison operators (must come before single-char operators)
+export const EqualsEquals = createToken({ name: 'EqualsEquals', pattern: /==/ });
+export const NotEquals = createToken({ name: 'NotEquals', pattern: /!=/ });
+export const LessThanOrEqual = createToken({ name: 'LessThanOrEqual', pattern: /<=/ });
+export const GreaterThanOrEqual = createToken({ name: 'GreaterThanOrEqual', pattern: />=/ });
+export const LessThan = createToken({ name: 'LessThan', pattern: /</ });
+export const GreaterThan = createToken({ name: 'GreaterThan', pattern: />/ });
+
+// Logical operators
+export const And = createToken({ name: 'And', pattern: /&&/ });
+export const Or = createToken({ name: 'Or', pattern: /\|\|/ });
+export const Not = createToken({ name: 'Not', pattern: /!/ });
+
 export const Equals = createToken({ name: 'Equals', pattern: /=/ });
 export const Plus = createToken({ name: 'Plus', pattern: /\+/ });
 export const Minus = createToken({ name: 'Minus', pattern: /-/ });
@@ -59,7 +72,18 @@ export const allTokens = [
   Section,
   Multiple,
   Clone,
+  // Multi-character operators
+  EqualsEquals,
+  NotEquals,
+  LessThanOrEqual,
+  GreaterThanOrEqual,
+  And,
+  Or,
+  // Single-character operators
   Equals,
+  LessThan,
+  GreaterThan,
+  Not,
   Plus,
   Minus,
   Times,

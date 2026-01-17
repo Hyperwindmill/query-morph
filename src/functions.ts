@@ -21,4 +21,13 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     // Only 2 arguments: slice from start to end of string
     return `String(${str}).slice(${start})`;
   },
+  if: (args: string[]) => {
+    if (args.length !== 3) {
+      throw new Error('if() requires exactly 3 arguments (condition, trueValue, falseValue)');
+    }
+    const [condition, trueValue, falseValue] = args;
+    // Compile to ternary operator
+    // Wrap in parentheses to ensure precedence is correct
+    return `((${condition}) ? (${trueValue}) : (${falseValue}))`;
+  },
 };

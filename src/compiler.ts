@@ -84,7 +84,39 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   }
 
   expression(ctx: any) {
-    return this.visit(ctx.addition);
+    return this.visit(ctx.logicalOr);
+  }
+
+  logicalOr(ctx: any) {
+    let result = this.visit(ctx.lhs);
+    if (ctx.rhs) {
+      for (let i = 0; i < ctx.rhs.length; i++) {
+        const rhs = this.visit(ctx.rhs[i]);
+        result = `${result} || ${rhs}`;
+      }
+    }
+    return result;
+  }
+
+  logicalAnd(ctx: any) {
+    let result = this.visit(ctx.lhs);
+    if (ctx.rhs) {
+      for (let i = 0; i < ctx.rhs.length; i++) {
+        const rhs = this.visit(ctx.rhs[i]);
+        result = `${result} && ${rhs}`;
+      }
+    }
+    return result;
+  }
+
+  comparison(ctx: any) {
+    let result = this.visit(ctx.lhs);
+    if (ctx.rhs) {
+      const op = ctx.ops[0].image;
+      const rhs = this.visit(ctx.rhs[0]);
+      result = `${result} ${op} ${rhs}`;
+    }
+    return result;
   }
 
   addition(ctx: any) {
@@ -114,7 +146,8 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   unaryExpression(ctx: any) {
     const atomic = this.visit(ctx.atomic);
     if (ctx.sign) {
-      return `-${atomic}`;
+      const op = ctx.sign[0].image;
+      return `${op}${atomic}`;
     }
     return atomic;
   }

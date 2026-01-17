@@ -8,6 +8,7 @@ A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Que
 - 🌐 **Isomorphic**: Runs seamlessly in Node.js and the Browser.
 - 🧩 **Format Agnostic**: Input and output can be JSON, XML, or raw Objects.
 - ➗ **Expressions**: Support for arithmetic, string concatenation, and unary minus.
+- 🔀 **Conditional Logic**: `if` function with comparison and logical operators.
 - 🛠️ **Modular Functions**: Extensible function registry (e.g., `substring`).
 - 🔄 **Structural Mapping**: Easy handling of nested objects and arrays (`multiple`).
 - 🎨 **Playground**: Real-time editor to test and visualize generated code.
@@ -57,6 +58,11 @@ console.log(result);
 
 `set total = price + tax`
 `set label = "Item: " + name`
+
+### Conditional Logic
+
+`set status = if(age >= 18, "adult", "minor")`
+`set discount = if(isPremium && amount > 100, amount * 0.2, 0)`
 
 ### Functions & Negative Indices
 

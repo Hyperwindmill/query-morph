@@ -38,12 +38,13 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 
 - ✅ **Format Independence**: Supports `json`, `xml`, and `object`.
 - ✅ **Expressions**: Basic arithmetic (+, -, \*, /) and string concatenation in `set`.
-- ✅ **Unary Operators**: Support for negative literals and variables (`-price`).
-- ✅ **Functions**: Support for function calls like `substring(str, start, end)`.
+- ✅ **Unary Operators**: Support for negative literals (`-price`) and logical NOT (`!`).
+- ✅ **Conditional Logic**: `if(condition, true, false)` with `<`, `>`, `<=`, `>=`, `==`, `!=`, `&&`, `||`, `!`.
+- ✅ **Functions**: Support for function calls like `substring` and `if`.
 - ✅ **Negative Indices**: Functions like `substring` support negative offsets from the end.
 - ✅ **Deep Nesting**: Unlimited recursive `section` directives.
 - ✅ **Full/Selective Cloning**: `clone` or `clone(a, b)`.
-- ✅ **Tests**: 30+ unit tests across multiple spec files.
+- ✅ **Tests**: 40+ unit tests across multiple spec files.
 - ✅ **Playground**: A Vite + React + Monaco environment (`npm run playground`).
 
 ## Next Development Steps
@@ -51,8 +52,8 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 - **Performance**: Benchmark the `fast-xml-parser` vs alternatives.
 - **Error Reporting**: Better CST-to-Code error mapping.
 - **Schema Validation**: Optional schema enforcement for input/output.
-- **Advanced Logic**: Conditional `if/else` mappings within sections.
+- **Conditional Actions**: Support for `if` statements to control blocks of actions.
 
 ---
 
-_Updated on 2026-01-17 with Expression and Function support._
+_Updated on 2026-01-17 with Conditional Logic support._

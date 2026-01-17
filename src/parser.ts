@@ -68,7 +68,38 @@ export class MorphParser extends CstParser {
   });
 
   private expression = this.RULE('expression', () => {
-    this.SUBRULE(this.addition);
+    this.SUBRULE(this.logicalOr);
+  });
+
+  private logicalOr = this.RULE('logicalOr', () => {
+    this.SUBRULE(this.logicalAnd, { LABEL: 'lhs' });
+    this.MANY(() => {
+      this.CONSUME(t.Or);
+      this.SUBRULE1(this.logicalAnd, { LABEL: 'rhs' });
+    });
+  });
+
+  private logicalAnd = this.RULE('logicalAnd', () => {
+    this.SUBRULE(this.comparison, { LABEL: 'lhs' });
+    this.MANY(() => {
+      this.CONSUME(t.And);
+      this.SUBRULE1(this.comparison, { LABEL: 'rhs' });
+    });
+  });
+
+  private comparison = this.RULE('comparison', () => {
+    this.SUBRULE(this.addition, { LABEL: 'lhs' });
+    this.OPTION(() => {
+      this.OR([
+        { ALT: () => this.CONSUME(t.EqualsEquals, { LABEL: 'ops' }) },
+        { ALT: () => this.CONSUME(t.NotEquals, { LABEL: 'ops' }) },
+        { ALT: () => this.CONSUME(t.LessThanOrEqual, { LABEL: 'ops' }) },
+        { ALT: () => this.CONSUME(t.GreaterThanOrEqual, { LABEL: 'ops' }) },
+        { ALT: () => this.CONSUME(t.LessThan, { LABEL: 'ops' }) },
+        { ALT: () => this.CONSUME(t.GreaterThan, { LABEL: 'ops' }) },
+      ]);
+      this.SUBRULE1(this.addition, { LABEL: 'rhs' });
+    });
   });
 
   private addition = this.RULE('addition', () => {
@@ -95,7 +126,10 @@ export class MorphParser extends CstParser {
 
   private unaryExpression = this.RULE('unaryExpression', () => {
     this.OPTION(() => {
-      this.CONSUME(t.Minus, { LABEL: 'sign' });
+      this.OR([
+        { ALT: () => this.CONSUME(t.Minus, { LABEL: 'sign' }) },
+        { ALT: () => this.CONSUME(t.Not, { LABEL: 'sign' }) },
+      ]);
     });
     this.SUBRULE(this.atomic);
   });
