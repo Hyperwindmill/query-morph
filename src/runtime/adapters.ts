@@ -42,6 +42,8 @@ registerAdapter('xml', {
     const rootTag = options?.rootGenerated ?? 'root';
     const builder = new XMLBuilder({
       ignoreAttributes: false,
+      attributeNamePrefix: '$',
+      textNodeName: '_',
       format: true,
     });
     return builder.build({ [rootTag]: data });

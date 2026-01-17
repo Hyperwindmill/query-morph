@@ -8,7 +8,7 @@ export const WhiteSpace = createToken({
 
 export const Identifier = createToken({
   name: 'Identifier',
-  pattern: /[a-zA-Z_][a-zA-Z0-9_]*/,
+  pattern: /[a-zA-Z_$][a-zA-Z0-9_]*/,
 });
 
 export const From = createToken({ name: 'From', pattern: /from/i, longer_alt: Identifier });
