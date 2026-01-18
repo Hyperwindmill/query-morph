@@ -2,6 +2,10 @@
 
 A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Query Language** (MQL) to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
 
+## Current status
+
+Please note that this project is in a very early stage and is not ready for production use. It is currently under active development and subject to change.
+
 ## Key Features
 
 - 🚀 **Performance**: Compiles DSL to native JS for maximum execution speed.
@@ -9,7 +13,7 @@ A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Que
 - 🧩 **Format Agnostic**: Input and output can be JSON, XML, or raw Objects.
 - ➗ **Expressions**: Support for arithmetic, string concatenation, and unary minus.
 - 🔀 **Conditional Logic**: `if` function with comparison and logical operators.
-- 🛠️ **Modular Functions**: Extensible function registry (e.g., `substring`).
+- 🛠️ **Modular Functions**: Extensible function registry (e.g., `substring`, `xmlnode`, `extractNumber`, `uppercase`, `lowercase`, `text`, `number`).
 - 🔄 **Structural Mapping**: Easy handling of nested objects and arrays (`multiple`).
 - 🎨 **Playground**: Real-time editor to test and visualize generated code.
 
