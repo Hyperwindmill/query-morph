@@ -58,4 +58,50 @@ describe('Functions in expressions', async () => {
     `;
     await expect(compile(query)).rejects.toThrow('Unknown function: unknownFunc');
   });
+  it('should cast as string when using text function', async () => {
+    const query = `
+      from object to object
+      transform
+        set result = 11+text(sku)
+    `;
+    const engine = await compile(query);
+    const source = { sku: 12345 };
+    const result = engine(source);
+    expect(result.result).toBe('1112345');
+  });
+  it('should not cast as string when not using text function', async () => {
+    const query = `
+      from object to object
+      transform
+        set result = 11+sku
+    `;
+    const engine = await compile(query);
+    const source = { sku: 12345 };
+    const result = engine(source);
+    expect(result.result).toBe(12356);
+  });
+  it('should cast number when using number function', async () => {
+    const query = `
+      from object to object
+      transform
+        set result = 11+number(sku)
+    `;
+    const engine = await compile(query);
+    const source = { sku: '12345' };
+    const result = engine(source);
+    expect(result.result).toBe(12356);
+  });
+  it('should extract number when using extractNumber function', async () => {
+    const query = `
+      from object to object
+      transform
+        set result = 11+extractNumber(sku)
+        set resultInt = 11+extractNumber(skuInt)
+    `;
+    const engine = await compile(query);
+    const source = { sku: '12345.15rt',skuInt: '12345' };
+    const result = engine(source);
+    expect(result.result).toBe(12356.15);
+    expect(result.resultInt).toBe(12356);
+  });
 });

@@ -44,4 +44,11 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     const [str] = args;
     return `Number(${str})`;
   },
+  extractnumber: (args: string[]) => {
+    if (args.length !== 1) {
+      throw new Error('extractNumber() requires exactly 1 argument (string)');
+    }
+    const [str] = args;
+    return `Number(String(${str}).match(/\\d+(\\.\\d+)?/)[0])`;
+  },
 };
