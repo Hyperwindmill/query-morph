@@ -5,6 +5,7 @@ A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Que
 ## Current status
 
 Please note that this project is in a very early stage and is not ready for production use. It is currently under active development and subject to change.
+Packages are NOT published to npm yet.
 
 ## Key Features
 
