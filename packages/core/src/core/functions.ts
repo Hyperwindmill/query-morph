@@ -37,6 +37,13 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     const [str] = args;
     return `String(${str})`;
   },
+  replace: (args: string[]) => {
+    if (args.length !== 3) {
+      throw new Error('replace() requires exactly 3 arguments (string, search, replacement)');
+    }
+    const [str, search, replacement] = args;
+    return `String(${str}).replace(${search}, ${replacement})`;
+  },
   number: (args: string[]) => {
     if (args.length !== 1) {
       throw new Error('number() requires exactly 1 argument (string)');
