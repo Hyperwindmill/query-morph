@@ -64,42 +64,53 @@ const xmlResult = convertEngine('{"foo":"bar"}');
 // Output: <root><foo>bar</foo></root>
 ```
 
-## DSL Snippets
+## MQL Reference
 
-### Arithmetic & Concatenation
+Morph Query Language (MQL) is a declarative DSL for structural data transformation.
 
-`set total = price + tax`
-`set label = "Item: " + name`
+### Actions (Statements)
 
-### Conditional Logic
+Actions are the top-level commands used inside the `transform` block or `section` blocks.
 
-**Expressions (Values):**
-`set status = if(age >= 18, "adult", "minor")`
+- **`set [target] = [expression]`**: Sets a property on the target object.
+- **`section [multiple] [name]( [actions] ) [from [path]]`**: Creates a nested object or array.
+  - `multiple`: If present, treats the source as an array and maps each item.
+  - `from [path]`: Optional path to shift the context of the source data.
+- **`clone([fields...])`**: Clones the entire source object or specific fields into the target.
+- **`delete [field]`**: Removes a property from the target object (useful after `clone`).
+- **`define [alias] = [expression]`**: Defines a local variable/alias that can be used in subsequent expressions within the same scope.
+- **`if ([condition]) ( [thenActions] ) [else ( [elseActions] )]`**: Executes a block of actions conditionally.
 
-**Actions (Blocks):**
+### Functions
 
-```
-if (isPremium) (
-  set discount = amount * 0.2
-  set badge = "VIP"
-) else (
-  set discount = 0
-  set badge = "Standard"
-)
-```
+Functions can be used within expressions to calculate values.
 
-### Deleting Properties
+| Function                              | Description                                             | Example                           |
+| :------------------------------------ | :------------------------------------------------------ | :-------------------------------- |
+| `substring(str, start, [length])`     | Extracts a part of a string. Supports negative indices. | `substring(sku, 0, 3)`            |
+| `if(cond, trueVal, falseVal)`         | Ternary-like expression.                                | `if(age >= 18, "adult", "minor")` |
+| `text(val)`                           | Converts a value to a string.                           | `text(123)`                       |
+| `replace(str, search, replace)`       | Replaces occurrences in a string.                       | `replace(name, " ", "_")`         |
+| `number(val)`                         | Converts a value to a number.                           | `number("42")`                    |
+| `extractnumber(str)`                  | Extracts the first numeric sequence from a string.      | `extractnumber("Price: 100USD")`  |
+| `uppercase(str)`                      | Converts string to uppercase.                           | `uppercase("hello")`              |
+| `lowercase(str)`                      | Converts string to lowercase.                           | `lowercase("HELLO")`              |
+| `xmlnode(val, [attrKey, attrVal...])` | Wraps a value for XML output with optional attributes.  | `xmlnode(content, "id", 1)`       |
 
-`delete password` - Removes a property from the target object
+### Operators
 
-### Functions & Negative Indices
+MQL supports standard operators for expressions:
 
-`set lastChars = substring(sku, -5)` - Get last 5 characters
-`set first3 = substring(sku, 0, 3)` - Get first 3 characters (start, length)
+- **Arithmetic**: `+`, `-`, `*`, `/`
+- **Comparison**: `==`, `===`, `!=`, `!==`, `<`, `>`, `<=`, `>=`
+- **Logical**: `&&` (and), `||` (or), `!` (not)
+- **Grouping**: `( )` for precedence.
 
-### Array Mapping
+---
 
-`section multiple items( set sku = itemSku )`
+## Array Mapping
+
+`section multiple items( set sku = itemSku )` from `itemsArray`
 
 ## Monorepo Structure
 

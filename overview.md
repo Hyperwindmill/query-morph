@@ -51,6 +51,34 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 - ✅ **Deep Nesting**: Unlimited recursive `section` directives.
 - ✅ **Full/Selective Cloning**: `clone` or `clone(a, b)`.
 - ✅ **Pure Conversions**: Optional `transform` directive for straight format conversion.
+
+## MQL Quick Reference (for LLMs)
+
+### Actions
+
+- `set <target> = <expression>`: Assign value.
+- `section [multiple] <name>( <actions> ) [from <path>]`: Nesting/Looping.
+- `clone([fields...])`: Copy all or select fields.
+- `delete <field>`: Remove field.
+- `define <alias> = <expression>`: Local variable.
+- `if (<cond>) ( <actions> ) [else ( <actions> )]`: Conditional block.
+
+### Functions
+
+- `substring(str, start, [len])`: Slice string.
+- `if(cond, true, false)`: Ternary expression.
+- `text(val)`, `number(val)`: Type casting.
+- `replace(str, search, replace)`: String replace.
+- `extractnumber(str)`: Get first number from string.
+- `uppercase(str)`, `lowercase(str)`: Case conversion.
+- `xmlnode(val, [k, v...])`: XML formatting.
+
+### Operators
+
+- Arithmetic: `+`, `-`, `*`, `/`
+- Comparison: `==`, `===`, `!=`, `!==`, `<`, `>`, `<=`, `>=`
+- Logical: `&&`, `||`, `!`
+- Grouping: `( )`
 - ✅ **Tests**: 67 unit tests across multiple spec files.
 - ✅ **Playground**: `@query-morph/playground` - Vite + React + Monaco app (`packages/playground/`).
 
