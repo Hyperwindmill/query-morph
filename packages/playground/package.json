@@ -1,7 +1,7 @@
 {
-  "name": "playground",
+  "name": "@query-morph/playground",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,11 +11,9 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "@query-morph/core": "*",
     "@tailwindcss/postcss": "^4.1.18",
-    "chevrotain": "^11.1.0",
     "clsx": "^2.1.1",
-    "fast-xml-parser": "^5.3.3",
-    "js-beautify": "^1.15.4",
     "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -23,7 +21,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@types/js-beautify": "^1.14.3",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",

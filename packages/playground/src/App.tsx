@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { Play, Code, Database, FileCode, Copy, Check, Info } from 'lucide-react';
-import { compile } from '../../src/index';
+import { compile } from '@query-morph/core';
 import { EXAMPLES } from './examples';
 
 interface Result {

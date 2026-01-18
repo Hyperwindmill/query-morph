@@ -6,35 +6,35 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 
 ## Core Architecture
 
-### 1. Lexer (`src/lexer.ts`)
+### 1. Lexer (`packages/core/src/lexer.ts`)
 
 - Powered by **Chevrotain**.
 - Defines tokens for keywords and mathematical operators (`+`, `-`, `*`, `/`).
 
-### 2. Parser (`src/parser.ts`)
+### 2. Parser (`packages/core/src/parser.ts`)
 
 - Defines the grammar for the DSL.
 - Produces a **Concrete Syntax Tree (CST)**.
 - Implements operator precedence and function call lookahead.
 
-### 3. Compiler (`src/compiler.ts`)
+### 3. Compiler (`packages/core/src/compiler.ts`)
 
 - Uses a CST Visitor to traverse the tree and generate a **JavaScript string**.
 - Maps DSL operators and functions to efficient JS implementations.
 
-### 4. Functions Registry (`src/functions.ts`)
+### 4. Functions Registry (`packages/core/src/functions.ts`)
 
 - Modular registry for transformation functions.
 - Current functions: `substring` (aliased to JS `.slice()`).
 - Extensible without modifying core logic.
 
-### 5. Runtime / Index (`src/index.ts`)
+### 5. Runtime / Index (`packages/core/src/index.ts`)
 
 - **Isomorphic**: Runs in both Node.js and the Browser.
 - **Handles source parsing**: JSON/XML and target serialization.
 - **Beautify code**:Integrates `js-beautify` for readable generated code.
 - **Async Compilation**: Returns a Promise that resolves to the engine.
-- **Adapter System**: Pluggable data format handlers (`src/adapters.ts`).
+- **Adapter System**: Pluggable data format handlers (`packages/core/src/adapters.ts`).
 - **Caching**: Supports custom caching strategies (e.g., File System in Node).
 
 ## Current Features & State
@@ -51,8 +51,18 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 - ✅ **Deep Nesting**: Unlimited recursive `section` directives.
 - ✅ **Full/Selective Cloning**: `clone` or `clone(a, b)`.
 - ✅ **Pure Conversions**: Optional `transform` directive for straight format conversion.
-- ✅ **Tests**: 50+ unit tests across multiple spec files.
-- ✅ **Playground**: A Vite + React + Monaco environment (`npm run playground`).
+- ✅ **Tests**: 67 unit tests across multiple spec files.
+- ✅ **Playground**: `@query-morph/playground` - Vite + React + Monaco app (`packages/playground/`).
+
+## Monorepo Structure
+
+```
+query-morph/
+├── packages/
+│   ├── core/        # @query-morph/core - Main library
+│   └── playground/  # @query-morph/playground - Interactive editor
+└── package.json     # npm workspaces root
+```
 
 ## Next Development Steps
 
@@ -62,4 +72,4 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 
 ---
 
-_Updated on 2026-01-18 with Pure Format Conversion support._
+_Updated on 2026-01-18 with Monorepo structure._

@@ -20,13 +20,13 @@ Please note that this project is in a very early stage and is not ready for prod
 ## Installation
 
 ```bash
-npm install query-morph
+npm install @query-morph/core
 ```
 
 ## Usage Example
 
 ```typescript
-import { compile } from 'query-morph';
+import { compile } from "@query-morph/core";
 
 // 1. Structural Transformation
 const query = `
@@ -43,13 +43,13 @@ const query = `
 const engine = await compile(query);
 
 const source = {
-  firstName: 'John',
-  lastName: 'Doe',
-  sku: 'ABC12345',
+  firstName: "John",
+  lastName: "Doe",
+  sku: "ABC12345",
   price: 100,
   amount: 2,
   discount: 10,
-  orderId: 'ORD-99',
+  orderId: "ORD-99",
 };
 
 const result = engine(source);
@@ -78,15 +78,13 @@ const xmlResult = convertEngine('{"foo":"bar"}');
 **Actions (Blocks):**
 
 ```
-
 if (isPremium) (
-set discount = amount \* 0.2
-set badge = "VIP"
+  set discount = amount * 0.2
+  set badge = "VIP"
 ) else (
-set discount = 0
-set badge = "Standard"
+  set discount = 0
+  set badge = "Standard"
 )
-
 ```
 
 ### Deleting Properties
@@ -102,22 +100,57 @@ set badge = "Standard"
 
 `section multiple items( set sku = itemSku )`
 
+## Monorepo Structure
+
+This repository uses **npm workspaces** to manage multiple packages:
+
+```
+query-morph/
+├── packages/
+│   ├── core/        # @query-morph/core - The main library
+│   └── playground/  # @query-morph/playground - Interactive editor
+├── package.json     # Workspace configuration
+└── README.md
+```
+
 ## Development
 
-### Playground
-
-Launch the interactive playground to test your queries in real-time:
+### Prerequisites
 
 ```bash
+npm install    # Installs all workspace dependencies
+npm run build  # Builds @query-morph/core
+```
+
+### Available Scripts (from root)
+
+| Command              | Description                     |
+| -------------------- | ------------------------------- |
+| `npm run build`      | Build the core library          |
+| `npm run test`       | Run tests for core library      |
+| `npm run playground` | Start the playground dev server |
+| `npm run dev`        | Watch mode for core library     |
+| `npm run build:all`  | Build all packages              |
+| `npm run test:all`   | Run tests for all packages      |
+
+### Development Workflow
+
+```bash
+# Terminal 1: Watch library changes
+npm run dev
+
+# Terminal 2: Run playground
 npm run playground
 ```
 
-### Build & Test
+Changes to `@query-morph/core` are automatically picked up by Vite's HMR.
 
-```bash
-npm run build
-npm run test
-```
+## Packages
+
+| Package                                          | Description               |
+| ------------------------------------------------ | ------------------------- |
+| [@query-morph/core](./packages/core)             | The transformation engine |
+| [@query-morph/playground](./packages/playground) | Interactive web editor    |
 
 ## License
 
