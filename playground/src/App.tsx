@@ -4,26 +4,100 @@ import { Play, Code, Database, FileCode, Copy, Check, Info } from 'lucide-react'
 import { compile } from '../../src/index';
 
 const DEFAULT_QUERY = `from json 
-to xml("Order") 
+to xml("UserProfile") 
 transform 
-  section order(
-    set orderId=id
-    section multiple items(
-      set itemSku=sku
-      section details(
-        set hex=color
-      ) from info
-    ) from products
-  )`;
+  section profile(
+    set customerId = id
+    set fullName = uppercase(name)
+    set status = if(isActive, "Active", "Inactive")
+    
+    if (isActive) (
+       set accountTier = "Premium"
+    ) else (
+       set accountTier = "Standard"
+    )
+
+    section contactInfo(
+      set primaryEmail = email
+      set phone = phone
+    ) from contact
+
+    section multiple addressBook(
+      set type = type
+      set fullAddress = street + ", " + city + " " + zip
+      set isPrimary = if(primary, "Yes", "No")
+    ) from addresses
+
+    section multiple orderHistory(
+      set orderRef = id
+      set value = total
+      set state = status
+      
+      section multiple lineItems(
+        set productCode = sku
+        set quantity = qty
+        set unitPrice = price
+        set totalLine = if(qty > 5, price * qty * 0.9, price * qty)
+      ) from items
+    ) from orders
+    
+    section stats(
+       set visitCount = visits
+       set accountType = if(visits > 40, "Frequent", "Casual")
+       set lastSeen = substring(lastLogin, 0, 10)
+    ) from metrics
+  ) from customer`;
 
 const DEFAULT_DATA = JSON.stringify(
   {
-    order: {
-      id: 'ORD-12345',
-      products: [
-        { sku: 'SKU-99', info: { color: '#ff0000' } },
-        { sku: 'SKU-88', info: { color: '#0000ff' } },
+    customer: {
+      id: 'CUST-001',
+      name: 'Jane Doe',
+      isActive: true,
+      contact: {
+        email: 'jane.doe@example.com',
+        phone: '+1-555-0199',
+      },
+      addresses: [
+        {
+          type: 'billing',
+          street: '123 Main St',
+          city: 'Metropolis',
+          zip: '10001',
+          primary: true,
+        },
+        {
+          type: 'shipping',
+          street: '456 Ocean Dr',
+          city: 'Gotham',
+          zip: '10200',
+          primary: false,
+        },
       ],
+      orders: [
+        {
+          id: 'ORD-2023-001',
+          date: '2023-10-15',
+          total: 150.5,
+          status: 'shipped',
+          items: [
+            { sku: 'WIDGET-A', qty: 2, price: 50.0 },
+            { sku: 'GADGET-B', qty: 1, price: 50.5 },
+          ],
+        },
+        {
+          id: 'ORD-2023-009',
+          date: '2023-11-01',
+          total: 200.0,
+          status: 'pending',
+          items: [{ sku: 'LUX-ITEM', qty: 1, price: 200.0 }],
+        },
+      ],
+      metrics: {
+        visits: 42,
+        lastLogin: '2023-11-05T10:00:00Z',
+        tags: ['vip', 'early-adopter'],
+      },
     },
   },
   null,
