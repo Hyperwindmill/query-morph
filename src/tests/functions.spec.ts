@@ -99,7 +99,7 @@ describe('Functions in expressions', async () => {
         set resultInt = 11+extractNumber(skuInt)
     `;
     const engine = await compile(query);
-    const source = { sku: '12345.15rt',skuInt: '12345' };
+    const source = { sku: '12345.15rt', skuInt: '12345' };
     const result = engine(source);
     expect(result.result).toBe(12356.15);
     expect(result.resultInt).toBe(12356);
@@ -125,5 +125,16 @@ describe('Functions in expressions', async () => {
     const source = { sku: 'HELLO' };
     const result = engine(source);
     expect(result.result).toBe('hello');
+  });
+  it('should create xml node with attributeswhen using xmlnode function', async () => {
+    const query = `
+      from object to xml("test")
+      transform
+        set result = xmlnode(sku,'test',sku)
+    `;
+    const engine = await compile(query);
+    const source = { sku: 'hello' };
+    const result = engine(source);
+    expect(result).toContain(`<result test="hello">hello</result>`);
   });
 });

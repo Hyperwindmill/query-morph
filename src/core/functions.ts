@@ -65,4 +65,30 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     const [str] = args;
     return `String(${str}).toLowerCase()`;
   },
+  xmlnode: (args: string[]) => {
+    if (args.length < 1) {
+      throw new Error('xmlnode() requires at least 1 argument (string)');
+    }
+    const value = args[0];
+    const attributesList = [...args.slice(1)];
+    let attributes = '';
+    if (attributesList.length > 0) {
+      let [list, chunkSize] = [attributesList, 2];
+      list = [...Array(Math.ceil(list.length / chunkSize))]
+        .map((_) => list.splice(0, chunkSize))
+        .map(([key, value]) => {
+          let attrKey = key;
+          if (key.startsWith('"') || key.startsWith("'")) {
+            attrKey = `"$${key.slice(1, -1)}"`;
+          } else {
+            attrKey = `["$"+${key}]`;
+          }
+          return `${attrKey}:${value ? value : 'null'}`;
+        });
+      attributes = ',' + list.join(',');
+    } else {
+      return value;
+    }
+    return `{_:${value}${attributes}}`;
+  },
 };
