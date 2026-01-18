@@ -14,7 +14,9 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "tsup src/index.ts --watch --format cjs,esm",
@@ -33,8 +35,17 @@
     "dsl",
     "compiler"
   ],
-  "author": "",
+  "author": "Hyperwindmill",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyperwindmill/query-morph.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/Hyperwindmill/query-morph/issues"
+  },
+  "homepage": "https://github.com/Hyperwindmill/query-morph/tree/main/packages/core#readme",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/js-beautify": "^1.14.3",

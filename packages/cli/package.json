@@ -19,8 +19,23 @@
     "json",
     "xml"
   ],
-  "author": "",
+  "author": "Hyperwindmill",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyperwindmill/query-morph.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Hyperwindmill/query-morph/issues"
+  },
+  "homepage": "https://github.com/Hyperwindmill/query-morph/tree/main/packages/cli#readme",
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@query-morph/core": "*",
     "commander": "^13.1.0"
