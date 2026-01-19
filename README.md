@@ -1,4 +1,4 @@
-# query-morph
+![Query Morph](./qm_square.png)
 
 A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Query Language** (MQL) to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
 
