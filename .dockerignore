@@ -6,15 +6,13 @@ dist
 .git
 .gitignore
 *.md
+!README.md
 .env*
 .docker
-Dockerfile*
-docker-compose*
 .eslintrc*
 .prettier*
 jest.config*
-tsconfig*.json
-test
 coverage
 packages/playground
 packages/cli
+vitest.config*
