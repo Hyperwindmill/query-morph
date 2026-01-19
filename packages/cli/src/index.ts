@@ -12,7 +12,7 @@ program
   .description(
     "CLI tool for query-morph - transform structural data from the command line.",
   )
-  .version("0.1.2")
+  .version("0.1.3")
   .option("-f, --from <path>", "Path to the source file")
   .option("-i, --input <string>", "Raw source content as string")
   .option(
