@@ -96,22 +96,66 @@ class MQLDiagnosticProvider {
     }
     createDiagnostic(error, document) {
         const message = error.message || String(error);
-        // Try to extract line/column info from error message
-        // Chevrotain errors often include position info
-        const lineMatch = message.match(/line[:\s]+(\d+)/i);
-        const columnMatch = message.match(/column[:\s]+(\d+)/i);
         let range;
-        if (lineMatch) {
-            const line = parseInt(lineMatch[1], 10) - 1; // Convert to 0-indexed
-            const column = columnMatch ? parseInt(columnMatch[1], 10) - 1 : 0;
-            // Try to get the end of the token
-            const lineText = document.lineAt(Math.min(line, document.lineCount - 1)).text;
-            const endColumn = Math.min(column + 10, lineText.length); // Highlight ~10 chars
-            range = new vscode.Range(new vscode.Position(line, column), new vscode.Position(line, endColumn));
+        let line = 0;
+        let column = 0;
+        let found = false;
+        // Try to extract position from Chevrotain token if available
+        if (error.token) {
+            if (error.token.startLine !== undefined) {
+                line = error.token.startLine - 1; // Convert to 0-indexed
+                column =
+                    error.token.startColumn !== undefined
+                        ? error.token.startColumn - 1
+                        : 0;
+                found = true;
+            }
+        }
+        // Fallback: Try to extract from error message
+        if (!found) {
+            const lineMatch = message.match(/line[:\s]+(\d+)/i);
+            const columnMatch = message.match(/column[:\s]+(\d+)/i);
+            if (lineMatch) {
+                line = parseInt(lineMatch[1], 10) - 1;
+                column = columnMatch ? parseInt(columnMatch[1], 10) - 1 : 0;
+                found = true;
+            }
+        }
+        // Fallback: Look for "at offset" or similar patterns
+        if (!found) {
+            const offsetMatch = message.match(/offset[:\s]+(\d+)/i);
+            if (offsetMatch) {
+                const offset = parseInt(offsetMatch[1], 10);
+                const pos = document.positionAt(offset);
+                line = pos.line;
+                column = pos.character;
+                found = true;
+            }
+        }
+        // Create range
+        if (found && line < document.lineCount) {
+            const lineText = document.lineAt(line).text;
+            // Try to highlight the problematic token
+            let endColumn = column;
+            // If we have token info, use its length
+            if (error.token && error.token.image) {
+                endColumn = column + error.token.image.length;
+            }
+            else {
+                // Otherwise, highlight next word or 10 chars
+                const remainingText = lineText.substring(column);
+                const wordMatch = remainingText.match(/^\S+/);
+                endColumn =
+                    column +
+                        (wordMatch
+                            ? wordMatch[0].length
+                            : Math.min(10, remainingText.length));
+            }
+            range = new vscode.Range(new vscode.Position(line, column), new vscode.Position(line, Math.min(endColumn, lineText.length)));
         }
         else {
-            // Default to first line if no position info
-            range = new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 10));
+            // Last resort: highlight first line
+            range = new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, Math.min(10, document.lineAt(0).text.length)));
         }
         return new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Error);
     }

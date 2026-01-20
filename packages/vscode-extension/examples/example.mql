@@ -1,4 +1,4 @@
-from json to xml
+from json to xml("XPS")
 transform
   // Basic field mapping
   set fullName = firstName + " " + lastName
