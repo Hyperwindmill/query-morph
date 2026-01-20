@@ -116,18 +116,24 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "package": "vsce package"
+    "vscode:prepublish": "npm run build",
+    "build": "rollup -c",
+    "compile": "rollup -c",
+    "watch": "rollup -c -w",
+    "package": "vsce package --no-dependencies"
   },
   "dependencies": {
     "@query-morph/core": "file:../core",
     "@query-morph/language-definitions": "file:../language-definitions"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
     "@types/node": "^18.0.0",
     "@types/vscode": "^1.75.0",
+    "rollup": "^4.55.2",
     "typescript": "^5.0.0"
   },
   "repository": {
