@@ -113,7 +113,8 @@
     "package": "vsce package"
   },
   "dependencies": {
-    "@query-morph/core": "file:../core"
+    "@query-morph/core": "file:../core",
+    "@query-morph/language-definitions": "file:../language-definitions"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

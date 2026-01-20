@@ -1,8 +1,16 @@
-import { useState, useEffect } from 'react';
-import Editor from '@monaco-editor/react';
-import { Play, Code, Database, FileCode, Copy, Check, Info } from 'lucide-react';
-import { compile } from '@query-morph/core';
-import { EXAMPLES } from './examples';
+import { useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
+import {
+  Play,
+  Code,
+  Database,
+  FileCode,
+  Copy,
+  Check,
+  Info,
+} from "lucide-react";
+import { compile } from "@query-morph/core";
+import { EXAMPLES } from "./examples";
 
 interface Result {
   result: string;
@@ -12,25 +20,25 @@ interface Result {
 
 export default function App() {
   const [query, setQuery] = useState(
-    () => sessionStorage.getItem('morph_query') || EXAMPLES[0].query
+    () => sessionStorage.getItem("morph_query") || EXAMPLES[0].query,
   );
   const [sourceData, setSourceData] = useState(
-    () => sessionStorage.getItem('morph_source') || EXAMPLES[0].source
+    () => sessionStorage.getItem("morph_source") || EXAMPLES[0].source,
   );
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<Result>({
-    result: '',
-    generatedCode: '',
+    result: "",
+    generatedCode: "",
     error: null,
   });
-  const sourceType = sourceData.trim().startsWith('<') ? 'xml' : 'json';
+  const sourceType = sourceData.trim().startsWith("<") ? "xml" : "json";
 
   useEffect(() => {
-    sessionStorage.setItem('morph_query', query);
+    sessionStorage.setItem("morph_query", query);
   }, [query]);
 
   useEffect(() => {
-    sessionStorage.setItem('morph_source', sourceData);
+    sessionStorage.setItem("morph_source", sourceData);
   }, [sourceData]);
 
   useEffect(() => {
@@ -39,14 +47,17 @@ export default function App() {
         const morph = await compile(query);
         const output = morph(sourceData);
         setResult({
-          result: typeof output === 'string' ? output : JSON.stringify(output, null, 2),
+          result:
+            typeof output === "string"
+              ? output
+              : JSON.stringify(output, null, 2),
           generatedCode: morph.code,
           error: null,
         });
       } catch (err: unknown) {
         setResult({
-          result: '',
-          generatedCode: '',
+          result: "",
+          generatedCode: "",
           error: err instanceof Error ? err.message : String(err),
         });
       }
@@ -89,8 +100,7 @@ export default function App() {
           <select
             className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700 text-slate-200 outline-none cursor-pointer"
             onChange={handleExampleChange}
-            defaultValue=""
-          >
+            defaultValue="">
             <option value="" disabled>
               Load Example...
             </option>
@@ -102,8 +112,7 @@ export default function App() {
           </select>
           <a
             href="https://github.com/Hyperwindmill/query-morph"
-            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700"
-          >
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700">
             Documentation
           </a>
           <button className="text-xs font-semibold px-4 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-600/20 text-white">
@@ -127,13 +136,19 @@ export default function App() {
             <div className="flex-1 overflow-hidden pt-2">
               <Editor
                 theme="vs-dark"
-                defaultLanguage="plaintext"
+                defaultLanguage="mql"
                 value={query}
-                onChange={(v) => setQuery(v || '')}
+                onChange={(v) => setQuery(v || "")}
+                beforeMount={(monaco) => {
+                  // Register MQL language
+                  import("./mqlLanguage").then(({ registerMQLLanguage }) => {
+                    registerMQLLanguage(monaco);
+                  });
+                }}
                 options={{
                   minimap: { enabled: false },
                   fontSize: 13,
-                  lineNumbers: 'on',
+                  lineNumbers: "on",
                   scrollBeyondLastLine: false,
                   automaticLayout: true,
                   padding: { top: 10 },
@@ -159,7 +174,7 @@ export default function App() {
                   readOnly: true,
                   minimap: { enabled: false },
                   fontSize: 13,
-                  lineNumbers: 'on',
+                  lineNumbers: "on",
                   scrollBeyondLastLine: false,
                   automaticLayout: true,
                   padding: { top: 10 },
@@ -182,13 +197,13 @@ export default function App() {
             <div className="flex-1 overflow-hidden pt-2">
               <Editor
                 theme="vs-dark"
-                language={sourceType === 'json' ? 'json' : 'xml'}
+                language={sourceType === "json" ? "json" : "xml"}
                 value={sourceData}
-                onChange={(v) => setSourceData(v || '')}
+                onChange={(v) => setSourceData(v || "")}
                 options={{
                   minimap: { enabled: false },
                   fontSize: 14,
-                  lineNumbers: 'on',
+                  lineNumbers: "on",
                   scrollBeyondLastLine: false,
                   automaticLayout: true,
                   padding: { top: 10 },
@@ -209,8 +224,7 @@ export default function App() {
               <button
                 onClick={copyToClipboard}
                 className="p-1 hover:bg-slate-800 rounded transition-colors text-slate-400 hover:text-white"
-                title="Copy Result"
-              >
+                title="Copy Result">
                 {copied ? (
                   <Check className="w-4 h-4 text-emerald-400" />
                 ) : (
@@ -223,20 +237,24 @@ export default function App() {
                 <div className="p-4 flex gap-3 text-red-400 bg-red-950/20 m-4 rounded-lg border border-red-900/50">
                   <Info className="w-5 h-5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-bold mb-1">Compilation/Execution Error</p>
+                    <p className="text-sm font-bold mb-1">
+                      Compilation/Execution Error
+                    </p>
                     <p className="text-xs font-mono">{result.error}</p>
                   </div>
                 </div>
               ) : (
                 <Editor
                   theme="vs-dark"
-                  language={result.result.trim().startsWith('<') ? 'xml' : 'json'}
+                  language={
+                    result.result.trim().startsWith("<") ? "xml" : "json"
+                  }
                   value={result.result}
                   options={{
                     readOnly: true,
                     minimap: { enabled: false },
                     fontSize: 14,
-                    lineNumbers: 'on',
+                    lineNumbers: "on",
                     scrollBeyondLastLine: false,
                     automaticLayout: true,
                     padding: { top: 10 },
