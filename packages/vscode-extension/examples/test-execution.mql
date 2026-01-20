@@ -1,0 +1,36 @@
+from json to json
+transform
+  // Basic transformations
+  set fullName = firstName + " " + lastName
+  set email = lowercase(email)
+  set age = number(age)
+  set isAdult = if(age >= 18, true, false)
+  
+  // Address section
+  section address(
+    set street = address.street
+    set city = uppercase(address.city)
+    set zip = address.zipCode
+  )
+  
+  // Transform orders array
+  section multiple orderList(
+    set id = orderId
+    set product = productName
+    set qty = quantity
+    set unitPrice = price
+    set total = quantity * price
+    
+    // Apply discount for bulk orders
+    if (quantity > 1) (
+      set discount = total * 0.1
+      set finalPrice = total - discount
+    ) else (
+      set discount = 0
+      set finalPrice = total
+    )
+  ) from orders
+  
+  // Calculate totals
+  define orderCount = 2
+  set totalOrders = orderCount

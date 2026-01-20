@@ -1,0 +1,119 @@
+{
+  "name": "mql-vscode",
+  "displayName": "MQL (Morph Query Language)",
+  "description": "Syntax highlighting and language support for Morph Query Language",
+  "version": "0.1.0",
+  "publisher": "query-morph",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "mql",
+    "morph",
+    "query",
+    "transformation",
+    "json",
+    "xml"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "mql",
+        "aliases": [
+          "MQL",
+          "Morph Query Language"
+        ],
+        "extensions": [
+          ".mql"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mql",
+        "scopeName": "source.mql",
+        "path": "./syntaxes/mql.tmLanguage.json"
+      },
+      {
+        "scopeName": "mql.injection",
+        "path": "./syntaxes/mql.injection.json",
+        "injectTo": [
+          "source.js",
+          "source.ts",
+          "source.jsx",
+          "source.tsx"
+        ]
+      }
+    ],
+    "snippets": [
+      {
+        "language": "mql",
+        "path": "./snippets/mql.json"
+      },
+      {
+        "language": "typescript",
+        "path": "./snippets/mql-embedded.json"
+      },
+      {
+        "language": "javascript",
+        "path": "./snippets/mql-embedded.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "mql.executeWithInput",
+        "title": "MQL: Execute with Input Data",
+        "icon": "$(play)"
+      },
+      {
+        "command": "mql.executeFromClipboard",
+        "title": "MQL: Execute with Clipboard Data"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == mql",
+          "command": "mql.executeWithInput",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == mql",
+          "command": "mql.executeWithInput",
+          "group": "mql@1"
+        },
+        {
+          "when": "resourceLangId == mql",
+          "command": "mql.executeFromClipboard",
+          "group": "mql@2"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "@query-morph/core": "file:../core"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/query-morph.git"
+  },
+  "license": "MIT"
+}

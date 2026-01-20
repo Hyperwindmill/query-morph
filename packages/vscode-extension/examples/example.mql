@@ -1,0 +1,40 @@
+from json to xml
+transform
+  // Basic field mapping
+  set fullName = firstName + " " + lastName
+  set age = number(ageString)
+  set isAdult = if(age >= 18, "yes", "no")
+  
+  // Using functions
+  set shortSku = substring(sku, 0, 3)
+  set nameParts = split(fullName, " ")
+  set upperName = uppercase(firstName)
+  
+  // Nested section
+  section address(
+    set street = addressLine1
+    set city = cityName
+    set country = "IT"
+  )
+  
+  // Array mapping with multiple
+  section multiple items(
+    set sku = itemSku
+    set price = itemPrice * 1.2
+    set total = price * quantity
+    
+    // Conditional logic
+    if (quantity > 10) (
+      set discount = 0.1
+    ) else (
+      set discount = 0
+    )
+  ) from products
+  
+  // Using define for reusable values
+  define taxRate = 0.22
+  set totalWithTax = total * (1 + taxRate)
+  
+  // Array index access
+  set firstItem = items[0]
+  set secondItemName = items[1].name

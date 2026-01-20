@@ -80,6 +80,24 @@ function createEngine(code: string): MorphEngine {
 }
 
 /**
+ * Tagged template helper for MQL queries.
+ * Enables syntax highlighting in VSCode and provides a cleaner API.
+ *
+ * @example
+ * ```typescript
+ * const query = mql`
+ *   from json to xml
+ *   transform
+ *     set fullName = firstName + " " + lastName
+ * `;
+ * const engine = await compile(query);
+ * ```
+ */
+export function mql(strings: TemplateStringsArray, ...values: any[]): string {
+  return strings.reduce((acc, str, i) => acc + str + (values[i] ?? ''), '');
+}
+
+/**
  * Legacy greet function for compatibility during migration.
  */
 export function greet(name: string): string {

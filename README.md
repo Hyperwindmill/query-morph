@@ -27,10 +27,10 @@ npm install @query-morph/core
 ## Usage Example
 
 ```typescript
-import { compile } from "@query-morph/core";
+import { compile, mql } from "@query-morph/core";
 
-// 1. Structural Transformation
-const query = `
+// 1. Structural Transformation with Tagged Template
+const query = mql`
   from object to json
   transform
     set fullName = firstName + " " + lastName
@@ -58,11 +58,13 @@ console.log(result);
 // Output: JSON string with fullName, shortSku, total, and header object
 
 // 2. Pure Format Conversion (No Transform)
-const convertQuery = `from json to xml`;
+const convertQuery = mql`from json to xml`;
 const convertEngine = await compile(convertQuery);
 const xmlResult = convertEngine('{"foo":"bar"}');
 // Output: <root><foo>bar</foo></root>
 ```
+
+> **💡 Tip**: Use the `mql` tagged template for better syntax highlighting in VSCode! Install the [MQL VSCode extension](./packages/vscode-extension) for the best development experience.
 
 ## MQL Reference
 
