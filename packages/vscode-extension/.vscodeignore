@@ -6,3 +6,9 @@ tsconfig.json
 node_modules/**
 *.vsix
 examples/**
+**/*.ts
+**/*.map
+.eslintrc.json
+.prettierrc
+*.log
+.DS_Store
