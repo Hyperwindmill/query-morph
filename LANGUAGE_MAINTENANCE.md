@@ -1,126 +1,126 @@
-# MQL Language Definition Maintenance Guide
+# MQL Language Maintenance Guide (Updated)
 
-## Overview
+## 🎯 Single Source of Truth: @query-morph/language-definitions
 
-This guide helps maintain consistency across all MQL language definitions when adding new features (keywords, functions, operators, etc.).
+**NEW:** All language definitions are now centralized in the `@query-morph/language-definitions` package!
 
-## 🎯 Single Source of Truth: The Lexer
+### Package Location
 
-**Primary Reference:** [`packages/core/src/core/lexer.ts`](file:///mnt/a341655b-7af5-403e-a435-792e0e283f08/Dev/query-morph/packages/core/src/core/lexer.ts)
-
-The lexer is the **authoritative source** for all MQL tokens. When adding new language features, **always start here**.
+[`packages/language-definitions/`](file:///mnt/a341655b-7af5-403e-a435-792e0e283f08/Dev/query-morph/packages/language-definitions/)
 
 ---
 
-## 📋 Checklist: Adding a New Keyword
+## ✅ Simplified Workflow: Adding New Features
 
-When adding a new keyword (e.g., `loop`, `break`, `continue`):
+### 1. Update Language Definitions Package
 
-### 1. Update the Lexer ✅ REQUIRED
+**Files to edit:**
+
+- **Keywords**: `packages/language-definitions/src/keywords.ts`
+- **Functions**: `packages/language-definitions/src/functions.ts`
+- **Operators**: `packages/language-definitions/src/operators.ts`
+
+### 2. Update the Lexer (Core)
+
+**File:** `packages/core/src/core/lexer.ts`
+
+Add the token definition and update `allTokens` array.
+
+### 3. Rebuild Language Definitions
+
+```bash
+cd packages/language-definitions
+npm run build
+```
+
+### 4. Update Consumers
+
+The VSCode extension and Monaco playground will automatically use the new definitions!
+
+---
+
+## 📋 Example: Adding a New Keyword
+
+### Step 1: Add to Language Definitions
+
+**File:** `packages/language-definitions/src/keywords.ts`
+
+```typescript
+export const KEYWORDS: KeywordDef[] = [
+  // ... existing keywords ...
+  {
+    name: "loop",
+    category: "control",
+    doc: {
+      signature: "loop <count> ( <actions> )",
+      description: "Repeats actions a specified number of times.",
+      parameters: [
+        { name: "count", description: "Number of iterations" },
+        { name: "actions", description: "Actions to repeat" },
+      ],
+      example: "loop 5 (\n  set item = value\n)",
+    },
+  },
+];
+```
+
+### Step 2: Update Lexer
 
 **File:** `packages/core/src/core/lexer.ts`
 
 ```typescript
-// Add token definition
 export const Loop = createToken({
   name: "Loop",
   pattern: /loop/i,
   longer_alt: Identifier,
 });
 
-// Add to allTokens array (order matters!)
 export const allTokens = [
-  WhiteSpace,
-  LineComment,
-  BlockComment,
-  // ... existing keywords ...
-  Loop, // ← Add here
-  // ... rest of tokens ...
+  // ...
+  Loop, // Add here
+  // ...
 ];
 ```
 
-### 2. Update VSCode Extension
+### Step 3: Rebuild
 
-**Files to update:**
+```bash
+cd packages/language-definitions
+npm run build
 
-#### a) TextMate Grammar
-
-**File:** `packages/vscode-extension/syntaxes/mql.tmLanguage.json`
-
-```json
-{
-  "repository": {
-    "keywords": {
-      "patterns": [
-        {
-          "name": "keyword.control.mql",
-          "match": "\\b(from|to|transform|if|else|loop)\\b"
-          //                                        ^^^^ Add here
-        }
-      ]
-    }
-  }
-}
+cd ../core
+npm run build
 ```
 
-#### b) Hover Documentation (if applicable)
+### Step 4: Done! ✅
 
-**File:** `packages/vscode-extension/src/hoverProvider.ts`
-
-```typescript
-const KEYWORD_DOCS: Record<string, DocEntry> = {
-  // ... existing docs ...
-  loop: {
-    signature: "loop <count> ( <actions> )",
-    description: "Repeats actions a specified number of times.",
-    parameters: [
-      { name: "count", description: "Number of iterations" },
-      { name: "actions", description: "Actions to repeat" },
-    ],
-    example: "loop 5 (\n  set item = value\n)",
-  },
-};
-```
-
-### 3. Update Monaco Editor (Playground)
-
-**File:** `packages/playground/src/mqlLanguage.ts` (if exists)
-
-```typescript
-export const mqlLanguage = {
-  keywords: [
-    "from",
-    "to",
-    "transform",
-    "set",
-    "section",
-    "multiple",
-    "clone",
-    "delete",
-    "define",
-    "if",
-    "else",
-    "loop", // ← Add here
-  ],
-  // ...
-};
-```
-
-### 4. Update Documentation
-
-**Files:**
-
-- `README.md` - Add to MQL Reference section
-- `overview.md` - Add to Quick Reference
-- `packages/vscode-extension/README.md` - Add to Syntax Support section
+The VSCode extension and playground will automatically pick up the new keyword on their next build.
 
 ---
 
-## 📋 Checklist: Adding a New Function
+## 📋 Example: Adding a New Function
 
-When adding a new function (e.g., `trim`, `join`, `filter`):
+### Step 1: Add to Language Definitions
 
-### 1. Update the Function Registry ✅ REQUIRED
+**File:** `packages/language-definitions/src/functions.ts`
+
+```typescript
+export const FUNCTIONS: FunctionDef[] = [
+  // ... existing functions ...
+  {
+    name: "trim",
+    doc: {
+      signature: "trim(str)",
+      description: "Removes whitespace from both ends of a string.",
+      parameters: [{ name: "str", description: "The string to trim" }],
+      returns: "string",
+      example: 'trim("  hello  ")  // "hello"',
+    },
+  },
+];
+```
+
+### Step 2: Implement in Core
 
 **File:** `packages/core/src/core/functions.ts`
 
@@ -131,335 +131,114 @@ export const FUNCTIONS: Record<string, FunctionHandler> = {
 };
 ```
 
-### 2. Update VSCode Extension
+### Step 3: Rebuild
 
-#### a) TextMate Grammar
+```bash
+cd packages/language-definitions
+npm run build
 
-**File:** `packages/vscode-extension/syntaxes/mql.tmLanguage.json`
-
-```json
-{
-  "repository": {
-    "functions": {
-      "patterns": [
-        {
-          "name": "entity.name.function.mql",
-          "match": "\\b(substring|split|replace|text|number|uppercase|lowercase|xmlnode|extractnumber|if|trim)(?=\\s*\\()"
-          //                                                                                              ^^^^ Add here
-        }
-      ]
-    }
-  }
-}
+cd ../core
+npm run build
 ```
-
-#### b) Hover Documentation
-
-**File:** `packages/vscode-extension/src/hoverProvider.ts`
-
-```typescript
-const FUNCTION_DOCS: Record<string, DocEntry> = {
-  // ... existing docs ...
-  trim: {
-    signature: "trim(str)",
-    description: "Removes whitespace from both ends of a string.",
-    parameters: [{ name: "str", description: "The string to trim" }],
-    returns: "string",
-    example: 'trim("  hello  ")  // "hello"',
-  },
-};
-```
-
-### 3. Update Monaco Editor
-
-**File:** `packages/playground/src/mqlLanguage.ts`
-
-```typescript
-export const mqlLanguage = {
-  // ...
-  builtinFunctions: [
-    "substring",
-    "split",
-    "replace",
-    "text",
-    "number",
-    "uppercase",
-    "lowercase",
-    "xmlnode",
-    "extractnumber",
-    "if",
-    "trim", // ← Add here
-  ],
-  // ...
-};
-```
-
-### 4. Update Documentation
-
-Add function to:
-
-- `README.md` - Functions table
-- `overview.md` - Functions list
-- `packages/vscode-extension/README.md` - Built-in Functions section
 
 ---
 
-## 📋 Checklist: Adding a New Operator
+## 🔄 How It Works
 
-When adding a new operator (e.g., `%` for modulo, `**` for power):
+### Before (Manual Sync Required)
 
-### 1. Update the Lexer ✅ REQUIRED
-
-**File:** `packages/core/src/core/lexer.ts`
-
-```typescript
-// Add token (multi-char operators BEFORE single-char!)
-export const Power = createToken({ name: "Power", pattern: /\*\*/ });
-export const Modulo = createToken({ name: "Modulo", pattern: /%/ });
-
-// Add to allTokens in correct order
-export const allTokens = [
-  // ...
-  // Multi-character operators
-  EqualsEqualsEquals,
-  EqualsEquals,
-  Power, // ← Add multi-char BEFORE single-char
-  // ...
-  // Single-character operators
-  Times,
-  Modulo, // ← Add single-char here
-  // ...
-];
+```
+Add keyword → Update lexer → Update TextMate grammar → Update Monaco config → Update hover docs → Update README
 ```
 
-### 2. Update VSCode Extension
+### After (Automatic Sync)
 
-**File:** `packages/vscode-extension/syntaxes/mql.tmLanguage.json`
-
-```json
-{
-  "repository": {
-    "operators": {
-      "patterns": [
-        {
-          "name": "keyword.operator.arithmetic.mql",
-          "match": "(\\+|-|\\*\\*|\\*|/|%)"
-          //                ^^^^      ^ Add here (escape special chars!)
-        }
-      ]
-    }
-  }
-}
+```
+Add keyword → Update lexer → Rebuild language-definitions → Done!
+                    ↓
+            All consumers auto-update
 ```
 
-### 3. Update Monaco Editor
+### Consumers
 
-**File:** `packages/playground/src/mqlLanguage.ts`
+1. **VSCode Extension**
+   - Imports `@query-morph/language-definitions`
+   - Uses `generateHoverDocs()` for hover provider
+   - Uses keyword/function lists for TextMate grammar generation
 
-```typescript
-export const mqlLanguage = {
-  operators: [
-    "===",
-    "!==",
-    "==",
-    "!=",
-    "<=",
-    ">=",
-    "<",
-    ">",
-    "&&",
-    "||",
-    "!",
-    "+",
-    "-",
-    "**",
-    "*",
-    "/",
-    "%", // ← Add here
-    "=",
-  ],
-  // ...
-};
-```
+2. **Monaco Playground**
+   - Imports `@query-morph/language-definitions`
+   - Uses `generateMonacoLanguageConfig()` for syntax highlighting
+   - Uses hover docs for Monaco hover provider
 
-### 4. Update Documentation
-
-Add to operators list in all READMEs.
+3. **Documentation**
+   - Can generate reference docs from the definitions
+   - Always in sync with actual implementation
 
 ---
 
-## 📋 Checklist: Adding Comment Support (Already Done!)
+## 📁 File Structure
 
-Comments are already supported:
-
-- ✅ Lexer: `LineComment` and `BlockComment` tokens
-- ✅ VSCode: TextMate grammar with `comment.line.double-slash.mql` and `comment.block.mql`
-- ✅ Language config: `lineComment: "//"` and `blockComment: ["/*", "*/"]`
+```
+packages/language-definitions/
+├── src/
+│   ├── types.ts       # TypeScript interfaces
+│   ├── keywords.ts    # ✏️ EDIT: Add keywords here
+│   ├── functions.ts   # ✏️ EDIT: Add functions here
+│   ├── operators.ts   # ✏️ EDIT: Add operators here
+│   └── index.ts       # Exports + generators
+├── package.json
+├── tsconfig.json
+└── README.md
+```
 
 ---
 
-## 🔄 Automated Sync Strategy (Future Improvement)
+## 🎯 Quick Reference
 
-To reduce manual work, consider:
-
-### Option 1: Generate from Lexer
-
-Create a script that reads `lexer.ts` and generates:
-
-- TextMate grammar JSON
-- Monaco language definition
-- Hover documentation templates
-
-### Option 2: Shared Configuration
-
-Extract all language definitions to a single JSON file:
-
-```json
-{
-  "keywords": [
-    { "name": "from", "category": "control", "doc": "..." },
-    { "name": "to", "category": "control", "doc": "..." }
-  ],
-  "functions": [{ "name": "substring", "signature": "...", "doc": "..." }],
-  "operators": [{ "symbol": "===", "category": "comparison" }]
-}
-```
-
-Then generate all artifacts from this single source.
+| Task             | Files to Edit                                                                 | Commands                                                                 |
+| ---------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| **Add Keyword**  | 1. `language-definitions/src/keywords.ts`<br>2. `core/src/core/lexer.ts`      | `cd language-definitions && npm run build`<br>`cd core && npm run build` |
+| **Add Function** | 1. `language-definitions/src/functions.ts`<br>2. `core/src/core/functions.ts` | Same as above                                                            |
+| **Add Operator** | 1. `language-definitions/src/operators.ts`<br>2. `core/src/core/lexer.ts`     | Same as above                                                            |
 
 ---
 
-## 🎯 Quick Reference: Files to Update
+## ✅ Benefits
 
-| Change Type  | Core           | VSCode                                                 | Monaco           | Docs        |
-| ------------ | -------------- | ------------------------------------------------------ | ---------------- | ----------- |
-| **Keyword**  | `lexer.ts`     | `mql.tmLanguage.json`<br>`hoverProvider.ts`            | `mqlLanguage.ts` | All READMEs |
-| **Function** | `functions.ts` | `mql.tmLanguage.json`<br>`hoverProvider.ts`            | `mqlLanguage.ts` | All READMEs |
-| **Operator** | `lexer.ts`     | `mql.tmLanguage.json`                                  | `mqlLanguage.ts` | All READMEs |
-| **Comment**  | `lexer.ts`     | `mql.tmLanguage.json`<br>`language-configuration.json` | `mqlLanguage.ts` | -           |
-
----
-
-## 🧪 Testing Checklist
-
-After making changes:
-
-1. **Core Tests**
-
-   ```bash
-   cd packages/core
-   npm test
-   ```
-
-2. **VSCode Extension**
-   - Open `packages/vscode-extension` in VSCode
-   - Press F5 to launch Extension Development Host
-   - Test syntax highlighting, hover, and diagnostics
-
-3. **Playground**
-   ```bash
-   cd packages/playground
-   npm run dev
-   ```
-
-   - Verify syntax highlighting
-   - Test with examples
+✅ **Single source of truth** - Edit once, use everywhere  
+✅ **Type-safe** - Full TypeScript support  
+✅ **Auto-sync** - No more manual updates to multiple files  
+✅ **Consistent** - Impossible to have mismatched definitions  
+✅ **Documented** - Documentation lives with definitions  
+✅ **Testable** - Can unit test the definitions themselves
 
 ---
 
-## 📝 Example: Complete Workflow
+## 🚨 Important Notes
 
-**Scenario:** Adding `foreach` keyword
-
-### Step 1: Lexer
-
-```typescript
-// packages/core/src/core/lexer.ts
-export const Foreach = createToken({
-  name: "Foreach",
-  pattern: /foreach/i,
-  longer_alt: Identifier,
-});
-
-export const allTokens = [
-  // ...
-  Foreach, // Add after other keywords
-  // ...
-];
-```
-
-### Step 2: Parser (if needed)
-
-```typescript
-// packages/core/src/core/parser.ts
-// Add grammar rule for foreach
-```
-
-### Step 3: VSCode
-
-```json
-// packages/vscode-extension/syntaxes/mql.tmLanguage.json
-{
-  "match": "\\b(from|to|transform|if|else|foreach)\\b"
-}
-```
-
-```typescript
-// packages/vscode-extension/src/hoverProvider.ts
-foreach: {
-  signature: 'foreach <item> in <array> ( <actions> )',
-  description: 'Iterates over array elements.',
-  // ...
-}
-```
-
-### Step 4: Monaco
-
-```typescript
-// packages/playground/src/mqlLanguage.ts
-keywords: ['from', 'to', 'transform', 'foreach', ...]
-```
-
-### Step 5: Documentation
-
-Update all README files with the new keyword.
-
-### Step 6: Test
-
-- Run core tests
-- Test in VSCode extension
-- Test in playground
+1. **Always rebuild language-definitions first** before rebuilding consumers
+2. **Lexer order matters** for operators (multi-char before single-char)
+3. **Documentation is required** for all keywords and functions
+4. **Test in all environments** after adding new features
 
 ---
 
-## 🚨 Common Pitfalls
+## 📞 For Future LLMs
 
-1. **Operator Order in Lexer**: Multi-char operators MUST come before single-char
-   - ❌ Wrong: `Times` before `Power`
-   - ✅ Right: `Power` (`**`) before `Times` (`*`)
+When maintaining this codebase:
 
-2. **Regex Escaping**: Special chars need escaping in TextMate grammar
-   - ❌ Wrong: `"match": "**"`
-   - ✅ Right: `"match": "\\*\\*"`
+1. ✅ **DO** edit `packages/language-definitions/src/` files
+2. ✅ **DO** update the lexer in `packages/core/src/core/lexer.ts`
+3. ✅ **DO** rebuild language-definitions package
+4. ❌ **DON'T** manually edit TextMate grammars
+5. ❌ **DON'T** manually edit Monaco configs
+6. ❌ **DON'T** manually edit hover documentation
 
-3. **Case Sensitivity**: MQL keywords are case-insensitive
-   - Lexer: Use `/pattern/i` flag
-   - TextMate: Use `\\b(keyword)\\b` (case-insensitive by default)
-
-4. **Hover Docs**: Keep examples concise and practical
-
----
-
-## 📞 Need Help?
-
-If you're an LLM maintaining this codebase:
-
-1. Always check `lexer.ts` first
-2. Follow the checklists above
-3. Test in all three environments (core, VSCode, playground)
-4. Update documentation last
+The language-definitions package is the **single source of truth**!
 
 ---
 
 **Last Updated:** 2026-01-21  
-**Maintainer:** AI Assistant
+**Maintainer:** AI Assistant  
+**Package:** @query-morph/language-definitions v0.1.0
