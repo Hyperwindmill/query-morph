@@ -111,15 +111,34 @@
     "quoted-identifiers": {
       "patterns": [
         {
+          "comment": "JS-escaped quoted identifier (for embedded MQL)",
           "name": "variable.other.quoted.mql",
-          "begin": "(\\\\)?`",
+          "begin": "(\\\\)`",
           "beginCaptures": {
             "1": { "name": "punctuation.definition.variable.escape.mql" }
           },
-          "end": "(\\\\)?`",
+          "end": "(?<!\\\\)\\1`",
           "endCaptures": {
             "1": { "name": "punctuation.definition.variable.escape.mql" }
-          }
+          },
+          "patterns": [
+            {
+              "name": "constant.character.escape.mql",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "comment": "Standard quoted identifier (for raw MQL files)",
+          "name": "variable.other.quoted.mql",
+          "begin": "`",
+          "end": "(?<!\\\\)`",
+          "patterns": [
+            {
+              "name": "constant.character.escape.mql",
+              "match": "\\\\."
+            }
+          ]
         }
       ]
     }
