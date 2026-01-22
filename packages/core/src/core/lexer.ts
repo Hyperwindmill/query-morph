@@ -26,7 +26,7 @@ export const Identifier = createToken({
 
 export const QuotedIdentifier = createToken({
   name: 'QuotedIdentifier',
-  pattern: /`[^`]*`/,
+  pattern: /`([^`\\]|\\.)*`/,
 });
 
 export const From = createToken({ name: 'From', pattern: /from/i, longer_alt: Identifier });

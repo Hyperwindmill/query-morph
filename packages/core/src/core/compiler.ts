@@ -67,8 +67,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       return { name: ctx.Identifier[0].image, quoted: false };
     }
     if (ctx.QuotedIdentifier) {
-      // Remove backticks
-      return { name: ctx.QuotedIdentifier[0].image.slice(1, -1), quoted: true };
+      // Remove backticks and unescape
+      const name = ctx.QuotedIdentifier[0].image.slice(1, -1).replace(/\\(.)/g, '$1');
+      return { name, quoted: true };
     }
   }
 

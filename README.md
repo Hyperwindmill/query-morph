@@ -109,6 +109,8 @@ transform
   set `multiple` = true
   set `order-id` = root.`external-id`
 ```
+Backticks can even be escaped with \ when needed in a field name.\
+Natural template string escape of backticks is also supported in the vscode extension and does not break synthax highlighting.
 
 ### Functions
 
