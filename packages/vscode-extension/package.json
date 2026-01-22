@@ -2,7 +2,7 @@
   "name": "mql-vscode",
   "displayName": "MQL (Morph Query Language)",
   "description": "Syntax highlighting, diagnostics, hover documentation, and execution for Morph Query Language",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "publisher": "query-morph",
   "icon": "icon.png",
   "engines": {

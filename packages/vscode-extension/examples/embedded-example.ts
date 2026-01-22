@@ -27,7 +27,7 @@ const complexQuery = mql`
   from json to json
   transform
     // Define reusable values
-    define taxRate = 0.22
+    define \`taxRate\` = 0.22
     define discountThreshold = 100
     
     // Basic fields

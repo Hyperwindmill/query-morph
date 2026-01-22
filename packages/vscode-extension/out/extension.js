@@ -20992,9 +20992,9 @@ function requireJs () {
 }
 
 var jsExports = requireJs();
-var pt = /*@__PURE__*/getDefaultExportFromCjs(jsExports);
+var Lt = /*@__PURE__*/getDefaultExportFromCjs(jsExports);
 
-var it=createToken({name:"WhiteSpace",pattern:/\s+/,group:Lexer.SKIPPED}),rt=createToken({name:"LineComment",pattern:/\/\/[^\n\r]*/,group:Lexer.SKIPPED}),st=createToken({name:"BlockComment",pattern:/\/\*[\s\S]*?\*\//,group:Lexer.SKIPPED}),l=createToken({name:"Identifier",pattern:/[a-zA-Z_$][a-zA-Z0-9_.\[\]]*/}),m=createToken({name:"From",pattern:/from/i,longer_alt:l}),A=createToken({name:"To",pattern:/to/i,longer_alt:l}),R=createToken({name:"Transform",pattern:/transform/i,longer_alt:l}),N=createToken({name:"Set",pattern:/set/i,longer_alt:l}),O=createToken({name:"Section",pattern:/section/i,longer_alt:l}),y=createToken({name:"Multiple",pattern:/multiple/i,longer_alt:l}),B=createToken({name:"Clone",pattern:/clone/i,longer_alt:l}),C=createToken({name:"Delete",pattern:/delete/i,longer_alt:l}),M=createToken({name:"Define",pattern:/define/i,longer_alt:l}),f=createToken({name:"If",pattern:/if/i,longer_alt:l}),$=createToken({name:"Else",pattern:/else/i,longer_alt:l}),T=createToken({name:"EqualsEquals",pattern:/==/}),v=createToken({name:"EqualsEqualsEquals",pattern:/===/}),P=createToken({name:"NotEquals",pattern:/!=/}),w=createToken({name:"NotEqualsEquals",pattern:/!==/}),q=createToken({name:"LessThanOrEqual",pattern:/<=/}),I=createToken({name:"GreaterThanOrEqual",pattern:/>=/}),x=createToken({name:"LessThan",pattern:/</}),_=createToken({name:"GreaterThan",pattern:/>/}),b=createToken({name:"And",pattern:/&&/}),D=createToken({name:"Or",pattern:/\|\|/}),F=createToken({name:"Not",pattern:/!/}),g=createToken({name:"Equals",pattern:/=/}),z=createToken({name:"Plus",pattern:/\+/}),U=createToken({name:"Minus",pattern:/-/}),j=createToken({name:"Times",pattern:/\*/}),Y=createToken({name:"Divide",pattern:/\//}),h=createToken({name:"LParen",pattern:/\(/}),u=createToken({name:"RParen",pattern:/\)/}),S=createToken({name:"Comma",pattern:/,/}),d=createToken({name:"StringLiteral",pattern:/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/}),G=createToken({name:"NumericLiteral",pattern:/-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/}),k=[it,rt,st,m,A,R,N,O,y,B,C,M,f,$,v,T,w,P,q,I,b,D,g,x,_,F,z,U,j,Y,h,u,S,d,G,l],J=new Lexer(k);var V=class extends CstParser{constructor(){super(k),this.performSelfAnalysis();}query=this.RULE("query",()=>{this.CONSUME(m),this.SUBRULE(this.typeFormat,{LABEL:"sourceType"}),this.CONSUME(A),this.SUBRULE1(this.typeFormat,{LABEL:"targetType"}),this.OPTION(()=>{this.CONSUME(R),this.MANY(()=>{this.SUBRULE(this.action);});});});typeFormat=this.RULE("typeFormat",()=>{this.SUBRULE(this.anyIdentifier,{LABEL:"name"}),this.OPTION(()=>{this.CONSUME(h),this.CONSUME(d,{LABEL:"parameter"}),this.CONSUME(u);});});anyIdentifier=this.RULE("anyIdentifier",()=>{this.CONSUME(l);});literal=this.RULE("literal",()=>{this.OR([{ALT:()=>this.CONSUME(d)},{ALT:()=>this.CONSUME(G)}]);});action=this.RULE("action",()=>{this.OR([{ALT:()=>this.SUBRULE(this.setRule)},{ALT:()=>this.SUBRULE(this.sectionRule)},{ALT:()=>this.SUBRULE(this.cloneRule)},{ALT:()=>this.SUBRULE(this.deleteRule)},{ALT:()=>this.SUBRULE(this.ifAction)},{ALT:()=>this.SUBRULE(this.defineRule)}]);});deleteRule=this.RULE("deleteRule",()=>{this.CONSUME(C),this.SUBRULE(this.anyIdentifier,{LABEL:"field"});});ifAction=this.RULE("ifAction",()=>{this.CONSUME(f),this.CONSUME(h),this.SUBRULE(this.expression,{LABEL:"condition"}),this.CONSUME(u),this.CONSUME2(h),this.MANY(()=>{this.SUBRULE(this.action,{LABEL:"thenActions"});}),this.CONSUME2(u),this.OPTION(()=>{this.CONSUME($),this.CONSUME3(h),this.MANY2(()=>{this.SUBRULE2(this.action,{LABEL:"elseActions"});}),this.CONSUME3(u);});});cloneRule=this.RULE("cloneRule",()=>{this.CONSUME(B),this.OPTION(()=>{this.CONSUME(h),this.MANY_SEP({SEP:S,DEF:()=>{this.SUBRULE(this.anyIdentifier,{LABEL:"fields"});}}),this.CONSUME(u);});});setRule=this.RULE("setRule",()=>{this.CONSUME(N),this.SUBRULE(this.anyIdentifier,{LABEL:"left"}),this.CONSUME(g),this.SUBRULE(this.expression,{LABEL:"right"});});expression=this.RULE("expression",()=>{this.SUBRULE(this.logicalOr);});logicalOr=this.RULE("logicalOr",()=>{this.SUBRULE(this.logicalAnd,{LABEL:"lhs"}),this.MANY(()=>{this.CONSUME(D),this.SUBRULE1(this.logicalAnd,{LABEL:"rhs"});});});logicalAnd=this.RULE("logicalAnd",()=>{this.SUBRULE(this.comparison,{LABEL:"lhs"}),this.MANY(()=>{this.CONSUME(b),this.SUBRULE1(this.comparison,{LABEL:"rhs"});});});comparison=this.RULE("comparison",()=>{this.SUBRULE(this.addition,{LABEL:"lhs"}),this.OPTION(()=>{this.OR([{ALT:()=>this.CONSUME(T,{LABEL:"ops"})},{ALT:()=>this.CONSUME(v,{LABEL:"ops"})},{ALT:()=>this.CONSUME(P,{LABEL:"ops"})},{ALT:()=>this.CONSUME(w,{LABEL:"ops"})},{ALT:()=>this.CONSUME(q,{LABEL:"ops"})},{ALT:()=>this.CONSUME(I,{LABEL:"ops"})},{ALT:()=>this.CONSUME(x,{LABEL:"ops"})},{ALT:()=>this.CONSUME(_,{LABEL:"ops"})}]),this.SUBRULE1(this.addition,{LABEL:"rhs"});});});addition=this.RULE("addition",()=>{this.SUBRULE(this.multiplication,{LABEL:"lhs"}),this.MANY(()=>{this.OR([{ALT:()=>this.CONSUME(z,{LABEL:"ops"})},{ALT:()=>this.CONSUME(U,{LABEL:"ops"})}]),this.SUBRULE1(this.multiplication,{LABEL:"rhs"});});});multiplication=this.RULE("multiplication",()=>{this.SUBRULE(this.unaryExpression,{LABEL:"lhs"}),this.MANY(()=>{this.OR([{ALT:()=>this.CONSUME(j,{LABEL:"ops"})},{ALT:()=>this.CONSUME(Y,{LABEL:"ops"})}]),this.SUBRULE1(this.unaryExpression,{LABEL:"rhs"});});});unaryExpression=this.RULE("unaryExpression",()=>{this.OPTION(()=>{this.OR([{ALT:()=>this.CONSUME(U,{LABEL:"sign"})},{ALT:()=>this.CONSUME(F,{LABEL:"sign"})}]);}),this.SUBRULE(this.atomic);});atomic=this.RULE("atomic",()=>{this.OR([{ALT:()=>this.SUBRULE(this.literal)},{GATE:()=>this.LA(2).tokenType===h,ALT:()=>this.SUBRULE(this.functionCall)},{ALT:()=>this.SUBRULE(this.anyIdentifier)},{ALT:()=>{this.CONSUME(h),this.SUBRULE(this.expression),this.CONSUME(u);}}]);});functionCall=this.RULE("functionCall",()=>{this.OR([{ALT:()=>this.CONSUME(l,{LABEL:"name"})},{ALT:()=>this.CONSUME(f,{LABEL:"name"})}]),this.CONSUME(h),this.MANY_SEP({SEP:S,DEF:()=>{this.SUBRULE(this.expression,{LABEL:"args"});}}),this.CONSUME(u);});sectionRule=this.RULE("sectionRule",()=>{this.CONSUME(O),this.OPTION(()=>{this.CONSUME(y);}),this.SUBRULE(this.anyIdentifier,{LABEL:"sectionName"}),this.CONSUME(h),this.MANY(()=>{this.SUBRULE(this.action);}),this.CONSUME(u),this.OPTION1(()=>{this.CONSUME(m),this.SUBRULE1(this.anyIdentifier,{LABEL:"followPath"});});});defineRule=this.RULE("defineRule",()=>{this.CONSUME(M),this.SUBRULE(this.anyIdentifier,{LABEL:"left"}),this.CONSUME(g),this.SUBRULE(this.expression,{LABEL:"right"});})},c=new V;var Q={substring:i=>{if(i.length<2)throw new Error("substring() requires at least 2 arguments (string, start, [length])");let[t,e,r]=i;return r!==void 0?`String(${t}).slice(${e}, (${e}) + (${r}))`:`String(${t}).slice(${e})`},if:i=>{if(i.length!==3)throw new Error("if() requires exactly 3 arguments (condition, trueValue, falseValue)");let[t,e,r]=i;return `((${t}) ? (${e}) : (${r}))`},text:i=>{if(i.length!==1)throw new Error("text() requires exactly 1 argument (string or number)");let[t]=i;return `String(${t})`},replace:i=>{if(i.length!==3)throw new Error("replace() requires exactly 3 arguments (string, search, replacement)");let[t,e,r]=i;return `String(${t}).replace(${e}, ${r})`},number:i=>{if(i.length!==1)throw new Error("number() requires exactly 1 argument (string)");let[t]=i;return `Number(${t})`},extractnumber:i=>{if(i.length!==1)throw new Error("extractNumber() requires exactly 1 argument (string)");let[t]=i;return `Number(String(${t}).match(/\\d+(\\.\\d+)?/)[0])`},uppercase:i=>{if(i.length!==1)throw new Error("uppercase() requires exactly 1 argument (string)");let[t]=i;return `String(${t}).toUpperCase()`},lowercase:i=>{if(i.length!==1)throw new Error("lowercase() requires exactly 1 argument (string)");let[t]=i;return `String(${t}).toLowerCase()`},xmlnode:i=>{if(i.length<1)throw new Error("xmlnode() requires at least 1 argument (string)");let t=i[0],e=[...i.slice(1)],r="";if(e.length>0){let[s,a]=[e,2];s=[...Array(Math.ceil(s.length/a))].map(o=>s.splice(0,a)).map(([o,p])=>{let E=o;return o.startsWith('"')||o.startsWith("'")?E=`"$${o.slice(1,-1)}"`:E=`["$"+${o}]`,`${E}:${p||"null"}`}),r=","+s.join(",");}else return t;return `{_:${t}${r}}`},split:i=>{if(i.length<1)throw new Error("split() requires at least 1 argument (string)");let[t,e,r]=i,s=e!==void 0?e:'""',a=r!==void 0?`, ${r}`:"";return `String(${t}).split(${s}${a})`}};var ot=c.getBaseCstVisitorConstructor(),K=class extends ot{constructor(){super(),this.validateVisitor();}query(t){let e=t.action?t.action.map(et=>this.visit(et)):[];t.Transform||e.push("Object.assign(target, source);");let r=this.visit(t.sourceType),s=this.visit(t.targetType),a=r.name,o=s.name,p=s.parameter?`'${s.parameter}'`:"undefined";return {code:`
+var at=createToken({name:"WhiteSpace",pattern:/\s+/,group:Lexer.SKIPPED}),ot=createToken({name:"LineComment",pattern:/\/\/[^\n\r]*/,group:Lexer.SKIPPED}),lt=createToken({name:"BlockComment",pattern:/\/\*[\s\S]*?\*\//,group:Lexer.SKIPPED}),h=createToken({name:"Identifier",pattern:/[a-zA-Z_$][a-zA-Z0-9_.\[\]]*/}),N=createToken({name:"QuotedIdentifier",pattern:/`([^`\\]|\\.)*`/}),L=createToken({name:"From",pattern:/from/i,longer_alt:h}),S=createToken({name:"To",pattern:/to/i,longer_alt:h}),d=createToken({name:"Transform",pattern:/transform/i,longer_alt:h}),B=createToken({name:"Set",pattern:/set/i,longer_alt:h}),T=createToken({name:"Section",pattern:/section/i,longer_alt:h}),C=createToken({name:"Multiple",pattern:/multiple/i,longer_alt:h}),M=createToken({name:"Clone",pattern:/clone/i,longer_alt:h}),v=createToken({name:"Delete",pattern:/delete/i,longer_alt:h}),q=createToken({name:"Define",pattern:/define/i,longer_alt:h}),A=createToken({name:"If",pattern:/if/i,longer_alt:h}),w=createToken({name:"Else",pattern:/else/i,longer_alt:h}),P=createToken({name:"EqualsEquals",pattern:/==/}),b=createToken({name:"EqualsEqualsEquals",pattern:/===/}),I=createToken({name:"NotEquals",pattern:/!=/}),x=createToken({name:"NotEqualsEquals",pattern:/!==/}),_=createToken({name:"LessThanOrEqual",pattern:/<=/}),F=createToken({name:"GreaterThanOrEqual",pattern:/>=/}),D=createToken({name:"LessThan",pattern:/</}),j=createToken({name:"GreaterThan",pattern:/>/}),z=createToken({name:"And",pattern:/&&/}),G=createToken({name:"Or",pattern:/\|\|/}),Y=createToken({name:"Not",pattern:/!/}),y=createToken({name:"Equals",pattern:/=/}),k=createToken({name:"Plus",pattern:/\+/}),R=createToken({name:"Minus",pattern:/-/}),Q=createToken({name:"Times",pattern:/\*/}),V=createToken({name:"Divide",pattern:/\//}),u=createToken({name:"LParen",pattern:/\(/}),c=createToken({name:"RParen",pattern:/\)/}),O=createToken({name:"Comma",pattern:/,/}),$=createToken({name:"StringLiteral",pattern:/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/}),W=createToken({name:"NumericLiteral",pattern:/-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/}),K=[at,ot,lt,L,S,d,B,T,C,M,v,q,A,w,b,P,x,I,_,F,z,G,y,D,j,Y,k,R,Q,V,u,c,O,$,W,N,h],et=new Lexer(K);var H=class extends CstParser{constructor(){super(K),this.performSelfAnalysis();}query=this.RULE("query",()=>{this.CONSUME(L),this.SUBRULE(this.typeFormat,{LABEL:"sourceType"}),this.CONSUME(S),this.SUBRULE1(this.typeFormat,{LABEL:"targetType"}),this.OPTION(()=>{this.CONSUME(d),this.MANY(()=>{this.SUBRULE(this.action);});});});typeFormat=this.RULE("typeFormat",()=>{this.SUBRULE(this.anyIdentifier,{LABEL:"name"}),this.OPTION(()=>{this.CONSUME(u),this.CONSUME($,{LABEL:"parameter"}),this.CONSUME(c);});});anyIdentifier=this.RULE("anyIdentifier",()=>{this.OR([{ALT:()=>this.CONSUME(h)},{ALT:()=>this.CONSUME(N)}]);});literal=this.RULE("literal",()=>{this.OR([{ALT:()=>this.CONSUME($)},{ALT:()=>this.CONSUME(W)}]);});action=this.RULE("action",()=>{this.OR([{ALT:()=>this.SUBRULE(this.setRule)},{ALT:()=>this.SUBRULE(this.sectionRule)},{ALT:()=>this.SUBRULE(this.cloneRule)},{ALT:()=>this.SUBRULE(this.deleteRule)},{ALT:()=>this.SUBRULE(this.ifAction)},{ALT:()=>this.SUBRULE(this.defineRule)}]);});deleteRule=this.RULE("deleteRule",()=>{this.CONSUME(v),this.SUBRULE(this.anyIdentifier,{LABEL:"field"});});ifAction=this.RULE("ifAction",()=>{this.CONSUME(A),this.CONSUME(u),this.SUBRULE(this.expression,{LABEL:"condition"}),this.CONSUME(c),this.CONSUME2(u),this.MANY(()=>{this.SUBRULE(this.action,{LABEL:"thenActions"});}),this.CONSUME2(c),this.OPTION(()=>{this.CONSUME(w),this.CONSUME3(u),this.MANY2(()=>{this.SUBRULE2(this.action,{LABEL:"elseActions"});}),this.CONSUME3(c);});});cloneRule=this.RULE("cloneRule",()=>{this.CONSUME(M),this.OPTION(()=>{this.CONSUME(u),this.MANY_SEP({SEP:O,DEF:()=>{this.SUBRULE(this.anyIdentifier,{LABEL:"fields"});}}),this.CONSUME(c);});});setRule=this.RULE("setRule",()=>{this.CONSUME(B),this.SUBRULE(this.anyIdentifier,{LABEL:"left"}),this.CONSUME(y),this.SUBRULE(this.expression,{LABEL:"right"});});expression=this.RULE("expression",()=>{this.SUBRULE(this.logicalOr);});logicalOr=this.RULE("logicalOr",()=>{this.SUBRULE(this.logicalAnd,{LABEL:"lhs"}),this.MANY(()=>{this.CONSUME(G),this.SUBRULE1(this.logicalAnd,{LABEL:"rhs"});});});logicalAnd=this.RULE("logicalAnd",()=>{this.SUBRULE(this.comparison,{LABEL:"lhs"}),this.MANY(()=>{this.CONSUME(z),this.SUBRULE1(this.comparison,{LABEL:"rhs"});});});comparison=this.RULE("comparison",()=>{this.SUBRULE(this.addition,{LABEL:"lhs"}),this.OPTION(()=>{this.OR([{ALT:()=>this.CONSUME(P,{LABEL:"ops"})},{ALT:()=>this.CONSUME(b,{LABEL:"ops"})},{ALT:()=>this.CONSUME(I,{LABEL:"ops"})},{ALT:()=>this.CONSUME(x,{LABEL:"ops"})},{ALT:()=>this.CONSUME(_,{LABEL:"ops"})},{ALT:()=>this.CONSUME(F,{LABEL:"ops"})},{ALT:()=>this.CONSUME(D,{LABEL:"ops"})},{ALT:()=>this.CONSUME(j,{LABEL:"ops"})}]),this.SUBRULE1(this.addition,{LABEL:"rhs"});});});addition=this.RULE("addition",()=>{this.SUBRULE(this.multiplication,{LABEL:"lhs"}),this.MANY(()=>{this.OR([{ALT:()=>this.CONSUME(k,{LABEL:"ops"})},{ALT:()=>this.CONSUME(R,{LABEL:"ops"})}]),this.SUBRULE1(this.multiplication,{LABEL:"rhs"});});});multiplication=this.RULE("multiplication",()=>{this.SUBRULE(this.unaryExpression,{LABEL:"lhs"}),this.MANY(()=>{this.OR([{ALT:()=>this.CONSUME(Q,{LABEL:"ops"})},{ALT:()=>this.CONSUME(V,{LABEL:"ops"})}]),this.SUBRULE1(this.unaryExpression,{LABEL:"rhs"});});});unaryExpression=this.RULE("unaryExpression",()=>{this.OPTION(()=>{this.OR([{ALT:()=>this.CONSUME(R,{LABEL:"sign"})},{ALT:()=>this.CONSUME(Y,{LABEL:"sign"})}]);}),this.SUBRULE(this.atomic);});atomic=this.RULE("atomic",()=>{this.OR([{ALT:()=>this.SUBRULE(this.literal)},{GATE:()=>this.LA(2).tokenType===u,ALT:()=>this.SUBRULE(this.functionCall)},{ALT:()=>this.SUBRULE(this.anyIdentifier)},{ALT:()=>{this.CONSUME(u),this.SUBRULE(this.expression),this.CONSUME(c);}}]);});functionCall=this.RULE("functionCall",()=>{this.OR([{ALT:()=>this.CONSUME(h,{LABEL:"name"})},{ALT:()=>this.CONSUME(A,{LABEL:"name"})}]),this.CONSUME(u),this.MANY_SEP({SEP:O,DEF:()=>{this.SUBRULE(this.expression,{LABEL:"args"});}}),this.CONSUME(c);});sectionRule=this.RULE("sectionRule",()=>{this.CONSUME(T),this.OPTION(()=>{this.CONSUME(C);}),this.SUBRULE(this.anyIdentifier,{LABEL:"sectionName"}),this.CONSUME(u),this.OPTION1(()=>{this.CONSUME(L,{LABEL:"subqueryFrom"}),this.SUBRULE(this.typeFormat,{LABEL:"subquerySourceType"}),this.CONSUME(S,{LABEL:"subqueryTo"}),this.SUBRULE1(this.typeFormat,{LABEL:"subqueryTargetType"}),this.OPTION2(()=>{this.CONSUME(d,{LABEL:"subqueryTransform"});});}),this.MANY(()=>{this.SUBRULE(this.action);}),this.CONSUME(c),this.OPTION3(()=>{this.CONSUME1(L,{LABEL:"followFrom"}),this.SUBRULE2(this.anyIdentifier,{LABEL:"followPath"});});});defineRule=this.RULE("defineRule",()=>{this.CONSUME(q),this.SUBRULE(this.anyIdentifier,{LABEL:"left"}),this.CONSUME(y),this.SUBRULE(this.expression,{LABEL:"right"});})},E=new H;var rt={substring:r=>{if(r.length<2)throw new Error("substring() requires at least 2 arguments (string, start, [length])");let[t,e,i]=r;return i!==void 0?`String(${t}).slice(${e}, (${e}) + (${i}))`:`String(${t}).slice(${e})`},if:r=>{if(r.length!==3)throw new Error("if() requires exactly 3 arguments (condition, trueValue, falseValue)");let[t,e,i]=r;return `((${t}) ? (${e}) : (${i}))`},text:r=>{if(r.length!==1)throw new Error("text() requires exactly 1 argument (string or number)");let[t]=r;return `String(${t})`},replace:r=>{if(r.length!==3)throw new Error("replace() requires exactly 3 arguments (string, search, replacement)");let[t,e,i]=r;return `String(${t}).replace(${e}, ${i})`},number:r=>{if(r.length!==1)throw new Error("number() requires exactly 1 argument (string)");let[t]=r;return `Number(${t})`},extractnumber:r=>{if(r.length!==1)throw new Error("extractNumber() requires exactly 1 argument (string)");let[t]=r;return `Number(String(${t}).match(/\\d+(\\.\\d+)?/)[0])`},uppercase:r=>{if(r.length!==1)throw new Error("uppercase() requires exactly 1 argument (string)");let[t]=r;return `String(${t}).toUpperCase()`},lowercase:r=>{if(r.length!==1)throw new Error("lowercase() requires exactly 1 argument (string)");let[t]=r;return `String(${t}).toLowerCase()`},xmlnode:r=>{if(r.length<1)throw new Error("xmlnode() requires at least 1 argument (string)");let t=r[0],e=[...r.slice(1)],i="";if(e.length>0){let[s,a]=[e,2];s=[...Array(Math.ceil(s.length/a))].map(o=>s.splice(0,a)).map(([o,l])=>{let p=o;return o.startsWith('"')||o.startsWith("'")?p=`"$${o.slice(1,-1)}"`:p=`["$"+${o}]`,`${p}:${l||"null"}`}),i=","+s.join(",");}else return t;return `{_:${t}${i}}`},split:r=>{if(r.length<1)throw new Error("split() requires at least 1 argument (string)");let[t,e,i]=r,s=e!==void 0?e:'""',a=i!==void 0?`, ${i}`:"";return `String(${t}).split(${s}${a})`},to_base64:r=>{if(r.length!==1)throw new Error("to_base64() requires exactly 1 argument (string)");let[t]=r;return `(typeof btoa === 'function' ? btoa(unescape(encodeURIComponent(String(${t})))) : Buffer.from(String(${t}), 'utf-8').toString('base64'))`},from_base64:r=>{if(r.length!==1)throw new Error("from_base64() requires exactly 1 argument (string)");let[t]=r;return `(typeof atob === 'function' ? decodeURIComponent(escape(atob(String(${t})))) : Buffer.from(String(${t}), 'base64').toString('utf-8'))`},aslist:r=>{if(r.length!==1)throw new Error("aslist() requires exactly 1 argument");let[t]=r;return `(Array.isArray(${t}) ? ${t} : (${t} == null ? [] : [${t}]))`}};var ct=E.getBaseCstVisitorConstructor(),J=class extends ct{constructor(){super(),this.validateVisitor();}query(t){let e=t.action?t.action.map(m=>this.visit(m)):[];t.Transform||e.push("Object.assign(target, source);");let i=this.visit(t.sourceType),s=this.visit(t.targetType),a=i.name,o=s.name,l=s.parameter?`'${s.parameter}'`:"undefined";return {code:`
       return function(input, env) {
         // 1. Parse Input
         const source = env.parse('${a}', input);
@@ -21005,34 +21005,56 @@ var it=createToken({name:"WhiteSpace",pattern:/\s+/,group:Lexer.SKIPPED}),rt=cre
         `)}
 
         // 3. Serialize Output
-        return env.serialize('${o}', target ${p!=="undefined"?`, { rootGenerated: ${p} }`:""} );
+        return env.serialize('${o}', target ${l!=="undefined"?`, { rootGenerated: ${l} }`:""} );
       }
-    `,sourceType:r,targetType:s}}typeFormat(t){let e=this.visit(t.name),r;return t.parameter&&(r=t.parameter[0].image.slice(1,-1)),{name:e,parameter:r}}anyIdentifier(t){if(t.Identifier)return t.Identifier[0].image;if(t.Static)return t.Static[0].image}literal(t){if(t.StringLiteral)return t.StringLiteral[0].image;if(t.NumericLiteral)return t.NumericLiteral[0].image}action(t){if(t.setRule)return this.visit(t.setRule);if(t.sectionRule)return this.visit(t.sectionRule);if(t.cloneRule)return this.visit(t.cloneRule);if(t.ifAction)return this.visit(t.ifAction);if(t.deleteRule)return this.visit(t.deleteRule);if(t.defineRule)return this.visit(t.defineRule)}deleteRule(t){return `delete target.${this.visit(t.field)};`}ifAction(t){let e=this.visit(t.condition),r=t.thenActions?t.thenActions.map(a=>this.visit(a)).join(`
+    `,sourceType:i,targetType:s}}typeFormat(t){let e=this.visit(t.name),i;return t.parameter&&(i=t.parameter[0].image.slice(1,-1)),{name:e.name,parameter:i}}genAccess(t,e){return e.quoted||e.name.includes("-")&&!e.name.includes(".")&&!e.name.includes("[")?`${t}["${e.name}"]`:`${t}.${e.name}`}anyIdentifier(t){if(t.Identifier)return {name:t.Identifier[0].image,quoted:false};if(t.QuotedIdentifier)return {name:t.QuotedIdentifier[0].image.slice(1,-1).replace(/\\(.)/g,"$1"),quoted:true}}literal(t){if(t.StringLiteral)return t.StringLiteral[0].image;if(t.NumericLiteral)return t.NumericLiteral[0].image}action(t){if(t.setRule)return this.visit(t.setRule);if(t.sectionRule)return this.visit(t.sectionRule);if(t.cloneRule)return this.visit(t.cloneRule);if(t.ifAction)return this.visit(t.ifAction);if(t.deleteRule)return this.visit(t.deleteRule);if(t.defineRule)return this.visit(t.defineRule)}deleteRule(t){let e=this.visit(t.field);return `delete ${this.genAccess("target",e)};`}ifAction(t){let e=this.visit(t.condition),i=t.thenActions?t.thenActions.map(a=>this.visit(a)).join(`
 `):"",s=t.elseActions?`else { ${t.elseActions.map(a=>this.visit(a)).join(`
 `)} }`:"";return `if (${e}) {
-       ${r}
-     } ${s}`}cloneRule(t){return t.fields?t.fields.map(r=>this.visit(r)).map(r=>`target.${r} = source.${r};`).join(`
-        `):"Object.assign(target, source);"}setRule(t){let e=this.visit(t.left),r=this.visit(t.right);return `target.${e} = ${r};`}defineRule(t){let e=this.visit(t.left),r=this.visit(t.right);return `source.${e} = ${r};`}expression(t){return this.visit(t.logicalOr)}logicalOr(t){let e=this.visit(t.lhs);if(t.rhs)for(let r=0;r<t.rhs.length;r++){let s=this.visit(t.rhs[r]);e=`${e} || ${s}`;}return e}logicalAnd(t){let e=this.visit(t.lhs);if(t.rhs)for(let r=0;r<t.rhs.length;r++){let s=this.visit(t.rhs[r]);e=`${e} && ${s}`;}return e}comparison(t){let e=this.visit(t.lhs);if(t.rhs){let r=t.ops[0].image,s=this.visit(t.rhs[0]);e=`${e} ${r} ${s}`;}return e}addition(t){let e=this.visit(t.lhs);if(t.rhs)for(let r=0;r<t.rhs.length;r++){let s=t.ops[r].image,a=this.visit(t.rhs[r]);e=`${e} ${s} ${a}`;}return e}multiplication(t){let e=this.visit(t.lhs);if(t.rhs)for(let r=0;r<t.rhs.length;r++){let s=t.ops[r].image,a=this.visit(t.rhs[r]);e=`${e} ${s} ${a}`;}return e}unaryExpression(t){let e=this.visit(t.atomic);return t.sign?`${t.sign[0].image}${e}`:e}atomic(t){if(t.literal)return this.visit(t.literal);if(t.functionCall)return this.visit(t.functionCall);if(t.anyIdentifier){let e=this.visit(t.anyIdentifier);return ["true","false","null"].includes(e)?e:`source.${e}`}if(t.expression)return `(${this.visit(t.expression)})`}functionCall(t){let e=t.name[0].image,r=e.toLowerCase(),s=t.args?t.args.map(o=>this.visit(o)):[],a=Q[r];if(a)return a(s);throw new Error(`Unknown function: ${e}`)}sectionRule(t){let e=this.visit(t.sectionName),r=t.followPath?this.visit(t.followPath):e,s=r==="parent"?"":"."+r,a=!!t.Multiple,o=t.action?t.action.map(p=>this.visit(p)):[];return a?`
-      if (source${s} && Array.isArray(source${s})) {
-        target.${e} = source${s}.map(item => {
+       ${i}
+     } ${s}`}cloneRule(t){return t.fields?t.fields.map(i=>this.visit(i)).map(i=>`${this.genAccess("target",i)} = ${this.genAccess("source",i)};`).join(`
+        `):"Object.assign(target, source);"}setRule(t){let e=this.visit(t.left),i=this.visit(t.right);return `${this.genAccess("target",e)} = ${i};`}defineRule(t){let e=this.visit(t.left),i=this.visit(t.right);return `${this.genAccess("source",e)} = ${i};`}expression(t){return this.visit(t.logicalOr)}logicalOr(t){let e=this.visit(t.lhs);if(t.rhs)for(let i=0;i<t.rhs.length;i++){let s=this.visit(t.rhs[i]);e=`${e} || ${s}`;}return e}logicalAnd(t){let e=this.visit(t.lhs);if(t.rhs)for(let i=0;i<t.rhs.length;i++){let s=this.visit(t.rhs[i]);e=`${e} && ${s}`;}return e}comparison(t){let e=this.visit(t.lhs);if(t.rhs){let i=t.ops[0].image,s=this.visit(t.rhs[0]);e=`${e} ${i} ${s}`;}return e}addition(t){let e=this.visit(t.lhs);if(t.rhs)for(let i=0;i<t.rhs.length;i++){let s=t.ops[i].image,a=this.visit(t.rhs[i]);e=`${e} ${s} ${a}`;}return e}multiplication(t){let e=this.visit(t.lhs);if(t.rhs)for(let i=0;i<t.rhs.length;i++){let s=t.ops[i].image,a=this.visit(t.rhs[i]);e=`${e} ${s} ${a}`;}return e}unaryExpression(t){let e=this.visit(t.atomic);return t.sign?`${t.sign[0].image}${e}`:e}atomic(t){if(t.literal)return this.visit(t.literal);if(t.functionCall)return this.visit(t.functionCall);if(t.anyIdentifier){let e=this.visit(t.anyIdentifier);return ["true","false","null"].includes(e.name)&&!e.quoted?e.name:this.genAccess("source",e)}if(t.expression)return `(${this.visit(t.expression)})`}functionCall(t){let e=t.name[0].image,i=(e.startsWith("`")?e.slice(1,-1):e).toLowerCase(),s=t.args?t.args.map(o=>this.visit(o)):[],a=rt[i];if(a)return a(s);throw new Error(`Unknown function: ${e}`)}sectionRule(t){let e=this.visit(t.sectionName);e.name;let s=this.genAccess("target",e),a=t.followPath?this.visit(t.followPath):e;a.name==="parent"?"":"."+a.name;let l=a.name==="parent"?"source":this.genAccess("source",a),p=!!t.Multiple,m=t.action?t.action.map(f=>this.visit(f)):[];if(!!t.subqueryFrom){let f=this.visit(t.subquerySourceType),g=this.visit(t.subqueryTargetType);t.subqueryTransform||m.push("Object.assign(target, source);");let tt=g.parameter?`, { rootGenerated: "${g.parameter}" }`:"";return p?`
+        if (${l} && Array.isArray(${l})) {
+          ${s} = ${l}.map(item => {
+            const subSource = env.parse('${f.name}', item);
+            const source = subSource;
+            const target = {};
+            ${m.join(`
+            `)}
+            return env.serialize('${g.name}', target${tt});
+          });
+        }
+        `:`
+        if (${l}) {
+          ${s} = (function(innerSource) {
+            const subSource = env.parse('${f.name}', innerSource);
+            const source = subSource;
+            const target = {};
+            ${m.join(`
+            `)}
+            return env.serialize('${g.name}', target${tt});
+          })(${l});
+        }
+        `}return p?`
+      if (${l} && Array.isArray(${l})) {
+        ${s} = ${l}.map(item => {
           const source = item;
           const target = {};
-          ${o.join(`
+          ${m.join(`
           `)}
           return target;
         });
       }
       `:`
-      if (source${s}) {
-        target.${e} = (function(innerSource) {
+      if (${l}) {
+        ${s} = (function(innerSource) {
           const source = innerSource;
           const target = {};
-          ${o.join(`
+          ${m.join(`
           `)}
           return target;
-        })(source${s});
+        })(${l});
       }
-      `}},X=new K;var Z={};function W(i,t){Z[i.toLowerCase()]=t;}function H(i){let t=Z[i.toLowerCase()];if(!t)throw new Error(`No adapter found for format: ${i}`);return t}W("json",{parse:i=>typeof i!="string"?i:JSON.parse(i),serialize:i=>JSON.stringify(i,null,2)});var ut=new Builder({ignoreAttributes:false,attributeNamePrefix:"$",textNodeName:"_",format:true});W("xml",{parse:i=>typeof i!="string"?i:new XMLParser({ignoreAttributes:false,removeNSPrefix:true}).parse(i),serialize:(i,t)=>{let e=t?.rootGenerated??"root";return ut.build({[e]:i})}});W("object",{parse:i=>i,serialize:i=>i});async function Bt(i,t){let e=J.tokenize(i);if(e.errors.length>0)throw new Error(`Lexing errors: ${e.errors[0].message}`);c.input=e.tokens;let r=c.query();if(c.errors.length>0)throw new Error(`Parsing errors: ${c.errors[0].message}`);let{code:s}=X.visit(r),a=pt.js(s,{indent_size:2,space_in_empty_paren:true,end_with_newline:true});return tt(a)}function tt(i){let e=new Function(i)(),r={parse:(a,o)=>H(a).parse(o),serialize:(a,o,p)=>H(a).serialize(o,p)},s=(a=>e(a,r));return s.code=i,s}
+      `}},it=new J;var st={};function X(r,t){st[r.toLowerCase()]=t;}function Z(r){let t=st[r.toLowerCase()];if(!t)throw new Error(`No adapter found for format: ${r}`);return t}X("json",{parse:r=>typeof r!="string"?r:JSON.parse(r),serialize:r=>JSON.stringify(r,null,2)});var Et=new Builder({ignoreAttributes:false,attributeNamePrefix:"$",textNodeName:"_",format:true});X("xml",{parse:r=>typeof r!="string"?r:new XMLParser({ignoreAttributes:false,removeNSPrefix:true}).parse(r),serialize:(r,t)=>{let e=t?.rootGenerated??"root";return Et.build({[e]:r})}});X("object",{parse:r=>r,serialize:r=>r});async function qt(r,t){let e=et.tokenize(r);if(e.errors.length>0)throw new Error(`Lexing errors: ${e.errors[0].message}`);E.input=e.tokens;let i=E.query();if(E.errors.length>0)throw new Error(`Parsing errors: ${E.errors[0].message}`);let{code:s}=it.visit(i),a=Lt.js(s,{indent_size:2,space_in_empty_paren:true,end_with_newline:true});return nt(a)}function nt(r){let e=new Function(r)(),i={parse:(a,o)=>Z(a).parse(o),serialize:(a,o,l)=>Z(a).serialize(o,l)},s=(a=>e(a,i));return s.code=r,s}
 
 class MQLDiagnosticProvider {
     constructor() {
@@ -21079,7 +21101,7 @@ class MQLDiagnosticProvider {
         const diagnostics = [];
         try {
             // Try to compile the document
-            await Bt(document.getText());
+            await qt(document.getText());
             // If successful, clear diagnostics
             this.diagnosticCollection.set(document.uri, []);
         }
@@ -21174,7 +21196,10 @@ var KEYWORDS = [
       signature: "from <format>",
       description: "Specifies the input data format.",
       parameters: [
-        { name: "format", description: "One of: `json`, `xml`, or `object`" }
+        {
+          name: "format",
+          description: "If used as first keyword: The starting format, one of `json`, `xml`, or `object`. When used after a section, defines its source"
+        }
       ],
       example: "from json to xml"
     }
@@ -21220,11 +21245,15 @@ var KEYWORDS = [
     name: "section",
     category: "action",
     doc: {
-      signature: "section [multiple] <name>( <actions> ) [from <path>]",
-      description: "Creates a nested object or array in the output.",
+      signature: "section [multiple] <name>( [subquery] <actions> ) [from <path>]",
+      description: "Creates a nested object or array in the output. Can optionally include a subquery for format conversion.",
       parameters: [
         { name: "multiple", description: "(Optional) Treat as array mapping" },
         { name: "name", description: "The section/field name" },
+        {
+          name: "subquery",
+          description: "(Optional) Nested query: from <format> to <format> [transform]"
+        },
         {
           name: "actions",
           description: "Actions to perform within the section"
@@ -21234,7 +21263,7 @@ var KEYWORDS = [
           description: "(Optional) Source path for the section data"
         }
       ],
-      example: "section multiple items(\n  set sku = itemSku\n) from products"
+      example: "section metadata(\n  from xml to object\n  transform\n    set name = root.productName\n) from xmlString"
     }
   },
   {
@@ -21426,6 +21455,38 @@ var FUNCTIONS = [
       returns: "XML node",
       example: 'xmlnode(content, "id", 1, "type", "text")'
     }
+  },
+  {
+    name: "to_base64",
+    doc: {
+      signature: "to_base64(value)",
+      description: "Encodes a string value to Base64.",
+      parameters: [{ name: "value", description: "The string to encode" }],
+      returns: "string",
+      example: 'to_base64("hello")  // "aGVsbG8="'
+    }
+  },
+  {
+    name: "from_base64",
+    doc: {
+      signature: "from_base64(value)",
+      description: "Decodes a Base64 string value.",
+      parameters: [
+        { name: "value", description: "The Base64 string to decode" }
+      ],
+      returns: "string",
+      example: 'from_base64("aGVsbG8=")  // "hello"'
+    }
+  },
+  {
+    name: "aslist",
+    doc: {
+      signature: "aslist(value)",
+      description: "Ensures a value is an array. Useful for XML nodes that might be a single object or an array.",
+      parameters: [{ name: "value", description: "The value to normalize" }],
+      returns: "array",
+      example: "aslist(items)  // Always returns an array"
+    }
   }
 ];
 function generateHoverDocs() {
@@ -21613,7 +21674,7 @@ async function executeQuery(query, inputData) {
         outputChannel.appendLine("");
         // Compile and execute
         const startTime = Date.now();
-        const engine = await Bt(query);
+        const engine = await qt(query);
         const compileTime = Date.now() - startTime;
         const execStartTime = Date.now();
         const result = engine(inputData);
