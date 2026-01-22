@@ -180,4 +180,44 @@ describe('Functions in expressions', async () => {
     expect(result.char0).toBe('X');
     expect(result.lim0).toBe('ABC');
   });
+
+  it('should encode string to base64 using to_base64', async () => {
+    const query = mql`
+      from object to object
+      transform
+        set encoded = to_base64(val)
+        set encodedUtf8 = to_base64(utf8Val)
+    `;
+    const engine = await compile(query);
+    const source = { val: 'hello', utf8Val: '✓ à la mode' };
+    const result = engine(source);
+    expect(result.encoded).toBe('aGVsbG8=');
+    expect(result.encodedUtf8).toBe('4pyTIMOgIGxhIG1vZGU=');
+  });
+
+  it('should decode base64 string using from_base64', async () => {
+    const query = mql`
+      from object to object
+      transform
+        set decoded = from_base64(val)
+        set decodedUtf8 = from_base64(utf8Val)
+    `;
+    const engine = await compile(query);
+    const source = { val: 'aGVsbG8=', utf8Val: '4pyTIMOgIGxhIG1vZGU=' };
+    const result = engine(source);
+    expect(result.decoded).toBe('hello');
+    expect(result.decodedUtf8).toBe('✓ à la mode');
+  });
+
+  it('should support base64 round-trip', async () => {
+    const query = mql`
+      from object to object
+      transform
+        set result = from_base64(to_base64(val))
+    `;
+    const engine = await compile(query);
+    const source = { val: 'Complex String! 123 @#$' };
+    const result = engine(source);
+    expect(result.result).toBe(source.val);
+  });
 });

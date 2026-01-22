@@ -127,6 +127,28 @@ export const FUNCTIONS: FunctionDef[] = [
       example: 'xmlnode(content, "id", 1, "type", "text")',
     },
   },
+  {
+    name: "to_base64",
+    doc: {
+      signature: "to_base64(value)",
+      description: "Encodes a string value to Base64.",
+      parameters: [{ name: "value", description: "The string to encode" }],
+      returns: "string",
+      example: 'to_base64("hello")  // "aGVsbG8="',
+    },
+  },
+  {
+    name: "from_base64",
+    doc: {
+      signature: "from_base64(value)",
+      description: "Decodes a Base64 string value.",
+      parameters: [
+        { name: "value", description: "The Base64 string to decode" },
+      ],
+      returns: "string",
+      example: 'from_base64("aGVsbG8=")  // "hello"',
+    },
+  },
 ];
 
 // Helper to get all function names

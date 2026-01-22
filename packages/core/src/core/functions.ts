@@ -107,4 +107,18 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     const lim = limit !== undefined ? `, ${limit}` : '';
     return `String(${str}).split(${sep}${lim})`;
   },
+  to_base64: (args: string[]) => {
+    if (args.length !== 1) {
+      throw new Error('to_base64() requires exactly 1 argument (string)');
+    }
+    const [val] = args;
+    return `(typeof btoa === 'function' ? btoa(unescape(encodeURIComponent(String(${val})))) : Buffer.from(String(${val}), 'utf-8').toString('base64'))`;
+  },
+  from_base64: (args: string[]) => {
+    if (args.length !== 1) {
+      throw new Error('from_base64() requires exactly 1 argument (string)');
+    }
+    const [val] = args;
+    return `(typeof atob === 'function' ? decodeURIComponent(escape(atob(String(${val})))) : Buffer.from(String(${val}), 'base64').toString('utf-8'))`;
+  },
 };
