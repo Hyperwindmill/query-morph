@@ -24,6 +24,11 @@ export const Identifier = createToken({
   pattern: /[a-zA-Z_$][a-zA-Z0-9_.\[\]]*/,
 });
 
+export const QuotedIdentifier = createToken({
+  name: 'QuotedIdentifier',
+  pattern: /`[^`]*`/,
+});
+
 export const From = createToken({ name: 'From', pattern: /from/i, longer_alt: Identifier });
 export const To = createToken({ name: 'To', pattern: /to/i, longer_alt: Identifier });
 export const Transform = createToken({
@@ -120,6 +125,7 @@ export const allTokens = [
   Comma,
   StringLiteral,
   NumericLiteral,
+  QuotedIdentifier,
   Identifier,
 ];
 

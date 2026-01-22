@@ -30,7 +30,10 @@ export class MorphParser extends CstParser {
   });
 
   private anyIdentifier = this.RULE('anyIdentifier', () => {
-    this.CONSUME(t.Identifier);
+    this.OR([
+      { ALT: () => this.CONSUME(t.Identifier) },
+      { ALT: () => this.CONSUME(t.QuotedIdentifier) },
+    ]);
   });
 
   private literal = this.RULE('literal', () => {

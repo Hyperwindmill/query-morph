@@ -64,6 +64,11 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 - `define <alias> = <expression>`: Local variable.
 - `if (<cond>) ( <actions> ) [else ( <actions> )]`: Conditional block.
 
+### Identifiers
+
+- **Backticks**: Use `` `identifier` `` to escape reserved keywords or use special characters.
+  - Example: ``set `multiple` = true``, ``set `order-id` = 123``
+
 ### Functions
 
 - `substring(str, start, [len])`: Slice string.
@@ -74,6 +79,8 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 - `extractnumber(str)`: Get first number from string.
 - `uppercase(str)`, `lowercase(str)`: Case conversion.
 - `xmlnode(val, [k, v...])`: XML formatting.
+- `to_base64(val)`, `from_base64(val)`: Base64 encoding/decoding.
+- `aslist(val)`: Array normalization.
 
 ### Operators
 

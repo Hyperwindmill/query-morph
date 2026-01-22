@@ -100,6 +100,16 @@ Actions are the top-level commands used inside the `transform` block or `section
 - **`define [alias] = [expression]`**: Defines a local variable/alias that can be used in subsequent expressions within the same scope.
 - **`if ([condition]) ( [thenActions] ) [else ( [elseActions] )]`**: Executes a block of actions conditionally.
 
+### Escaped Identifiers
+
+Use backticks (`` `fieldname` ``) to use reserved keywords or special characters (dashes, spaces, etc.) as identifiers:
+
+```mql
+transform
+  set `multiple` = true
+  set `order-id` = root.`external-id`
+```
+
 ### Functions
 
 Functions can be used within expressions to calculate values.
@@ -116,6 +126,9 @@ Functions can be used within expressions to calculate values.
 | `uppercase(str)`                      | Converts string to uppercase.                             | `uppercase("hello")`              |
 | `lowercase(str)`                      | Converts string to lowercase.                             | `lowercase("HELLO")`              |
 | `xmlnode(val, [attrKey, attrVal...])` | Wraps a value for XML output with optional attributes.    | `xmlnode(content, "id", 1)`       |
+| `to_base64(val)`                      | Encodes a string to Base64 (isomorphic).                  | `to_base64("hello")`              |
+| `from_base64(val)`                    | Decodes a Base64 string (isomorphic).                     | `from_base64("aGVsbG8=") `        |
+| `aslist(val)`                         | Ensures a value is an array (useful for XML).             | `aslist(items)`                   |
 
 ### Operators
 

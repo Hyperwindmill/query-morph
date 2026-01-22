@@ -46,21 +46,29 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   }
 
   typeFormat(ctx: any) {
-    const name = this.visit(ctx.name);
+    const id = this.visit(ctx.name);
     let parameter = undefined;
     if (ctx.parameter) {
       // Remove quotes from string literal
       parameter = ctx.parameter[0].image.slice(1, -1);
     }
-    return { name, parameter };
+    return { name: id.name, parameter };
+  }
+
+  private genAccess(base: string, id: { name: string; quoted: boolean }) {
+    if (id.quoted || (id.name.includes('-') && !id.name.includes('.') && !id.name.includes('['))) {
+      return `${base}["${id.name}"]`;
+    }
+    return `${base}.${id.name}`;
   }
 
   anyIdentifier(ctx: any) {
     if (ctx.Identifier) {
-      return ctx.Identifier[0].image;
+      return { name: ctx.Identifier[0].image, quoted: false };
     }
-    if (ctx.Static) {
-      return ctx.Static[0].image;
+    if (ctx.QuotedIdentifier) {
+      // Remove backticks
+      return { name: ctx.QuotedIdentifier[0].image.slice(1, -1), quoted: true };
     }
   }
 
@@ -96,7 +104,7 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   deleteRule(ctx: any) {
     const field = this.visit(ctx.field);
-    return `delete target.${field};`;
+    return `delete ${this.genAccess('target', field)};`;
   }
 
   ifAction(ctx: any) {
@@ -115,8 +123,10 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   cloneRule(ctx: any) {
     if (ctx.fields) {
-      const fieldNames = ctx.fields.map((f: any) => this.visit(f));
-      return fieldNames.map((f: string) => `target.${f} = source.${f};`).join('\n        ');
+      const identifiers = ctx.fields.map((f: any) => this.visit(f));
+      return identifiers
+        .map((id: any) => `${this.genAccess('target', id)} = ${this.genAccess('source', id)};`)
+        .join('\n        ');
     }
     return `Object.assign(target, source);`;
   }
@@ -124,13 +134,13 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   setRule(ctx: any) {
     const left = this.visit(ctx.left);
     const right = this.visit(ctx.right);
-    return `target.${left} = ${right};`;
+    return `${this.genAccess('target', left)} = ${right};`;
   }
 
   defineRule(ctx: any) {
     const left = this.visit(ctx.left);
     const right = this.visit(ctx.right);
-    return `source.${left} = ${right};`;
+    return `${this.genAccess('source', left)} = ${right};`;
   }
 
   expression(ctx: any) {
@@ -211,10 +221,10 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     }
     if (ctx.anyIdentifier) {
       const id = this.visit(ctx.anyIdentifier);
-      if (['true', 'false', 'null'].includes(id)) {
-        return id;
+      if (['true', 'false', 'null'].includes(id.name) && !id.quoted) {
+        return id.name;
       }
-      return `source.${id}`;
+      return this.genAccess('source', id);
     }
     if (ctx.expression) {
       return `(${this.visit(ctx.expression)})`;
@@ -223,7 +233,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   functionCall(ctx: any) {
     const originalName = ctx.name[0].image;
-    const name = originalName.toLowerCase();
+    const name = (
+      originalName.startsWith('`') ? originalName.slice(1, -1) : originalName
+    ).toLowerCase();
     const args = ctx.args ? ctx.args.map((a: any) => this.visit(a)) : [];
 
     const handler = functionRegistry[name];
@@ -235,9 +247,19 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   }
 
   sectionRule(ctx: any) {
-    const sectionName = this.visit(ctx.sectionName);
-    const followPathName = ctx.followPath ? this.visit(ctx.followPath) : sectionName;
-    const followPath = followPathName === 'parent' ? '' : '.' + followPathName;
+    const sectionId = this.visit(ctx.sectionName);
+    const sectionName = sectionId.name;
+    const sectionAccess = this.genAccess('target', sectionId);
+
+    const followPathId = ctx.followPath ? this.visit(ctx.followPath) : sectionId;
+    const followPath = followPathId.name === 'parent' ? '' : '.' + followPathId.name;
+    // Note: followPath currently only supports simple paths or 'parent'.
+    // If it's a quoted identifier, genAccess would return target["name"].
+    // But section handling uses '.' + followPath.
+    // I should probably use genAccess here too for consistency, but it needs to be relative to 'source'.
+    const sourceAccess =
+      followPathId.name === 'parent' ? 'source' : this.genAccess('source', followPathId);
+
     const isMultiple = !!ctx.Multiple;
     const actions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
 
@@ -260,8 +282,8 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
       if (isMultiple) {
         return `
-        if (source${followPath} && Array.isArray(source${followPath})) {
-          target.${sectionName} = source${followPath}.map(item => {
+        if (${sourceAccess} && Array.isArray(${sourceAccess})) {
+          ${sectionAccess} = ${sourceAccess}.map(item => {
             const subSource = env.parse('${subSourceType.name}', item);
             const source = subSource;
             const target = {};
@@ -272,14 +294,14 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
         `;
       } else {
         return `
-        if (source${followPath}) {
-          target.${sectionName} = (function(innerSource) {
+        if (${sourceAccess}) {
+          ${sectionAccess} = (function(innerSource) {
             const subSource = env.parse('${subSourceType.name}', innerSource);
             const source = subSource;
             const target = {};
             ${actions.join('\n            ')}
             return env.serialize('${subTargetType.name}', target${subTargetParam});
-          })(source${followPath});
+          })(${sourceAccess});
         }
         `;
       }
@@ -288,8 +310,8 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     // Regular section handling (unchanged)
     if (isMultiple) {
       return `
-      if (source${followPath} && Array.isArray(source${followPath})) {
-        target.${sectionName} = source${followPath}.map(item => {
+      if (${sourceAccess} && Array.isArray(${sourceAccess})) {
+        ${sectionAccess} = ${sourceAccess}.map(item => {
           const source = item;
           const target = {};
           ${actions.join('\n          ')}
@@ -299,13 +321,13 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       `;
     } else {
       return `
-      if (source${followPath}) {
-        target.${sectionName} = (function(innerSource) {
+      if (${sourceAccess}) {
+        ${sectionAccess} = (function(innerSource) {
           const source = innerSource;
           const target = {};
           ${actions.join('\n          ')}
           return target;
-        })(source${followPath});
+        })(${sourceAccess});
       }
       `;
     }
