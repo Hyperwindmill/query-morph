@@ -16,7 +16,7 @@ export const KEYWORDS: KeywordDef[] = [
       signature: "from <format>",
       description: "Specifies the input data format.",
       parameters: [
-        { name: "format", description: "One of: `json`, `xml`, or `object`" },
+        { name: "format", description: "If used as first keyword: The starting format, one of `json`, `xml`, or `object`. When used after a section, defines its source" },
       ],
       example: "from json to xml",
     },
