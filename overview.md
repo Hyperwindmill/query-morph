@@ -49,6 +49,7 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 - ✅ **Functions**: Support for function calls like `substring` and `if`.
 - ✅ **Negative Indices**: Functions like `substring` support negative offsets from the end.
 - ✅ **Deep Nesting**: Unlimited recursive `section` directives.
+- ✅ **Subquery Sections**: Format conversion within sections (e.g., `section metadata( from xml to object transform ... ) from xmlString`).
 - ✅ **Full/Selective Cloning**: `clone` or `clone(a, b)`.
 - ✅ **Pure Conversions**: Optional `transform` directive for straight format conversion.
 

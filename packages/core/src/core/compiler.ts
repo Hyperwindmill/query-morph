@@ -241,6 +241,51 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     const isMultiple = !!ctx.Multiple;
     const actions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
 
+    // Check if this is a subquery section
+    const isSubquery = !!ctx.subqueryFrom;
+
+    if (isSubquery) {
+      const subSourceType = this.visit(ctx.subquerySourceType);
+      const subTargetType = this.visit(ctx.subqueryTargetType);
+      const hasTransform = !!ctx.subqueryTransform;
+
+      if (!hasTransform) {
+        // Pure format conversion - copy all fields
+        actions.push('Object.assign(target, source);');
+      }
+
+      const subTargetParam = subTargetType.parameter
+        ? `, { rootGenerated: "${subTargetType.parameter}" }`
+        : '';
+
+      if (isMultiple) {
+        return `
+        if (source${followPath} && Array.isArray(source${followPath})) {
+          target.${sectionName} = source${followPath}.map(item => {
+            const subSource = env.parse('${subSourceType.name}', item);
+            const source = subSource;
+            const target = {};
+            ${actions.join('\n            ')}
+            return env.serialize('${subTargetType.name}', target${subTargetParam});
+          });
+        }
+        `;
+      } else {
+        return `
+        if (source${followPath}) {
+          target.${sectionName} = (function(innerSource) {
+            const subSource = env.parse('${subSourceType.name}', innerSource);
+            const source = subSource;
+            const target = {};
+            ${actions.join('\n            ')}
+            return env.serialize('${subTargetType.name}', target${subTargetParam});
+          })(source${followPath});
+        }
+        `;
+      }
+    }
+
+    // Regular section handling (unchanged)
     if (isMultiple) {
       return `
       if (source${followPath} && Array.isArray(source${followPath})) {

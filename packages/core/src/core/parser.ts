@@ -206,13 +206,27 @@ export class MorphParser extends CstParser {
     });
     this.SUBRULE(this.anyIdentifier, { LABEL: 'sectionName' });
     this.CONSUME(t.LParen);
+
+    // NEW: Check if this is a subquery section (from X to Y ...)
+    this.OPTION1(() => {
+      this.CONSUME(t.From, { LABEL: 'subqueryFrom' });
+      this.SUBRULE(this.typeFormat, { LABEL: 'subquerySourceType' });
+      this.CONSUME(t.To, { LABEL: 'subqueryTo' });
+      this.SUBRULE1(this.typeFormat, { LABEL: 'subqueryTargetType' });
+      this.OPTION2(() => {
+        this.CONSUME(t.Transform, { LABEL: 'subqueryTransform' });
+      });
+    });
+
+    // Actions (for both regular sections and subquery transform blocks)
     this.MANY(() => {
       this.SUBRULE(this.action);
     });
+
     this.CONSUME(t.RParen);
-    this.OPTION1(() => {
-      this.CONSUME(t.From);
-      this.SUBRULE1(this.anyIdentifier, { LABEL: 'followPath' });
+    this.OPTION3(() => {
+      this.CONSUME1(t.From, { LABEL: 'followFrom' });
+      this.SUBRULE2(this.anyIdentifier, { LABEL: 'followPath' });
     });
   });
 

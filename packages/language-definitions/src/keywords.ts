@@ -16,7 +16,11 @@ export const KEYWORDS: KeywordDef[] = [
       signature: "from <format>",
       description: "Specifies the input data format.",
       parameters: [
-        { name: "format", description: "If used as first keyword: The starting format, one of `json`, `xml`, or `object`. When used after a section, defines its source" },
+        {
+          name: "format",
+          description:
+            "If used as first keyword: The starting format, one of `json`, `xml`, or `object`. When used after a section, defines its source",
+        },
       ],
       example: "from json to xml",
     },
@@ -62,11 +66,18 @@ export const KEYWORDS: KeywordDef[] = [
     name: "section",
     category: "action",
     doc: {
-      signature: "section [multiple] <name>( <actions> ) [from <path>]",
-      description: "Creates a nested object or array in the output.",
+      signature:
+        "section [multiple] <name>( [subquery] <actions> ) [from <path>]",
+      description:
+        "Creates a nested object or array in the output. Can optionally include a subquery for format conversion.",
       parameters: [
         { name: "multiple", description: "(Optional) Treat as array mapping" },
         { name: "name", description: "The section/field name" },
+        {
+          name: "subquery",
+          description:
+            "(Optional) Nested query: from <format> to <format> [transform]",
+        },
         {
           name: "actions",
           description: "Actions to perform within the section",
@@ -76,7 +87,8 @@ export const KEYWORDS: KeywordDef[] = [
           description: "(Optional) Source path for the section data",
         },
       ],
-      example: "section multiple items(\n  set sku = itemSku\n) from products",
+      example:
+        "section metadata(\n  from xml to object\n  transform\n    set name = root.productName\n) from xmlString",
     },
   },
   {

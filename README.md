@@ -62,6 +62,21 @@ const convertQuery = mql`from json to xml`;
 const convertEngine = await compile(convertQuery);
 const xmlResult = convertEngine('{"foo":"bar"}');
 // Output: <root><foo>bar</foo></root>
+
+// 3. Subquery Sections (Format Conversion in Sections)
+const subqueryEngine = mql`
+  from json to object
+  transform
+    set orderId = id
+    section metadata(
+      from xml to object
+      transform
+        set name = root.productName
+        set price = number(root.cost)
+    ) from xmlString
+`;
+const subqueryResult = await compile(subqueryEngine);
+// Parses XML field and transforms it within the section
 ```
 
 > **💡 Tip**: Use the `mql` tagged template for better syntax highlighting in VSCode! Install the [MQL VSCode extension](./packages/vscode-extension) for the best development experience.
@@ -75,9 +90,11 @@ Morph Query Language (MQL) is a declarative DSL for structural data transformati
 Actions are the top-level commands used inside the `transform` block or `section` blocks.
 
 - **`set [target] = [expression]`**: Sets a property on the target object.
-- **`section [multiple] [name]( [actions] ) [from [path]]`**: Creates a nested object or array.
+- **`section [multiple] [name]( [subquery] [actions] ) [from [path]]`**: Creates a nested object or array.
   - `multiple`: If present, treats the source as an array and maps each item.
+  - `subquery`: Optional nested query for format conversion: `from [format] to [format] [transform]`
   - `from [path]`: Optional path to shift the context of the source data.
+  - Example with subquery: `section metadata( from xml to object transform set name = root.productName ) from xmlString`
 - **`clone([fields...])`**: Clones the entire source object or specific fields into the target.
 - **`delete [field]`**: Removes a property from the target object (useful after `clone`).
 - **`define [alias] = [expression]`**: Defines a local variable/alias that can be used in subsequent expressions within the same scope.
