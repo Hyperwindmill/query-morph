@@ -27,7 +27,7 @@ const cache = redisHost
   ? new RedisCache({
       host: redisHost,
       port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
-      prefix: process.env.REDIS_PREFIX || 'mql:',
+      prefix: process.env.REDIS_PREFIX || 'morphql:',
     })
   : undefined;
 

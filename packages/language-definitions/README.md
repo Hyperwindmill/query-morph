@@ -50,7 +50,7 @@ const doc = getKeywordDoc("set");
 import { generateTextMateKeywordsPattern } from "@morphql/language-definitions";
 
 const keywordsPattern = generateTextMateKeywordsPattern();
-// Use in mql.tmLanguage.json
+// Use in morphql.tmLanguage.json
 ```
 
 ### Generate Monaco Language Config
@@ -59,8 +59,8 @@ const keywordsPattern = generateTextMateKeywordsPattern();
 import { generateMonacoLanguageConfig } from "@morphql/language-definitions";
 
 const monacoConfig = generateMonacoLanguageConfig();
-monaco.languages.register({ id: "mql" });
-monaco.languages.setMonarchTokensProvider("mql", monacoConfig);
+monaco.languages.register({ id: "morphql" });
+monaco.languages.setMonarchTokensProvider("morphql", monacoConfig);
 ```
 
 ### Generate Hover Documentation

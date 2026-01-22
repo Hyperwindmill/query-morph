@@ -67,7 +67,7 @@ Edit `packages/vscode-extension/package.json`:
 
 ```json
 {
-  "name": "mql-vscode",
+  "name": "morphql-vscode",
   "displayName": "MorphQL (Morph Query Language)",
   "description": "Syntax highlighting, diagnostics, and execution for Morph Query Language",
   "version": "0.1.0",
@@ -78,7 +78,7 @@ Edit `packages/vscode-extension/package.json`:
   },
   "categories": ["Programming Languages", "Formatters", "Other"],
   "keywords": [
-    "mql",
+    "morphql",
     "morph",
     "query",
     "transformation",
@@ -146,14 +146,14 @@ npm run compile
 vsce package
 ```
 
-This creates `mql-vscode-0.1.0.vsix`
+This creates `morphql-vscode-0.1.0.vsix`
 
 ### 3. Test Locally
 
 Install the `.vsix` file locally:
 
 ```bash
-code --install-extension mql-vscode-0.1.0.vsix
+code --install-extension morphql-vscode-0.1.0.vsix
 ```
 
 Test thoroughly!
@@ -235,12 +235,12 @@ vsce publish major
 ### 1. Add Badge to README
 
 ```markdown
-[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/morphql.mql-vscode)](https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/morphql.morphql-vscode)](https://marketplace.visualstudio.com/items?itemName=morphql.morphql-vscode)
 ```
 
 ### 2. Monitor
 
-- Check https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode
+- Check https://marketplace.visualstudio.com/items?itemName=morphql.morphql-vscode
 - Monitor install count
 - Respond to reviews
 
@@ -251,7 +251,7 @@ Add to main `README.md`:
 ```markdown
 ## VSCode Extension
 
-Install the MorphQL extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode)
+Install the MorphQL extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=morphql.morphql-vscode)
 
 Or search for "MorphQL" in VSCode Extensions.
 ```

@@ -23,7 +23,7 @@ echo ""
 echo "✅ Package created successfully!"
 echo ""
 echo "📋 Next steps:"
-echo "1. Test locally: code --install-extension mql-vscode-0.1.0.vsix"
+echo "1. Test locally: code --install-extension morphql-vscode-0.1.0.vsix"
 echo "2. Login to marketplace: vsce login morphql"
 echo "3. Publish: vsce publish"
 echo ""
@@ -35,5 +35,5 @@ if [ "$1" == "--publish" ]; then
     vsce publish
     echo ""
     echo "✅ Published successfully!"
-    echo "🔗 https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode"
+    echo "🔗 https://marketplace.visualstudio.com/items?itemName=morphql.morphql-vscode"
 fi

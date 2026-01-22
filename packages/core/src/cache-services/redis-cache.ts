@@ -8,7 +8,7 @@ export interface RedisCacheOptions {
   host?: string;
   /** Redis port. Default: 6379 */
   port?: number;
-  /** Key prefix for all cached queries. Default: 'mql:' */
+  /** Key prefix for all cached queries. Default: 'morphql:' */
   prefix?: string;
   /** TTL in seconds. Default: undefined (no expiration) */
   ttl?: number;
@@ -33,7 +33,7 @@ export class RedisCache implements MorphQLCache {
   private ttl?: number;
 
   constructor(options: RedisCacheOptions = {}) {
-    this.prefix = options.prefix ?? 'mql:';
+    this.prefix = options.prefix ?? 'morphql:';
     this.ttl = options.ttl;
 
     // Dynamic import to keep ioredis as optional peer dependency

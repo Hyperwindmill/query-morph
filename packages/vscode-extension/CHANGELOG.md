@@ -8,7 +8,7 @@ All notable changes to the MorphQL VSCode extension will be documented in this f
 
 - Initial release of MorphQL VSCode extension
 - **Syntax Highlighting**
-  - Full syntax highlighting for `.mql` files
+  - Full syntax highlighting for `.morphql` files
   - Embedded MorphQL support in JavaScript/TypeScript (tagged templates and comment hints)
   - Support for keywords, functions, operators, strings, numbers, and comments
 - **Comment Support**
@@ -23,8 +23,8 @@ All notable changes to the MorphQL VSCode extension will be documented in this f
   - Complete documentation for all built-in functions
   - Parameter descriptions and usage examples
 - **Code Execution**
-  - Execute `.mql` files with input data dialog
-  - Execute `.mql` files with clipboard data
+  - Execute `.morphql` files with input data dialog
+  - Execute `.morphql` files with clipboard data
   - Execute selected MorphQL queries in JS/TS files
   - Formatted output display (JSON/XML)
   - Execution timing metrics

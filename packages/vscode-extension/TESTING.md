@@ -15,7 +15,7 @@ Then press **F5** to launch the Extension Development Host.
 
 In the Extension Development Host window:
 
-1. Open `examples/example.mql`
+1. Open `examples/example.morphql`
 2. Verify syntax highlighting:
    - Keywords (`from`, `to`, `transform`, `set`, etc.) should be highlighted
    - Functions (`substring`, `split`, etc.) should be highlighted
@@ -26,21 +26,21 @@ In the Extension Development Host window:
 
 1. Open `examples/embedded-example.ts`
 2. Verify syntax highlighting inside:
-   - Tagged templates: `mql\`...\``
-   - Comment hints: `// @mql` followed by template string
+   - Tagged templates: `morphQL\`...\``
+   - Comment hints: `// @morphQL` followed by template string
 
 ### 4. Test Code Snippets
 
-In a new `.mql` file, type:
+In a new `.morphql` file, type:
 
-- `mql-transform` + Tab
-- `mql-section` + Tab
-- `mql-if-stmt` + Tab
+- `morphql-transform` + Tab
+- `morphql-section` + Tab
+- `morphql-if-stmt` + Tab
 
 In a new `.ts` file, type:
 
-- `mql-tagged` + Tab
-- `mql-compile` + Tab
+- `morphql-tagged` + Tab
+- `morphql-compile` + Tab
 
 ## Expected Results
 
@@ -76,14 +76,14 @@ In TypeScript files, MorphQL syntax should be highlighted inside:
 
 ```typescript
 // This should have MorphQL syntax highlighting:
-const query = mql`
+const query = morphQL`
   from json to xml
   transform
     set name = firstName
 `;
 
 // This should also have MorphQL syntax highlighting:
-// @mql
+// @morphql
 const query2 = `
   from json to xml
 `;
@@ -99,7 +99,7 @@ const query2 = `
 
 ### Snippets Not Working
 
-1. Make sure you're in the correct file type (`.mql` for MorphQL snippets, `.ts`/`.js` for embedded snippets)
+1. Make sure you're in the correct file type (`.morphql` for MorphQL snippets, `.ts`/`.js` for embedded snippets)
 2. Type the prefix exactly and press Tab
 3. Check VSCode settings: `"editor.snippetSuggestions": "top"`
 
@@ -111,10 +111,10 @@ const query2 = `
 
 ## Manual Testing Checklist
 
-- [ ] Syntax highlighting in `.mql` files
-- [ ] Syntax highlighting in `mql\`...\`` tagged templates
-- [ ] Syntax highlighting with `// @mql` comment hints
-- [ ] Code snippets in `.mql` files
+- [ ] Syntax highlighting in `.morphql` files
+- [ ] Syntax highlighting in `morphQL\`...\`` tagged templates
+- [ ] Syntax highlighting with `// @morphQL` comment hints
+- [ ] Code snippets in `.morphql` files
 - [ ] Code snippets in `.ts`/`.js` files
 - [ ] Bracket matching and auto-closing
 - [ ] Array index syntax highlighting (`[0]`, `[index]`)
@@ -134,7 +134,7 @@ After manual testing, you can:
 2. **Install locally**:
 
    ```bash
-   code --install-extension mql-vscode-0.1.0.vsix
+   code --install-extension morphql-vscode-0.1.0.vsix
    ```
 
 3. **Publish to marketplace** (when ready):

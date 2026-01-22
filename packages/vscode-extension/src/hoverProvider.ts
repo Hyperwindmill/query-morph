@@ -39,7 +39,7 @@ export class MorphQLHoverProvider implements vscode.HoverProvider {
     md.isTrusted = true;
 
     // Signature
-    md.appendCodeblock(doc.signature, "mql");
+    md.appendCodeblock(doc.signature, "morphql");
 
     // Description
     md.appendMarkdown(doc.description);
@@ -62,7 +62,7 @@ export class MorphQLHoverProvider implements vscode.HoverProvider {
     // Example
     if (doc.example) {
       md.appendMarkdown("**Example:**\n\n");
-      md.appendCodeblock(doc.example, "mql");
+      md.appendCodeblock(doc.example, "morphql");
     }
 
     return md;

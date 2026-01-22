@@ -7,14 +7,14 @@ export class MorphQLDiagnosticProvider {
 
   constructor() {
     this.diagnosticCollection =
-      vscode.languages.createDiagnosticCollection("mql");
+      vscode.languages.createDiagnosticCollection("morphql");
   }
 
   public activate(context: vscode.ExtensionContext) {
     // Listen to document changes
     context.subscriptions.push(
       vscode.workspace.onDidChangeTextDocument((event) => {
-        if (event.document.languageId === "mql") {
+        if (event.document.languageId === "morphql") {
           this.scheduleValidation(event.document);
         }
       }),
@@ -23,7 +23,7 @@ export class MorphQLDiagnosticProvider {
     // Listen to document open
     context.subscriptions.push(
       vscode.workspace.onDidOpenTextDocument((document) => {
-        if (document.languageId === "mql") {
+        if (document.languageId === "morphql") {
           this.validateDocument(document);
         }
       }),
@@ -32,7 +32,7 @@ export class MorphQLDiagnosticProvider {
     // Listen to document save
     context.subscriptions.push(
       vscode.workspace.onDidSaveTextDocument((document) => {
-        if (document.languageId === "mql") {
+        if (document.languageId === "morphql") {
           this.validateDocument(document);
         }
       }),
@@ -40,7 +40,7 @@ export class MorphQLDiagnosticProvider {
 
     // Validate all open MorphQL documents
     vscode.workspace.textDocuments.forEach((document) => {
-      if (document.languageId === "mql") {
+      if (document.languageId === "morphql") {
         this.validateDocument(document);
       }
     });

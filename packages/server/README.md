@@ -129,7 +129,7 @@ Configure the server via environment variables:
 | `NODE_ENV`     | Environment mode                     | -       | No       |
 | `REDIS_HOST`   | Redis hostname for caching           | -       | No       |
 | `REDIS_PORT`   | Redis port                           | `6379`  | No       |
-| `REDIS_PREFIX` | Cache key prefix                     | `mql:`  | No       |
+| `REDIS_PREFIX` | Cache key prefix                     | `morphql:`  | No       |
 | `API_KEY`      | Optional API key for auth            | -       | No       |
 | `API_KEY_FILE` | Optional API key file (for secrets)  | -       | No       |
 

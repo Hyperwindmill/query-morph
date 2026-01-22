@@ -1,7 +1,7 @@
-import { compile, mql } from "@morphql/core";
+import { compile, morphQL } from "@morphql/core";
 
 // Example 1: Tagged template - select the query inside the backticks
-const transformQuery = mql`
+const transformQuery = morphQL`
 from json to json
 transform
   set fullName = firstName + " " + lastName
@@ -10,7 +10,7 @@ transform
 `;
 
 // Example 2: Regular template string - select the query text
-// @mql
+// @morphql
 const convertQuery = `
 from json to xml
 transform

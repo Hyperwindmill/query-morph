@@ -6,12 +6,12 @@ Syntax highlighting and language support for **Morph Query Language (MorphQL)** 
 
 ### 🎨 Syntax Highlighting
 
-- **Standalone `.mql` files**: Full syntax highlighting for MorphQL query files
+- **Standalone `.morphql` files**: Full syntax highlighting for MorphQL query files
 - **Embedded in JavaScript/TypeScript**: Syntax highlighting for MorphQL inside template strings
 
 ### ▶️ Execute MorphQL Files
 
-Run `.mql` files directly in VSCode with two convenient commands:
+Run `.morphql` files directly in VSCode with two convenient commands:
 
 1. **Execute with Input Data** (Play button in editor toolbar or right-click menu)
    - Opens an input dialog to enter JSON or XML data
@@ -24,7 +24,7 @@ Run `.mql` files directly in VSCode with two convenient commands:
 
 **How to use:**
 
-1. Open a `.mql` file
+1. Open a `.morphql` file
 2. Click the ▶️ play button in the editor toolbar, or
 3. Right-click and select "MorphQL: Execute with Input Data"
 4. Enter your input data (JSON or XML)
@@ -32,7 +32,7 @@ Run `.mql` files directly in VSCode with two convenient commands:
 
 **Example:**
 
-- Open `examples/test-execution.mql`
+- Open `examples/test-execution.morphql`
 - Click the play button
 - Copy and paste the content from `examples/sample-input.json`
 - See the transformation result!
@@ -53,7 +53,7 @@ Run `.mql` files directly in VSCode with two convenient commands:
 
 MorphQL now supports both line and block comments:
 
-```mql
+```morphql
 // Line comment
 from json to xml
 transform
@@ -68,7 +68,7 @@ Errors are highlighted as you type with a 500ms debounce:
 
 - Syntax errors show up immediately
 - Error messages appear on hover
-- Works only in `.mql` files
+- Works only in `.morphql` files
 
 ### 📖 Hover Documentation
 
@@ -83,9 +83,9 @@ Hover over keywords and functions to see documentation:
 #### 1. Tagged Templates (Recommended)
 
 ```typescript
-import { compile, mql } from "@morphql/core";
+import { compile, morphQL } from "@morphql/core";
 
-const query = mql`
+const query = morphQL`
   from json to xml
   transform
     set fullName = firstName + " " + lastName
@@ -104,7 +104,7 @@ const result = engine(sourceData);
 ```typescript
 import { compile } from "@morphql/core";
 
-// @mql
+// @morphql
 const query = `
   from json to xml
   transform
@@ -118,16 +118,16 @@ const engine = await compile(query);
 
 Type these prefixes and press Tab:
 
-- `mql-transform` - Basic transformation template
-- `mql-section` - Section block
-- `mql-section-multiple` - Array mapping with multiple
-- `mql-if-expr` - If expression (ternary)
-- `mql-if-stmt` - If/else statement block
-- `mql-clone` - Clone fields
-- `mql-define` - Define variable
-- `mql-tagged` - MorphQL with tagged template (JS/TS)
-- `mql-comment` - MorphQL with comment hint (JS/TS)
-- `mql-compile` - Complete compile and execute pattern (JS/TS)
+- `morphql-transform` - Basic transformation template
+- `morphql-section` - Section block
+- `morphql-section-multiple` - Array mapping with multiple
+- `morphql-if-expr` - If expression (ternary)
+- `morphql-if-stmt` - If/else statement block
+- `morphql-clone` - Clone fields
+- `morphql-define` - Define variable
+- `morphql-tagged` - MorphQL with tagged template (JS/TS)
+- `morphql-comment` - MorphQL with comment hint (JS/TS)
+- `morphql-compile` - Complete compile and execute pattern (JS/TS)
 
 ## Syntax Support
 
@@ -181,9 +181,9 @@ Search for "MorphQL" in the VSCode Extensions marketplace.
 
 ## Example Files
 
-Create a file with `.mql` extension:
+Create a file with `.morphql` extension:
 
-```mql
+```morphql
 from json to xml
 transform
   set fullName = firstName + " " + lastName
@@ -209,10 +209,10 @@ transform
 ### 0.1.0
 
 - Initial release
-- Syntax highlighting for `.mql` files
+- Syntax highlighting for `.morphql` files
 - Embedded MorphQL support in JS/TS (tagged templates and comment hints)
 - Code snippets for common patterns
-- **Execute `.mql` files** with input data or clipboard data
+- **Execute `.morphql` files** with input data or clipboard data
 - Formatted output display with execution timing
 
 ## Contributing
