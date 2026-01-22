@@ -220,4 +220,26 @@ describe('Functions in expressions', async () => {
     const result = engine(source);
     expect(result.result).toBe(source.val);
   });
+
+  it('should normalize value to list using aslist', async () => {
+    const query = mql`
+      from object to object
+      transform
+        set single = aslist(val)
+        set many = aslist(listVal)
+        set empty = aslist(nullVal)
+        set notFound = aslist(missing)
+    `;
+    const engine = await compile(query);
+    const source = {
+      val: { id: 1 },
+      listVal: [{ id: 1 }, { id: 2 }],
+      nullVal: null,
+    };
+    const result = engine(source);
+    expect(result.single).toEqual([{ id: 1 }]);
+    expect(result.many).toEqual([{ id: 1 }, { id: 2 }]);
+    expect(result.empty).toEqual([]);
+    expect(result.notFound).toEqual([]);
+  });
 });

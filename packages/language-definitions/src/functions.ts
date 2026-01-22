@@ -149,6 +149,17 @@ export const FUNCTIONS: FunctionDef[] = [
       example: 'from_base64("aGVsbG8=")  // "hello"',
     },
   },
+  {
+    name: "aslist",
+    doc: {
+      signature: "aslist(value)",
+      description:
+        "Ensures a value is an array. Useful for XML nodes that might be a single object or an array.",
+      parameters: [{ name: "value", description: "The value to normalize" }],
+      returns: "array",
+      example: "aslist(items)  // Always returns an array",
+    },
+  },
 ];
 
 // Helper to get all function names

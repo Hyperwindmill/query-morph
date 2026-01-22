@@ -121,4 +121,11 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     const [val] = args;
     return `(typeof atob === 'function' ? decodeURIComponent(escape(atob(String(${val})))) : Buffer.from(String(${val}), 'base64').toString('utf-8'))`;
   },
+  aslist: (args: string[]) => {
+    if (args.length !== 1) {
+      throw new Error('aslist() requires exactly 1 argument');
+    }
+    const [val] = args;
+    return `(Array.isArray(${val}) ? ${val} : (${val} == null ? [] : [${val}]))`;
+  },
 };
