@@ -89,7 +89,7 @@ export default function App() {
           </div>
           <div>
             <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-              Query Morph Playground
+              MorphQL Playground
             </h1>
             <p className="text-xs text-slate-400 font-medium">
               High-Performance Query-to-Code Engine
@@ -111,7 +111,7 @@ export default function App() {
             ))}
           </select>
           <a
-            href="https://github.com/Hyperwindmill/query-morph"
+            href="https://github.com/Hyperwindmill/morphql"
             className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700">
             Documentation
           </a>
@@ -140,7 +140,7 @@ export default function App() {
                 value={query}
                 onChange={(v) => setQuery(v || "")}
                 beforeMount={(monaco) => {
-                  // Register MQL language
+                  // Register MorphQL language
                   import("./morphqlLanguage").then(({ registerMorphQLLanguage }) => {
                     registerMorphQLLanguage(monaco);
                   });
@@ -274,7 +274,7 @@ export default function App() {
           </div>
         </div>
         <div className="text-[10px] text-slate-500 font-medium italic">
-          Query Morph Engine &copy; 2026
+          MorphQL Engine &copy; 2026
         </div>
       </footer>
     </div>

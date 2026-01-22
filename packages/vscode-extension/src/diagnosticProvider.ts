@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { compile } from "@morphql/core";
 
-export class MQLDiagnosticProvider {
+export class MorphQLDiagnosticProvider {
   private diagnosticCollection: vscode.DiagnosticCollection;
   private timeout: NodeJS.Timeout | undefined;
 
@@ -38,7 +38,7 @@ export class MQLDiagnosticProvider {
       }),
     );
 
-    // Validate all open MQL documents
+    // Validate all open MorphQL documents
     vscode.workspace.textDocuments.forEach((document) => {
       if (document.languageId === "mql") {
         this.validateDocument(document);

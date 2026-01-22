@@ -1,6 +1,6 @@
 # @morphql/cli
 
-CLI tool for **query-morph** - structural data transformation powered by the Morph Query Language (MQL).
+CLI tool for **morphql** - structural data transformation powered by the Morph Query Language (MorphQL).
 
 ## Installation
 
@@ -11,7 +11,7 @@ npm install -g @morphql/cli
 ## Usage
 
 ```bash
-query-morph [-f <input-file> | -i <raw-input>] [-t <output-file>] -q <query>
+morphql [-f <input-file> | -i <raw-input>] [-t <output-file>] -q <query>
 ```
 
 ### Options
@@ -19,7 +19,7 @@ query-morph [-f <input-file> | -i <raw-input>] [-t <output-file>] -q <query>
 - `-f, --from <path>`: Path to the source file (JSON, XML).
 - `-i, --input <string>`: Raw source content as a string.
 - `-t, --to <path>`: Path to the destination file. If omitted, result is printed to `stdout`.
-- `-q, --query <string>`: The MQL query to execute.
+- `-q, --query <string>`: The MorphQL query to execute.
 - `--cache-dir <path>`: Directory for compiled cache (default: `.compiled`).
 
 ### Examples
@@ -27,19 +27,19 @@ query-morph [-f <input-file> | -i <raw-input>] [-t <output-file>] -q <query>
 **Transforming a file to another file:**
 
 ```bash
-query-morph --from ./data.json --to ./output.xml -q "from json to xml transform set fullName = firstName + \" \" + lastName"
+morphql --from ./data.json --to ./output.xml -q "from json to xml transform set fullName = firstName + \" \" + lastName"
 ```
 
 **Transforming raw input to stdout (useful for piping):**
 
 ```bash
-query-morph -i '{"name": "John"}' -q "from json to xml"
+morphql -i '{"name": "John"}' -q "from json to xml"
 ```
 
 **Piping output to another tool:**
 
 ```bash
-query-morph --from data.json -q "from json to json" | jq .
+morphql --from data.json -q "from json to json" | jq .
 ```
 
 > [!NOTE]

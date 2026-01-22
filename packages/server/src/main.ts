@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Query Morph API')
+    .setTitle('MorphQL API')
     .setDescription('Stateless Transformation Engine')
     .setVersion('1.0')
     .addApiKey({ type: 'apiKey', name: 'X-API-KEY', in: 'header' }, 'X-API-KEY')

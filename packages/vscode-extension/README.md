@@ -1,15 +1,15 @@
-# MQL VSCode Extension
+# MorphQL VSCode Extension
 
-Syntax highlighting and language support for **Morph Query Language (MQL)** in Visual Studio Code.
+Syntax highlighting and language support for **Morph Query Language (MorphQL)** in Visual Studio Code.
 
 ## Features
 
 ### 🎨 Syntax Highlighting
 
-- **Standalone `.mql` files**: Full syntax highlighting for MQL query files
-- **Embedded in JavaScript/TypeScript**: Syntax highlighting for MQL inside template strings
+- **Standalone `.mql` files**: Full syntax highlighting for MorphQL query files
+- **Embedded in JavaScript/TypeScript**: Syntax highlighting for MorphQL inside template strings
 
-### ▶️ Execute MQL Files
+### ▶️ Execute MorphQL Files
 
 Run `.mql` files directly in VSCode with two convenient commands:
 
@@ -26,9 +26,9 @@ Run `.mql` files directly in VSCode with two convenient commands:
 
 1. Open a `.mql` file
 2. Click the ▶️ play button in the editor toolbar, or
-3. Right-click and select "MQL: Execute with Input Data"
+3. Right-click and select "MorphQL: Execute with Input Data"
 4. Enter your input data (JSON or XML)
-5. View the results in the "MQL Output" panel
+5. View the results in the "MorphQL Output" panel
 
 **Example:**
 
@@ -38,20 +38,20 @@ Run `.mql` files directly in VSCode with two convenient commands:
 - See the transformation result!
 
 3. **Execute Selection** (For embedded queries in JS/TS)
-   - Select MQL query text in a `.ts` or `.js` file
-   - Right-click and choose "MQL: Execute Selection"
+   - Select MorphQL query text in a `.ts` or `.js` file
+   - Right-click and choose "MorphQL: Execute Selection"
    - Enter input data and see results
 
 **Example:**
 
 - Open `examples/test-selection.ts`
 - Select a query (the text between backticks)
-- Right-click → "MQL: Execute Selection"
+- Right-click → "MorphQL: Execute Selection"
 - Enter test data and see the result!
 
 ### 💬 Comments Support
 
-MQL now supports both line and block comments:
+MorphQL now supports both line and block comments:
 
 ```mql
 // Line comment
@@ -78,7 +78,7 @@ Hover over keywords and functions to see documentation:
 - **Functions**: `substring`, `split`, `replace`, `if`, etc.
 - Includes parameter descriptions and examples
 
-### 📝 Two Ways to Use MQL in JS/TS
+### 📝 Two Ways to Use MorphQL in JS/TS
 
 #### 1. Tagged Templates (Recommended)
 
@@ -125,8 +125,8 @@ Type these prefixes and press Tab:
 - `mql-if-stmt` - If/else statement block
 - `mql-clone` - Clone fields
 - `mql-define` - Define variable
-- `mql-tagged` - MQL with tagged template (JS/TS)
-- `mql-comment` - MQL with comment hint (JS/TS)
+- `mql-tagged` - MorphQL with tagged template (JS/TS)
+- `mql-comment` - MorphQL with comment hint (JS/TS)
 - `mql-compile` - Complete compile and execute pattern (JS/TS)
 
 ## Syntax Support
@@ -172,12 +172,12 @@ Type these prefixes and press Tab:
 
 ### From Marketplace (Coming Soon)
 
-Search for "MQL" in the VSCode Extensions marketplace.
+Search for "MorphQL" in the VSCode Extensions marketplace.
 
 ## Requirements
 
 - VSCode 1.75.0 or higher
-- For using MQL: `@morphql/core` package
+- For using MorphQL: `@morphql/core` package
 
 ## Example Files
 
@@ -210,14 +210,14 @@ transform
 
 - Initial release
 - Syntax highlighting for `.mql` files
-- Embedded MQL support in JS/TS (tagged templates and comment hints)
+- Embedded MorphQL support in JS/TS (tagged templates and comment hints)
 - Code snippets for common patterns
 - **Execute `.mql` files** with input data or clipboard data
 - Formatted output display with execution timing
 
 ## Contributing
 
-See the main [query-morph repository](../../README.md) for contribution guidelines.
+See the main [morphql repository](../../README.md) for contribution guidelines.
 
 ## License
 

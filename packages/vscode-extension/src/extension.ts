@@ -1,22 +1,22 @@
 import * as vscode from "vscode";
 import { compile } from "@morphql/core";
-import { MQLDiagnosticProvider } from "./diagnosticProvider";
-import { MQLHoverProvider } from "./hoverProvider";
+import { MorphQLDiagnosticProvider } from "./diagnosticProvider";
+import { MorphQLHoverProvider } from "./hoverProvider";
 
 let outputChannel: vscode.OutputChannel;
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("MQL extension is now active");
+  console.log("MorphQL extension is now active");
 
   // Create output channel for results
-  outputChannel = vscode.window.createOutputChannel("MQL Output");
+  outputChannel = vscode.window.createOutputChannel("MorphQL Output");
 
   // Register diagnostic provider
-  const diagnosticProvider = new MQLDiagnosticProvider();
+  const diagnosticProvider = new MorphQLDiagnosticProvider();
   diagnosticProvider.activate(context);
 
   // Register hover provider
-  const hoverProvider = new MQLHoverProvider();
+  const hoverProvider = new MorphQLHoverProvider();
   context.subscriptions.push(
     vscode.languages.registerHoverProvider("morphQL", hoverProvider),
   );
@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
     async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor || editor.document.languageId !== "morphQL") {
-        vscode.window.showErrorMessage("Please open an MQL file first");
+        vscode.window.showErrorMessage("Please open an MorphQL file first");
         return;
       }
 
@@ -68,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
     async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor || editor.document.languageId !== "morphQL") {
-        vscode.window.showErrorMessage("Please open an MQL file first");
+        vscode.window.showErrorMessage("Please open an MorphQL file first");
         return;
       }
 
@@ -103,7 +103,7 @@ export function activate(context: vscode.ExtensionContext) {
         query = editor.document.getText(selection);
       } else {
         vscode.window.showErrorMessage(
-          "Please select the MQL query text to execute",
+          "Please select the MorphQL query text to execute",
         );
         return;
       }
@@ -148,7 +148,7 @@ async function executeQuery(query: string, inputData: string) {
     outputChannel.clear();
     outputChannel.show(true);
     outputChannel.appendLine("=".repeat(60));
-    outputChannel.appendLine("MQL Execution Started");
+    outputChannel.appendLine("MorphQL Execution Started");
     outputChannel.appendLine("=".repeat(60));
     outputChannel.appendLine("");
 
@@ -202,7 +202,7 @@ async function executeQuery(query: string, inputData: string) {
 
     // Show success message
     vscode.window.showInformationMessage(
-      `MQL executed successfully in ${compileTime + execTime}ms`,
+      `MorphQL executed successfully in ${compileTime + execTime}ms`,
     );
   } catch (error: any) {
     outputChannel.appendLine("");
@@ -220,7 +220,7 @@ async function executeQuery(query: string, inputData: string) {
     outputChannel.appendLine("");
     outputChannel.appendLine("=".repeat(60));
 
-    vscode.window.showErrorMessage(`MQL execution failed: ${error.message}`);
+    vscode.window.showErrorMessage(`MorphQL execution failed: ${error.message}`);
   }
 }
 

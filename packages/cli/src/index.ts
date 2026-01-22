@@ -1,5 +1,5 @@
 import { compile } from "@morphql/core";
-import { MQLFileCache } from "./file-cache.js";
+import { MorphQLFileCache } from "./file-cache.js";
 import { Command } from "commander";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -8,9 +8,9 @@ import { existsSync } from "node:fs";
 const program = new Command();
 
 program
-  .name("query-morph")
+  .name("morphql")
   .description(
-    "CLI tool for query-morph - transform structural data from the command line.",
+    "CLI tool for morphql - transform structural data from the command line.",
   )
   .version("0.1.3")
   .option("-f, --from <path>", "Path to the source file")
@@ -19,7 +19,7 @@ program
     "-t, --to <path>",
     "Path to the destination file (if omitted, result is printed to stdout)",
   )
-  .requiredOption("-q, --query <string>", "MQL query string")
+  .requiredOption("-q, --query <string>", "MorphQL query string")
   .option("--cache-dir <path>", "Directory for compiled cache", ".compiled")
   .action(async (options) => {
     try {
@@ -43,7 +43,7 @@ program
       }
 
       // 2. Initialize Cache
-      const cache = new MQLFileCache(cacheDir);
+      const cache = new MorphQLFileCache(cacheDir);
 
       // 3. Compile Query
       const engine = await compile(query, { cache });

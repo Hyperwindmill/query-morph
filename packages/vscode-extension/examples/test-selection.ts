@@ -23,9 +23,9 @@ const inlineQuery = `from json to json transform set id = userId set name = user
 
 // To test:
 // 1. Select any of the queries above (the text between backticks)
-// 2. Right-click and choose "MQL: Execute Selection"
+// 2. Right-click and choose "MorphQL: Execute Selection"
 // 3. Enter test data like: {"firstName": "John", "lastName": "Doe", "ageString": "25", "email": "JOHN@EXAMPLE.COM", "active": true}
-// 4. See the result in the MQL Output panel!
+// 4. See the result in the MorphQL Output panel!
 
 async function example() {
   const data = {

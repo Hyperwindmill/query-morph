@@ -1,4 +1,4 @@
-![Query Morph](./qm_square.png)
+![MorphQL](./qm_square.png)
 
 A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Query Language** (MorphQL) to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
 
@@ -152,7 +152,7 @@ MorphQL supports standard operators for expressions:
 This repository uses **npm workspaces** to manage multiple packages:
 
 ```
-query-morph/
+morphql/
 ├── packages/
 │   ├── core/        # @morphql/core - The main library
 │   ├── playground/  # @morphql/playground - Interactive editor
@@ -164,7 +164,7 @@ query-morph/
 
 ## CLI Usage
 
-You can use `query-morph` directly from the command line:
+You can use `morphql` directly from the command line:
 
 ```bash
 # Transform a file
@@ -178,7 +178,7 @@ For more details, see the [CLI README](./packages/cli/README.md).
 
 ## Server API
 
-Deploy `query-morph` as a stateless REST API for server-side transformations:
+Deploy `morphql` as a stateless REST API for server-side transformations:
 
 ```bash
 # Quick start with Docker Compose

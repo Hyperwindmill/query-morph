@@ -1,7 +1,7 @@
 {
   "name": "@morphql/language-definitions",
   "version": "0.1.0",
-  "description": "Shared language definitions for MQL across VSCode, Monaco, and documentation",
+  "description": "Shared language definitions for MorphQL across VSCode, Monaco, and documentation",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

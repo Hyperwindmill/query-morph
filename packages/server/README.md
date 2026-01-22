@@ -1,10 +1,10 @@
-# Query Morph Server
+# MorphQL Server
 
-A high-performance, stateless NestJS API for the Query Morph transformation engine.
+A high-performance, stateless NestJS API for the MorphQL transformation engine.
 
 ## Overview
 
-This server provides a RESTful interface to compile and execute Morph Query Language (MQL) transformations. Built with NestJS, it's designed to be a lightweight, scalable microservice that can be deployed in containerized environments.
+This server provides a RESTful interface to compile and execute Morph Query Language (MorphQL) transformations. Built with NestJS, it's designed to be a lightweight, scalable microservice that can be deployed in containerized environments.
 
 ### Features
 
@@ -167,20 +167,20 @@ If `API_KEY` is not set, all requests are allowed (useful for development).
 
 ```bash
 # From monorepo root
-docker build -f packages/server/Dockerfile -t query-morph-server .
+docker build -f packages/server/Dockerfile -t morphql-server .
 ```
 
 ### Running with Docker
 
 ```bash
 # Without Redis
-docker run -p 3000:3000 query-morph-server
+docker run -p 3000:3000 morphql-server
 
 # With Redis
 docker run -p 3000:3000 \
   -e REDIS_HOST=redis.example.com \
   -e REDIS_PORT=6379 \
-  query-morph-server
+  morphql-server
 ```
 
 ### Docker Compose Production

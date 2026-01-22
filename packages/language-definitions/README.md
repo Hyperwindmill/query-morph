@@ -1,10 +1,10 @@
 # @morphql/language-definitions
 
-**Single source of truth** for MQL language definitions across all platforms.
+**Single source of truth** for MorphQL language definitions across all platforms.
 
 ## Purpose
 
-This package centralizes all MQL language definitions (keywords, functions, operators, documentation) in TypeScript, eliminating duplication across:
+This package centralizes all MorphQL language definitions (keywords, functions, operators, documentation) in TypeScript, eliminating duplication across:
 
 - VSCode extension
 - Monaco Editor (playground)

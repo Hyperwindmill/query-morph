@@ -1,9 +1,9 @@
-import { MQLCache } from "@morphql/core";
+import { MorphQLCache } from "@morphql/core";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { createHash } from "node:crypto";
 
-export class MQLFileCache implements MQLCache {
+export class MorphQLFileCache implements MorphQLCache {
   private cacheDir: string;
 
   constructor(cacheDir: string = ".compiled") {

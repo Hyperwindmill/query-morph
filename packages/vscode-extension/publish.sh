@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🎨 MQL VSCode Extension - Publishing Script"
+echo "🎨 MorphQL VSCode Extension - Publishing Script"
 echo "==========================================="
 echo ""
 
@@ -24,7 +24,7 @@ echo "✅ Package created successfully!"
 echo ""
 echo "📋 Next steps:"
 echo "1. Test locally: code --install-extension mql-vscode-0.1.0.vsix"
-echo "2. Login to marketplace: vsce login query-morph"
+echo "2. Login to marketplace: vsce login morphql"
 echo "3. Publish: vsce publish"
 echo ""
 echo "Or run: ./publish.sh --publish to publish automatically"
@@ -35,5 +35,5 @@ if [ "$1" == "--publish" ]; then
     vsce publish
     echo ""
     echo "✅ Published successfully!"
-    echo "🔗 https://marketplace.visualstudio.com/items?itemName=query-morph.mql-vscode"
+    echo "🔗 https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode"
 fi

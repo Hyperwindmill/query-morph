@@ -1,4 +1,4 @@
-# Publishing MQL VSCode Extension
+# Publishing MorphQL VSCode Extension
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ npm install -g @vscode/vsce
 
 1. Go to https://dev.azure.com
 2. Sign in with Microsoft account (or create one)
-3. Create an organization (e.g., "query-morph")
+3. Create an organization (e.g., "morphql")
 
 ### 3. Create a Personal Access Token (PAT)
 
@@ -31,8 +31,8 @@ npm install -g @vscode/vsce
 1. Go to https://marketplace.visualstudio.com/manage
 2. Click "Create publisher"
 3. Fill in:
-   - **ID**: `query-morph` (or your preferred ID)
-   - **Name**: Query Morph
+   - **ID**: `morphql` (or your preferred ID)
+   - **Name**: MorphQL
    - **Email**: your@email.com
 4. Click "Create"
 
@@ -53,10 +53,10 @@ Update `package.json`:
 ```json
 {
   "icon": "icon.png",
-  "publisher": "query-morph",
+  "publisher": "morphql",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Hyperwindmill/query-morph.git"
+    "url": "https://github.com/Hyperwindmill/morphql.git"
   }
 }
 ```
@@ -68,10 +68,10 @@ Edit `packages/vscode-extension/package.json`:
 ```json
 {
   "name": "mql-vscode",
-  "displayName": "MQL (Morph Query Language)",
+  "displayName": "MorphQL (Morph Query Language)",
   "description": "Syntax highlighting, diagnostics, and execution for Morph Query Language",
   "version": "0.1.0",
-  "publisher": "query-morph",
+  "publisher": "morphql",
   "icon": "icon.png",
   "engines": {
     "vscode": "^1.75.0"
@@ -120,11 +120,11 @@ Create `packages/vscode-extension/CHANGELOG.md`:
 ### Added
 
 - Initial release
-- Syntax highlighting for MQL files
-- Embedded MQL support in JS/TS
+- Syntax highlighting for MorphQL files
+- Embedded MorphQL support in JS/TS
 - Real-time diagnostics
 - Hover documentation
-- Execute MQL files with input data
+- Execute MorphQL files with input data
 - Execute embedded queries
 - Comment support (line and block)
 ```
@@ -168,7 +168,7 @@ Test thoroughly!
 cd packages/vscode-extension
 
 # Login (use your PAT when prompted)
-vsce login query-morph
+vsce login morphql
 
 # Publish
 vsce publish
@@ -176,7 +176,7 @@ vsce publish
 
 ### Option 2: Manual Upload
 
-1. Go to https://marketplace.visualstudio.com/manage/publishers/query-morph
+1. Go to https://marketplace.visualstudio.com/manage/publishers/morphql
 2. Click "New extension" → "Visual Studio Code"
 3. Upload the `.vsix` file
 4. Fill in any additional metadata
@@ -235,12 +235,12 @@ vsce publish major
 ### 1. Add Badge to README
 
 ```markdown
-[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/query-morph.mql-vscode)](https://marketplace.visualstudio.com/items?itemName=query-morph.mql-vscode)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/morphql.mql-vscode)](https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode)
 ```
 
 ### 2. Monitor
 
-- Check https://marketplace.visualstudio.com/items?itemName=query-morph.mql-vscode
+- Check https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode
 - Monitor install count
 - Respond to reviews
 
@@ -251,9 +251,9 @@ Add to main `README.md`:
 ```markdown
 ## VSCode Extension
 
-Install the MQL extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=query-morph.mql-vscode)
+Install the MorphQL extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=morphql.mql-vscode)
 
-Or search for "MQL" in VSCode Extensions.
+Or search for "MorphQL" in VSCode Extensions.
 ```
 
 ---

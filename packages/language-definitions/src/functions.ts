@@ -1,7 +1,7 @@
 import { FunctionDef } from "./types";
 
 /**
- * MQL Functions - Single source of truth
+ * MorphQL Functions - Single source of truth
  *
  * When adding a new function:
  * 1. Add it here
@@ -58,7 +58,7 @@ export const FUNCTIONS: FunctionDef[] = [
         { name: "replacement", description: "The replacement string" },
       ],
       returns: "string",
-      example: 'replace("Hello World", "World", "MQL")  // "Hello MQL"',
+      example: 'replace("Hello World", "World", "MorphQL")  // "Hello MorphQL"',
     },
   },
   {

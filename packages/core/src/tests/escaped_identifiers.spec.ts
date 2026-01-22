@@ -88,7 +88,7 @@ describe('Escaped Identifiers', async () => {
   });
 
   it('should support escaped backticks within quoted identifiers', async () => {
-    // MQL source: set `field\`name` = 1
+    // MorphQL source: set `field\`name` = 1
     // We double-escape because this is a JS string
     const query = 'from object to object transform set `field\\`name` = 1';
     const engine = await compile(query);

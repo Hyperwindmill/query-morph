@@ -33,7 +33,7 @@ const cache = redisHost
 
 export class ExecuteDto {
   @ApiProperty({
-    description: 'The MQL query string',
+    description: 'The MorphQL query string',
     example: 'from json to json transform set name = split(fullName, " ")',
   })
   query!: string;
@@ -47,7 +47,7 @@ export class ExecuteDto {
 
 export class CompileDto {
   @ApiProperty({
-    description: 'The MQL query string',
+    description: 'The MorphQL query string',
     example: 'from json to json transform set name = split(fullName, " ")',
   })
   query!: string;
@@ -110,7 +110,7 @@ export class MorphController {
   }
 
   @Post('compile')
-  @ApiOperation({ summary: 'Compile MQL to JavaScript' })
+  @ApiOperation({ summary: 'Compile MorphQL to JavaScript' })
   @ApiResponse({ status: 200, type: CompileResponseDto })
   async compile(@Body() body: CompileDto): Promise<CompileResponseDto> {
     if (!body.query) {

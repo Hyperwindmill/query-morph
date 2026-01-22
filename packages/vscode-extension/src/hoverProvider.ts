@@ -6,7 +6,7 @@ import {
 
 const { keywordDocs, functionDocs } = generateHoverDocs();
 
-export class MQLHoverProvider implements vscode.HoverProvider {
+export class MorphQLHoverProvider implements vscode.HoverProvider {
   provideHover(
     document: vscode.TextDocument,
     position: vscode.Position,

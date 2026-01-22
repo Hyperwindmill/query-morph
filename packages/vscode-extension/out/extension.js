@@ -21056,7 +21056,7 @@ var at=createToken({name:"WhiteSpace",pattern:/\s+/,group:Lexer.SKIPPED}),ot=cre
       }
       `}},it=new J;var st={};function X(r,t){st[r.toLowerCase()]=t;}function Z(r){let t=st[r.toLowerCase()];if(!t)throw new Error(`No adapter found for format: ${r}`);return t}X("json",{parse:r=>typeof r!="string"?r:JSON.parse(r),serialize:r=>JSON.stringify(r,null,2)});var Et=new Builder({ignoreAttributes:false,attributeNamePrefix:"$",textNodeName:"_",format:true});X("xml",{parse:r=>typeof r!="string"?r:new XMLParser({ignoreAttributes:false,removeNSPrefix:true}).parse(r),serialize:(r,t)=>{let e=t?.rootGenerated??"root";return Et.build({[e]:r})}});X("object",{parse:r=>r,serialize:r=>r});async function qt(r,t){let e=et.tokenize(r);if(e.errors.length>0)throw new Error(`Lexing errors: ${e.errors[0].message}`);E.input=e.tokens;let i=E.query();if(E.errors.length>0)throw new Error(`Parsing errors: ${E.errors[0].message}`);let{code:s}=it.visit(i),a=Lt.js(s,{indent_size:2,space_in_empty_paren:true,end_with_newline:true});return nt(a)}function nt(r){let e=new Function(r)(),i={parse:(a,o)=>Z(a).parse(o),serialize:(a,o,l)=>Z(a).serialize(o,l)},s=(a=>e(a,i));return s.code=r,s}
 
-class MQLDiagnosticProvider {
+class MorphQLDiagnosticProvider {
     constructor() {
         this.diagnosticCollection =
             vscode__namespace.languages.createDiagnosticCollection("mql");
@@ -21080,7 +21080,7 @@ class MQLDiagnosticProvider {
                 this.validateDocument(document);
             }
         }));
-        // Validate all open MQL documents
+        // Validate all open MorphQL documents
         vscode__namespace.workspace.textDocuments.forEach((document) => {
             if (document.languageId === "mql") {
                 this.validateDocument(document);
@@ -21387,7 +21387,7 @@ var FUNCTIONS = [
         { name: "replacement", description: "The replacement string" }
       ],
       returns: "string",
-      example: 'replace("Hello World", "World", "MQL")  // "Hello MQL"'
+      example: 'replace("Hello World", "World", "MorphQL")  // "Hello MorphQL"'
     }
   },
   {
@@ -21502,7 +21502,7 @@ function generateHoverDocs() {
 }
 
 const { keywordDocs, functionDocs } = generateHoverDocs();
-class MQLHoverProvider {
+class MorphQLHoverProvider {
     provideHover(document, position, token) {
         const range = document.getWordRangeAtPosition(position);
         if (!range) {
@@ -21552,20 +21552,20 @@ class MQLHoverProvider {
 
 let outputChannel;
 function activate(context) {
-    console.log("MQL extension is now active");
+    console.log("MorphQL extension is now active");
     // Create output channel for results
-    outputChannel = vscode__namespace.window.createOutputChannel("MQL Output");
+    outputChannel = vscode__namespace.window.createOutputChannel("MorphQL Output");
     // Register diagnostic provider
-    const diagnosticProvider = new MQLDiagnosticProvider();
+    const diagnosticProvider = new MorphQLDiagnosticProvider();
     diagnosticProvider.activate(context);
     // Register hover provider
-    const hoverProvider = new MQLHoverProvider();
+    const hoverProvider = new MorphQLHoverProvider();
     context.subscriptions.push(vscode__namespace.languages.registerHoverProvider("mql", hoverProvider));
     // Register command: Execute with input data
     const executeWithInput = vscode__namespace.commands.registerCommand("mql.executeWithInput", async () => {
         const editor = vscode__namespace.window.activeTextEditor;
         if (!editor || editor.document.languageId !== "mql") {
-            vscode__namespace.window.showErrorMessage("Please open an MQL file first");
+            vscode__namespace.window.showErrorMessage("Please open an MorphQL file first");
             return;
         }
         const query = editor.document.getText();
@@ -21600,7 +21600,7 @@ function activate(context) {
     const executeFromClipboard = vscode__namespace.commands.registerCommand("mql.executeFromClipboard", async () => {
         const editor = vscode__namespace.window.activeTextEditor;
         if (!editor || editor.document.languageId !== "mql") {
-            vscode__namespace.window.showErrorMessage("Please open an MQL file first");
+            vscode__namespace.window.showErrorMessage("Please open an MorphQL file first");
             return;
         }
         const query = editor.document.getText();
@@ -21626,7 +21626,7 @@ function activate(context) {
             query = editor.document.getText(selection);
         }
         else {
-            vscode__namespace.window.showErrorMessage("Please select the MQL query text to execute");
+            vscode__namespace.window.showErrorMessage("Please select the MorphQL query text to execute");
             return;
         }
         // Ask for input data
@@ -21661,7 +21661,7 @@ async function executeQuery(query, inputData) {
         outputChannel.clear();
         outputChannel.show(true);
         outputChannel.appendLine("=".repeat(60));
-        outputChannel.appendLine("MQL Execution Started");
+        outputChannel.appendLine("MorphQL Execution Started");
         outputChannel.appendLine("=".repeat(60));
         outputChannel.appendLine("");
         outputChannel.appendLine("Query:");
@@ -21709,7 +21709,7 @@ async function executeQuery(query, inputData) {
         outputChannel.appendLine("");
         outputChannel.appendLine("=".repeat(60));
         // Show success message
-        vscode__namespace.window.showInformationMessage(`MQL executed successfully in ${compileTime + execTime}ms`);
+        vscode__namespace.window.showInformationMessage(`MorphQL executed successfully in ${compileTime + execTime}ms`);
     }
     catch (error) {
         outputChannel.appendLine("");
@@ -21724,7 +21724,7 @@ async function executeQuery(query, inputData) {
         }
         outputChannel.appendLine("");
         outputChannel.appendLine("=".repeat(60));
-        vscode__namespace.window.showErrorMessage(`MQL execution failed: ${error.message}`);
+        vscode__namespace.window.showErrorMessage(`MorphQL execution failed: ${error.message}`);
     }
 }
 function formatXml(xml) {

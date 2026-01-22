@@ -1,6 +1,6 @@
 # @morphql/core
 
-A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Query Language** (MQL) to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
+A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Query Language** (MorphQL) to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
 
 ## Key Features
 
@@ -33,7 +33,7 @@ const result = engine({ firstName: 'John', lastName: 'Doe' });
 // <root><fullName>John Doe</fullName></root>
 ```
 
-For full documentation of the Morph Query Language, see the [main repository README](https://github.com/Hyperwindmill/query-morph).
+For full documentation of the Morph Query Language, see the [main repository README](https://github.com/Hyperwindmill/morphql).
 
 ## License
 

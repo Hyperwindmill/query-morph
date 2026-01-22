@@ -1,6 +1,6 @@
 # Project Overview & AI Handover Guide
 
-## Project Goal: `query-morph`
+## Project Goal: `morphql`
 
 A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transform structural data (JSON/XML) by compiling the query into a pure JavaScript function specialized for that specific transformation.
 
@@ -94,7 +94,7 @@ A high-performance, isomorphic Query-to-Code engine. It provides a DSL to transf
 ## Monorepo Structure
 
 ```
-query-morph/
+morphql/
 ├── packages/
 │   ├── core/        # @morphql/core - Main transformation library
 │   ├── playground/  # @morphql/playground - Interactive web editor
@@ -105,7 +105,7 @@ query-morph/
 
 ### Server Package (`packages/server/`)
 
-A production-ready NestJS microservice that exposes the query-morph engine via REST API.
+A production-ready NestJS microservice that exposes the morphql engine via REST API.
 
 **Key Features**:
 

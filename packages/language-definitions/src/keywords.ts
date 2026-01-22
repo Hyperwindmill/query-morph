@@ -1,7 +1,7 @@
 import { KeywordDef } from "./types";
 
 /**
- * MQL Keywords - Single source of truth
+ * MorphQL Keywords - Single source of truth
  *
  * When adding a new keyword:
  * 1. Add it here

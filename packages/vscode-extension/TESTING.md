@@ -1,4 +1,4 @@
-# Testing the MQL VSCode Extension
+# Testing the MorphQL VSCode Extension
 
 ## Quick Start
 
@@ -11,7 +11,7 @@ code .
 
 Then press **F5** to launch the Extension Development Host.
 
-### 2. Test Standalone MQL Files
+### 2. Test Standalone MorphQL Files
 
 In the Extension Development Host window:
 
@@ -22,7 +22,7 @@ In the Extension Development Host window:
    - Operators (`===`, `!==`, `+`, `-`, etc.) should be highlighted
    - Strings and numbers should be highlighted
 
-### 3. Test Embedded MQL in TypeScript
+### 3. Test Embedded MorphQL in TypeScript
 
 1. Open `examples/embedded-example.ts`
 2. Verify syntax highlighting inside:
@@ -72,17 +72,17 @@ In a new `.ts` file, type:
 
 ### Embedded Language Support
 
-In TypeScript files, MQL syntax should be highlighted inside:
+In TypeScript files, MorphQL syntax should be highlighted inside:
 
 ```typescript
-// This should have MQL syntax highlighting:
+// This should have MorphQL syntax highlighting:
 const query = mql`
   from json to xml
   transform
     set name = firstName
 `;
 
-// This should also have MQL syntax highlighting:
+// This should also have MorphQL syntax highlighting:
 // @mql
 const query2 = `
   from json to xml
@@ -91,7 +91,7 @@ const query2 = `
 
 ## Troubleshooting
 
-### No Syntax Highlighting in Embedded MQL
+### No Syntax Highlighting in Embedded MorphQL
 
 1. Make sure you've compiled the extension: `npm run compile`
 2. Restart the Extension Development Host (Ctrl+R or Cmd+R)
@@ -99,7 +99,7 @@ const query2 = `
 
 ### Snippets Not Working
 
-1. Make sure you're in the correct file type (`.mql` for MQL snippets, `.ts`/`.js` for embedded snippets)
+1. Make sure you're in the correct file type (`.mql` for MorphQL snippets, `.ts`/`.js` for embedded snippets)
 2. Type the prefix exactly and press Tab
 3. Check VSCode settings: `"editor.snippetSuggestions": "top"`
 

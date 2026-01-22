@@ -1,7 +1,7 @@
 import { OperatorDef } from "./types";
 
 /**
- * MQL Operators - Single source of truth
+ * MorphQL Operators - Single source of truth
  *
  * When adding a new operator:
  * 1. Add it here

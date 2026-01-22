@@ -1,15 +1,15 @@
 # Change Log
 
-All notable changes to the MQL VSCode extension will be documented in this file.
+All notable changes to the MorphQL VSCode extension will be documented in this file.
 
 ## [0.1.0] - 2026-01-21
 
 ### Added
 
-- Initial release of MQL VSCode extension
+- Initial release of MorphQL VSCode extension
 - **Syntax Highlighting**
   - Full syntax highlighting for `.mql` files
-  - Embedded MQL support in JavaScript/TypeScript (tagged templates and comment hints)
+  - Embedded MorphQL support in JavaScript/TypeScript (tagged templates and comment hints)
   - Support for keywords, functions, operators, strings, numbers, and comments
 - **Comment Support**
   - Line comments (`//`)
@@ -25,12 +25,12 @@ All notable changes to the MQL VSCode extension will be documented in this file.
 - **Code Execution**
   - Execute `.mql` files with input data dialog
   - Execute `.mql` files with clipboard data
-  - Execute selected MQL queries in JS/TS files
+  - Execute selected MorphQL queries in JS/TS files
   - Formatted output display (JSON/XML)
   - Execution timing metrics
 - **Code Snippets**
-  - Snippets for common MQL patterns
-  - Snippets for embedded MQL in JS/TS
+  - Snippets for common MorphQL patterns
+  - Snippets for embedded MorphQL in JS/TS
 - **Language Configuration**
   - Auto-closing pairs for brackets and quotes
   - Comment toggling support
@@ -38,7 +38,7 @@ All notable changes to the MQL VSCode extension will be documented in this file.
 
 ### Features
 
-- Supports MQL keywords: `from`, `to`, `transform`, `set`, `section`, `multiple`, `clone`, `delete`, `define`, `if`, `else`
+- Supports MorphQL keywords: `from`, `to`, `transform`, `set`, `section`, `multiple`, `clone`, `delete`, `define`, `if`, `else`
 - Supports built-in functions: `substring`, `split`, `replace`, `text`, `number`, `uppercase`, `lowercase`, `extractnumber`, `xmlnode`, `if`
 - Supports operators: arithmetic (`+`, `-`, `*`, `/`), comparison (`==`, `===`, `!=`, `!==`, `<`, `>`, `<=`, `>=`), logical (`&&`, `||`, `!`)
 - Centralized language definitions using `@morphql/language-definitions` package

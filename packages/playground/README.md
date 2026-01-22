@@ -1,6 +1,6 @@
 # @morphql/playground
 
-An interactive, real-time web editor to test and visualize **Morph Query Language** (MQL) transformations.
+An interactive, real-time web editor to test and visualize **Morph Query Language** (MorphQL) transformations.
 
 ## Features
 
