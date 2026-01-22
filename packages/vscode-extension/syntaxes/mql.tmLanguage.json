@@ -112,14 +112,14 @@
       "patterns": [
         {
           "name": "variable.other.quoted.mql",
-          "begin": "`",
-          "end": "`",
-          "patterns": [
-            {
-              "name": "constant.character.escape.mql",
-              "match": "\\\\."
-            }
-          ]
+          "begin": "(\\\\)?`",
+          "beginCaptures": {
+            "1": { "name": "punctuation.definition.variable.escape.mql" }
+          },
+          "end": "(\\\\)?`",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.variable.escape.mql" }
+          }
         }
       ]
     }
