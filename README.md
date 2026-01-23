@@ -1,259 +1,332 @@
-![MorphQL](./morphql.png)
+<p align="center">
+  <img src="./morphql.png" alt="MorphQL" width="400" />
+</p>
 
-A high-performance, isomorphic Query-to-Code engine. It provides the **Morph Query Language** (MorphQL) to transform structural data (JSON, XML, or Objects) by compiling queries into specialized, pure JavaScript functions.
+<h3 align="center">Transform Data with Declarative Queries</h3>
 
-## Current status
+<p align="center">
+  A high-performance engine that compiles transformation queries into optimized JavaScript functions.
+  <br />
+  <strong>Isomorphic · Type-Safe · Fast</strong>
+</p>
 
-Please note that this project is in a very early stage and is not ready for production use. It is currently under active development and subject to change.
-Packages are NOT published to npm yet.
+<p align="center">
+  <code>📦 Library</code> · <code>💻 CLI</code> · <code>🌐 REST Server</code>
+</p>
 
-## Key Features
+<p align="center">
+  <a href="#-as-a-library">Library</a> •
+  <a href="#-as-a-cli">CLI</a> •
+  <a href="#-as-an-api-server">Server</a> •
+  <a href="#use-cases">Use Cases</a> •
+  <a href="./docs/language-reference.md">Docs</a>
+</p>
 
-- 🚀 **Performance**: Compiles DSL to native JS for maximum execution speed.
-- 🌐 **Isomorphic**: Runs seamlessly in Node.js and the Browser.
-- 🧩 **Format Agnostic**: Input and output can be JSON, XML, or raw Objects.
-- ➗ **Expressions**: Support for arithmetic, string concatenation, and unary minus.
-- 🔀 **Conditional Logic**: `if` function with comparison and logical operators.
-- 🛠️ **Modular Functions**: Extensible function registry (e.g., `substring`, `xmlnode`, `extractNumber`, `uppercase`, `lowercase`, `text`, `number`).
-- 🔄 **Structural Mapping**: Easy handling of nested objects and arrays (`multiple`).
-- 🎨 **Playground**: Real-time editor to test and visualize generated code.
-- 🖼️ **IDE Support**: JetBrains/VSCode Extension (highlighting, injection, docs).
+---
 
-## Installation
+## What is MorphQL?
 
-```bash
-npm install @morphql/core
-```
+**MorphQL** (Morph Query Language) is a declarative DSL that transforms structural data—JSON, XML, or Objects—by compiling your queries into specialized, native JavaScript functions.
 
-## Usage Example
+Unlike traditional data mappers that interpret transformations at runtime, MorphQL **compiles once and executes fast**. This makes it ideal for high-throughput ETL pipelines, API response shaping, and format conversion workflows.
 
-```typescript
+```javascript
 import { compile, morphQL } from "@morphql/core";
 
-// 1. Structural Transformation with Tagged Template
-const query = morphQL`
-  from object to json
+const engine = await compile(morphQL`
+  from json to json
   transform
     set fullName = firstName + " " + lastName
-    set shortSku = substring(sku, 0, 3)
-    set total = (price * amount) - discount
-    section header(
-      set id = orderId
-    )
-`;
+    set sku = substring(productCode, 0, 6)
+    set total = (price * quantity) - discount
+`);
 
-const engine = await compile(query);
+const result = engine(inputData);
+```
 
-const source = {
-  firstName: "John",
-  lastName: "Doe",
-  sku: "ABC12345",
-  price: 100,
-  amount: 2,
-  discount: 10,
-  orderId: "ORD-99",
-};
+---
 
-const result = engine(source);
-console.log(result);
-// Output: JSON string with fullName, shortSku, total, and header object
+## Why MorphQL?
 
-// 2. Pure Format Conversion (No Transform)
-const convertQuery = morphQL`from json to xml`;
-const convertEngine = await compile(convertQuery);
-const xmlResult = convertEngine('{"foo":"bar"}');
-// Output: <root><foo>bar</foo></root>
+| Challenge                                        | MorphQL Solution                             |
+| :----------------------------------------------- | :------------------------------------------- |
+| **Complex mapping logic** scattered across code  | Declarative, self-documenting queries        |
+| **Performance bottlenecks** in data processing   | Compiled to native JS for maximum speed      |
+| **Format juggling** between JSON/XML/Objects     | Built-in format conversion in a single query |
+| **Inconsistent transformations** across services | Centralized, reusable query definitions      |
+| **Debug difficulty** with nested mappers         | Generated code is readable and inspectable   |
 
-// 3. Subquery Sections (Format Conversion in Sections)
-const subqueryEngine = morphQL`
+---
+
+## Use Cases
+
+### 🔄 API Response Transformation
+
+Shape backend responses into frontend-friendly formats without cluttering your application code.
+
+```javascript
+const shapeOrder = await compile(morphQL`
+  from json to json
+  transform
+    set id = orderId
+    set customer = billing.customerName
+    section multiple items(
+      set name = productName
+      set price = number(unitPrice)
+    ) from lineItems
+`);
+```
+
+### 📦 ETL Pipelines
+
+Process large datasets with compiled transformations for optimal throughput.
+
+```javascript
+const transform = await compile(morphQL`
+  from xml to json
+  transform
+    set productId = root.product.id
+    set price = extractnumber(root.product.price)
+    set available = root.product.stock > 0
+`);
+
+// Process millions of records efficiently
+data.map(transform);
+```
+
+### 🔧 Format Conversion
+
+Convert between formats with zero transformation logic—just specify source and target.
+
+```javascript
+const xmlToJson = await compile(morphQL`from xml to json`);
+const jsonToXml = await compile(morphQL`from json to xml`);
+```
+
+### 🧩 Nested Data Processing
+
+Handle complex nested structures with subqueries that can parse embedded data.
+
+```javascript
+const engine = await compile(morphQL`
   from json to object
   transform
     set orderId = id
     section metadata(
       from xml to object
       transform
-        set name = root.productName
-        set price = number(root.cost)
-    ) from xmlString
-`;
-const subqueryResult = await compile(subqueryEngine);
-// Parses XML field and transforms it within the section
+        set supplier = root.vendor.name
+    ) from embeddedXmlField
+`);
 ```
-
-> **💡 Tip**: Use the `morphQL` tagged template for better syntax highlighting in VSCode! Install the [MorphQL VSCode extension](./packages/vscode-extension) for the best development experience.
-
-## MorphQL Reference
-
-Morph Query Language (MorphQL) is a declarative DSL for structural data transformation.
-
-### Actions (Statements)
-
-Actions are the top-level commands used inside the `transform` block or `section` blocks.
-
-- **`set [target] = [expression]`**: Sets a property on the target object.
-- **`section [multiple] [name]( [subquery] [actions] ) [from [path]]`**: Creates a nested object or array.
-  - `multiple`: If present, treats the source as an array and maps each item.
-  - `subquery`: Optional nested query for format conversion: `from [format] to [format] [transform]`
-  - `from [path]`: Optional path to shift the context of the source data.
-  - Example with subquery: `section metadata( from xml to object transform set name = root.productName ) from xmlString`
-- **`clone([fields...])`**: Clones the entire source object or specific fields into the target.
-- **`delete [field]`**: Removes a property from the target object (useful after `clone`).
-- **`define [alias] = [expression]`**: Defines a local variable/alias that can be used in subsequent expressions within the same scope.
-- **`if ([condition]) ( [thenActions] ) [else ( [elseActions] )]`**: Executes a block of actions conditionally.
-
-### Escaped Identifiers
-
-Use backticks (`` `fieldname` ``) to use reserved keywords or special characters (dashes, spaces, etc.) as identifiers:
-
-```morphQL
-transform
-  set `multiple` = true
-  set `order-id` = root.`external-id`
-```
-
-Backticks can even be escaped with \ when needed in a field name.\
-Natural template string escape of backticks is also supported in the vscode extension and does not break synthax highlighting.
-
-### Functions
-
-Functions can be used within expressions to calculate values.
-
-| Function                              | Description                                               | Example                           |
-| :------------------------------------ | :-------------------------------------------------------- | :-------------------------------- |
-| `substring(str, start, [length])`     | Extracts a part of a string. Supports negative indices.   | `substring(sku, 0, 3)`            |
-| `if(cond, trueVal, falseVal)`         | Ternary-like expression.                                  | `if(age >= 18, "adult", "minor")` |
-| `text(val)`                           | Converts a value to a string.                             | `text(123)`                       |
-| `replace(str, search, replace)`       | Replaces occurrences in a string.                         | `replace(name, " ", "_")`         |
-| `split(str, [sep], [limit])`          | Splits a string into an array. Default separator is `""`. | `split(sku, "-")`                 |
-| `number(val)`                         | Converts a value to a number.                             | `number("42")`                    |
-| `extractnumber(str)`                  | Extracts the first numeric sequence from a string.        | `extractnumber("Price: 100USD")`  |
-| `uppercase(str)`                      | Converts string to uppercase.                             | `uppercase("hello")`              |
-| `lowercase(str)`                      | Converts string to lowercase.                             | `lowercase("HELLO")`              |
-| `xmlnode(val, [attrKey, attrVal...])` | Wraps a value for XML output with optional attributes.    | `xmlnode(content, "id", 1)`       |
-| `to_base64(val)`                      | Encodes a string to Base64 (isomorphic).                  | `to_base64("hello")`              |
-| `from_base64(val)`                    | Decodes a Base64 string (isomorphic).                     | `from_base64("aGVsbG8=") `        |
-| `aslist(val)`                         | Ensures a value is an array (useful for XML).             | `aslist(items)`                   |
-
-### Operators
-
-MorphQL supports standard operators for expressions:
-
-- **Arithmetic**: `+`, `-`, `*`, `/`
-- **Comparison**: `==`, `===`, `!=`, `!==`, `<`, `>`, `<=`, `>=`
-- **Logical**: `&&` (and), `||` (or), `!` (not)
-- **Grouping**: `( )` for precedence.
 
 ---
 
-## Array Mapping
+## Quick Start
 
-`section multiple items( set sku = itemSku )` from `itemsArray`
+### Installation
 
-## Monorepo Structure
-
-This repository uses **npm workspaces** to manage multiple packages:
-
-```
-morphql/
-├── packages/
-│   ├── core/        # @morphql/core - The main library
-│   ├── playground/  # @morphql/playground - Interactive editor
-│   ├── cli/         # @morphql/cli - Command line interface
-│   └── server/      # NestJS REST API server
-├── package.json     # Workspace configuration
-└── README.md
+```bash
+npm install @morphql/core
 ```
 
-## CLI Usage
+### Basic Usage
 
-You can use `morphql` directly from the command line:
+```javascript
+import { compile, morphQL } from "@morphql/core";
+
+// Define your transformation
+const query = morphQL`
+  from object to json
+  transform
+    set greeting = "Hello, " + name + "!"
+    set isAdult = age >= 18
+`;
+
+// Compile once
+const engine = await compile(query);
+
+// Execute many times
+const result = engine({ name: "Alice", age: 25 });
+// → '{"greeting":"Hello, Alice!","isAdult":true}'
+```
+
+> 💡 **Tip**: Use the `morphQL` tagged template for syntax highlighting in [VSCode](#vscode-extension) and [JetBrains](#jetbrains-plugin) IDEs.
+
+---
+
+## How to Use
+
+MorphQL is available in multiple forms to fit your workflow:
+
+### 📦 As a Library
+
+Import `@morphql/core` directly into your Node.js or browser application.
+
+```bash
+npm install @morphql/core
+```
+
+```javascript
+import { compile, morphQL } from "@morphql/core";
+
+const engine = await compile(morphQL`from json to xml`);
+const xml = engine('{"foo":"bar"}');
+```
+
+**Features:**
+
+- 🌐 Isomorphic—works in Node.js and browsers
+- ⚡ Async compilation with optional caching
+- 🔌 Pluggable format adapters
+
+### 💻 As a CLI
+
+Use `@morphql/cli` for command-line transformations and scripting.
 
 ```bash
 # Transform a file
 npx @morphql/cli --from ./data.json --to ./output.xml -q "from json to xml"
 
-# Transform raw input to stdout
+# Transform raw input, output to stdout
 npx @morphql/cli -i '{"a":1}' -q "from json to xml"
+
+# Pipe-friendly
+cat data.json | npx @morphql/cli -q "from json to json transform set id = uuid"
 ```
 
-For more details, see the [CLI README](./packages/cli/README.md).
+📖 [Full CLI Documentation](./packages/cli/README.md)
 
-## Server API
+### 🌐 As an API Server
 
-Deploy `morphql` as a stateless REST API for server-side transformations:
+Deploy `@morphql/server` as a stateless REST API for server-side transformations.
 
 ```bash
-# Quick start with Docker Compose
 cd packages/server
 docker compose up -d
 ```
 
-The server exposes HTTP endpoints for executing transformations:
-
 ```bash
-# Execute a transformation
 curl -X POST http://localhost:3000/v1/execute \
   -H "Content-Type: application/json" \
   -d '{
     "query": "from json to json transform set firstName = split(fullName, \" \")[0]",
     "data": { "fullName": "John Doe" }
   }'
-
-# Response: {"success":true,"result":{"firstName":"John"},"executionTime":2.5}
 ```
 
-**Features**:
+**Features:**
 
 - 🚀 Stateless & horizontally scalable
 - ⚡ Redis caching for compiled queries
 - 🔐 Optional API key authentication
 - 📊 Swagger docs at `/api`
 
-For more details, see the [Server README](./packages/server/README.md).
+📖 [Full Server Documentation](./packages/server/README.md)
 
-## Development
+### 🎮 In the Playground
 
-### Prerequisites
-
-```bash
-npm install    # Installs all workspace dependencies
-npm run build  # Builds @morphql/core
-```
-
-### Available Scripts (from root)
-
-| Command              | Description                     |
-| -------------------- | ------------------------------- |
-| `npm run build`      | Build the core library          |
-| `npm run test`       | Run tests for core library      |
-| `npm run playground` | Start the playground dev server |
-| `npm run server`     | Start the API server (dev mode) |
-| `npm run dev`        | Watch mode for core library     |
-| `npm run build:all`  | Build all packages              |
-| `npm run test:all`   | Run tests for all packages      |
-
-### Development Workflow
+Try MorphQL instantly in the interactive web playground—no installation required.
 
 ```bash
-# Terminal 1: Watch library changes
-npm run dev
-
-# Terminal 2: Run playground
 npm run playground
 ```
 
-Changes to `@morphql/core` are automatically picked up by Vite's HMR.
+Features a real-time editor with syntax highlighting, live output preview, and generated JavaScript inspection.
+
+---
+
+## Available Tools
+
+### VSCode Extension
+
+Full language support for VSCode and compatible editors.
+
+- ✨ Syntax highlighting for `.mql` files and template literals
+- 📝 Hover documentation for keywords and functions
+- 🎯 Language injection in `morphQL` tagged templates
+
+📦 [packages/vscode-extension](./packages/vscode-extension)
+
+### JetBrains Plugin
+
+Native support for IntelliJ IDEA, WebStorm, PhpStorm, and all JetBrains IDEs that support Javascript.
+
+- ✨ Syntax highlighting
+- 📝 Hover documentation
+- 🎯 Language injection in template strings
+
+📦 [packages/jetbrains-extension](./packages/jetbrains-extension)
+
+### Language Definitions
+
+A shared package providing language specifications for tooling integration.
+
+📦 [@morphql/language-definitions](./packages/language-definitions)
+
+---
+
+## Documentation
+
+| Document                                           | Description                                       |
+| :------------------------------------------------- | :------------------------------------------------ |
+| [Language Reference](./docs/language-reference.md) | Complete MorphQL syntax, functions, and operators |
+| [Architecture Guide](./docs/architecture.md)       | Internal design and package structure             |
+| [Maintenance Guide](./docs/maintenance.md)         | How to extend the language                        |
+
+---
 
 ## Packages
 
-| Package                                               | Description               |
-| ----------------------------------------------------- | ------------------------- |
-| [@morphql/core](./packages/core)                      | The transformation engine |
-| [@morphql/playground](./packages/playground)          | Interactive web editor    |
-| [@morphql/cli](./packages/cli)                        | Command line interface    |
-| [server](./packages/server)                           | NestJS REST API server    |
-| [jetbrains-extension](./packages/jetbrains-extension) | JetBrains IDE Plugin      |
+| Package                                                          | Description                | Status   |
+| :--------------------------------------------------------------- | :------------------------- | :------- |
+| [@morphql/core](./packages/core)                                 | Core transformation engine | ✅ Ready |
+| [@morphql/cli](./packages/cli)                                   | Command-line interface     | ✅ Ready |
+| [@morphql/playground](./packages/playground)                     | Interactive web editor     | ✅ Ready |
+| [@morphql/server](./packages/server)                             | REST API server            | ✅ Ready |
+| [vscode-extension](./packages/vscode-extension)                  | VSCode language support    | ✅ Ready |
+| [jetbrains-extension](./packages/jetbrains-extension)            | JetBrains IDE plugin       | ✅ Ready |
+| [@morphql/language-definitions](./packages/language-definitions) | Shared language specs      | ✅ Ready |
+
+---
+
+## Development
+
+```bash
+# Install all dependencies
+npm install
+
+# Build the core library
+npm run build
+
+# Run tests
+npm run test
+
+# Start the playground
+npm run playground
+
+# Watch mode for development
+npm run dev
+```
+
+See the [Architecture Guide](./docs/architecture.md) for detailed development information.
+
+---
+
+## Project Status
+
+> ⚠️ **Early Stage**: MorphQL is under active development. The API is stabilizing but may have breaking changes before v1.0. Packages are not yet published to npm.
+
+We welcome feedback, bug reports, and contributions!
+
+---
 
 ## License
 
-MIT
+MIT © 2026
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ for developers who transform data</sub>
+</p>

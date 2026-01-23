@@ -1,16 +1,16 @@
-# MorphQL Language Maintenance Guide (Updated)
+# MorphQL Language Maintenance Guide
+
+This guide explains how to extend and maintain the MorphQL language—adding new keywords, functions, and operators.
 
 ## 🎯 Single Source of Truth: @morphql/language-definitions
 
-**NEW:** All language definitions are now centralized in the `@morphql/language-definitions` package!
+All language definitions are centralized in the `@morphql/language-definitions` package. This ensures consistency across all consumers (IDE extensions, playground, documentation).
 
-### Package Location
-
-[`packages/language-definitions/`](./packages/language-definitions/)
+**Package Location:** [`packages/language-definitions/`](../packages/language-definitions/)
 
 ---
 
-## ✅ Simplified Workflow: Adding New Features
+## ✅ Workflow: Adding New Features
 
 ### 1. Update Language Definitions Package
 
@@ -24,7 +24,7 @@
 
 **File:** `packages/core/src/core/lexer.ts`
 
-Add the token definition and update `allTokens` array.
+Add the token definition and update the `allTokens` array.
 
 ### 3. Rebuild Language Definitions
 
@@ -33,9 +33,9 @@ cd packages/language-definitions
 npm run build
 ```
 
-### 4. Update Consumers
+### 4. Consumers Auto-Update
 
-The VSCode extension and Monaco playground will automatically use the new definitions!
+The VSCode extension, JetBrains plugin, and Monaco playground automatically use the new definitions!
 
 ---
 
@@ -91,10 +91,6 @@ npm run build
 cd ../core
 npm run build
 ```
-
-### Step 4: Done! ✅
-
-The VSCode extension and playground will automatically pick up the new keyword on their next build.
 
 ---
 
@@ -166,18 +162,22 @@ Add keyword → Update lexer → Rebuild language-definitions → Done!
    - Uses `generateHoverDocs()` for hover provider
    - Uses keyword/function lists for TextMate grammar generation
 
-2. **Monaco Playground**
+2. **JetBrains Plugin**
+   - Consumes generated syntax definitions
+   - Provides hover documentation
+
+3. **Monaco Playground**
    - Imports `@morphql/language-definitions`
    - Uses `generateMonacoLanguageConfig()` for syntax highlighting
    - Uses hover docs for Monaco hover provider
 
-3. **Documentation**
+4. **Documentation**
    - Can generate reference docs from the definitions
    - Always in sync with actual implementation
 
 ---
 
-## 📁 File Structure
+## 📁 Package Structure
 
 ```
 packages/language-definitions/
@@ -197,7 +197,7 @@ packages/language-definitions/
 ## 🎯 Quick Reference
 
 | Task             | Files to Edit                                                                 | Commands                                                                 |
-| ---------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| :--------------- | :---------------------------------------------------------------------------- | :----------------------------------------------------------------------- |
 | **Add Keyword**  | 1. `language-definitions/src/keywords.ts`<br>2. `core/src/core/lexer.ts`      | `cd language-definitions && npm run build`<br>`cd core && npm run build` |
 | **Add Function** | 1. `language-definitions/src/functions.ts`<br>2. `core/src/core/functions.ts` | Same as above                                                            |
 | **Add Operator** | 1. `language-definitions/src/operators.ts`<br>2. `core/src/core/lexer.ts`     | Same as above                                                            |
@@ -206,12 +206,12 @@ packages/language-definitions/
 
 ## ✅ Benefits
 
-✅ **Single source of truth** - Edit once, use everywhere  
-✅ **Type-safe** - Full TypeScript support  
-✅ **Auto-sync** - No more manual updates to multiple files  
-✅ **Consistent** - Impossible to have mismatched definitions  
-✅ **Documented** - Documentation lives with definitions  
-✅ **Testable** - Can unit test the definitions themselves
+- ✅ **Single source of truth** - Edit once, use everywhere
+- ✅ **Type-safe** - Full TypeScript support
+- ✅ **Auto-sync** - No more manual updates to multiple files
+- ✅ **Consistent** - Impossible to have mismatched definitions
+- ✅ **Documented** - Documentation lives with definitions
+- ✅ **Testable** - Can unit test the definitions themselves
 
 ---
 
@@ -224,21 +224,19 @@ packages/language-definitions/
 
 ---
 
-## 📞 For Future LLMs
+## 📞 For AI Assistants / LLMs
 
 When maintaining this codebase:
 
-1. ✅ **DO** edit `packages/language-definitions/src/` files
-2. ✅ **DO** update the lexer in `packages/core/src/core/lexer.ts`
-3. ✅ **DO** rebuild language-definitions package
-4. ❌ **DON'T** manually edit TextMate grammars
-5. ❌ **DON'T** manually edit Monaco configs
-6. ❌ **DON'T** manually edit hover documentation
+- ✅ **DO** edit `packages/language-definitions/src/` files
+- ✅ **DO** update the lexer in `packages/core/src/core/lexer.ts`
+- ✅ **DO** rebuild language-definitions package
+- ❌ **DON'T** manually edit TextMate grammars
+- ❌ **DON'T** manually edit Monaco configs
+- ❌ **DON'T** manually edit hover documentation
 
 The language-definitions package is the **single source of truth**!
 
 ---
 
-**Last Updated:** 2026-01-21  
-**Maintainer:** AI Assistant  
-**Package:** @morphql/language-definitions v0.1.0
+_Last Updated: 2026-01-24_
