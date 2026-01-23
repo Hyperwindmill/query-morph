@@ -14,8 +14,9 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean && npm run export-json",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "export-json": "tsx export-json.ts"
   },
   "keywords": [
     "morphql",
@@ -28,6 +29,7 @@
   "license": "MIT",
   "devDependencies": {
     "tsup": "^8.0.0",
+    "tsx": "^4.0.0",
     "typescript": "^5.0.0"
   }
 }

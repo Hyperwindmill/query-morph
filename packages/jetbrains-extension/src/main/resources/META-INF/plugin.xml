@@ -1,0 +1,28 @@
+<idea-plugin>
+    <id>org.morphql.jetbrains</id>
+    <name>MorphQL</name>
+    <vendor email="support@morphql.org" url="https://morphql.org">MorphQL Team</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.javascript</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="MorphQL File"
+                  language="MorphQL"
+                  extensions="morphql"
+                  implementationClass="org.morphql.jetbrains.MorphQLFileType"
+                  fieldName="INSTANCE" />
+
+        <lang.syntaxHighlighterFactory language="MorphQL"
+                                       implementationClass="org.morphql.jetbrains.MorphQLSyntaxHighlighterFactory" />
+
+        <lang.parserDefinition language="MorphQL"
+                               implementationClass="org.morphql.jetbrains.MorphQLParserDefinition" />
+
+        <lang.documentationProvider language="MorphQL"
+                                   implementationClass="org.morphql.jetbrains.MorphQLDocumentationProvider" />
+
+        <multiHostInjector implementationClass="org.morphql.jetbrains.MorphQLInjector" />
+    </extensions>
+</idea-plugin>
