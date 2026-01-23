@@ -5,6 +5,17 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { existsSync } from "node:fs";
 
+/**
+ * Reads all data from stdin (for pipe support)
+ */
+async function readStdin(): Promise<string> {
+  const chunks: Buffer[] = [];
+  for await (const chunk of process.stdin) {
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks).toString("utf8");
+}
+
 const program = new Command();
 
 program
@@ -35,9 +46,12 @@ program
           process.exit(1);
         }
         sourceContent = await fs.readFile(from, "utf8");
+      } else if (!process.stdin.isTTY) {
+        // Read from stdin (pipe)
+        sourceContent = await readStdin();
       } else {
         console.error(
-          "Error: Either --from <path> or --input <string> must be provided.",
+          "Error: Either --from <path>, --input <string>, or pipe data via stdin must be provided.",
         );
         process.exit(1);
       }
