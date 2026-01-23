@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Log files
+*.log
+
+# macOS
+.DS_Store
+
+# Java/Kotlin
+*.class
