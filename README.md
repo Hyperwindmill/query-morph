@@ -17,7 +17,7 @@ Packages are NOT published to npm yet.
 - 🛠️ **Modular Functions**: Extensible function registry (e.g., `substring`, `xmlnode`, `extractNumber`, `uppercase`, `lowercase`, `text`, `number`).
 - 🔄 **Structural Mapping**: Easy handling of nested objects and arrays (`multiple`).
 - 🎨 **Playground**: Real-time editor to test and visualize generated code.
-- 🖼️ **IDE Support**: JetBrains Extension (highlighting, injection, docs).
+- 🖼️ **IDE Support**: JetBrains/VSCode Extension (highlighting, injection, docs).
 
 ## Installation
 
