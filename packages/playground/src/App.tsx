@@ -111,13 +111,10 @@ export default function App() {
             ))}
           </select>
           <a
-            href="https://github.com/Hyperwindmill/morphql"
+            href="https://hyperwindmill.github.io/morphql"
             className="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-700">
             Documentation
           </a>
-          <button className="text-xs font-semibold px-4 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-600/20 text-white">
-            Share Query
-          </button>
         </div>
       </header>
 
@@ -141,9 +138,11 @@ export default function App() {
                 onChange={(v) => setQuery(v || "")}
                 beforeMount={(monaco) => {
                   // Register MorphQL language
-                  import("./morphqlLanguage").then(({ registerMorphQLLanguage }) => {
-                    registerMorphQLLanguage(monaco);
-                  });
+                  import("./morphqlLanguage").then(
+                    ({ registerMorphQLLanguage }) => {
+                      registerMorphQLLanguage(monaco);
+                    },
+                  );
                 }}
                 options={{
                   minimap: { enabled: false },
