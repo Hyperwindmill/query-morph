@@ -15,6 +15,7 @@ hero:
     - theme: alt
       text: Try Playground
       link: /playground/
+      target: _blank
 
 features:
   - title: Isomorphic
