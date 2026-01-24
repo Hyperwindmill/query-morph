@@ -7,8 +7,8 @@ import { MorphQLCache } from './runtime/cache.js';
 export { MorphQLCache };
 import beautify from 'js-beautify';
 
-export interface MorphEngine {
-  (source: any): Promise<any> | any;
+export interface MorphEngine<Source = any, Target = any> {
+  (source: Source): Promise<Target> | Target;
   code: string;
 }
 
@@ -16,12 +16,15 @@ export interface CompileOptions {
   cache?: MorphQLCache;
 }
 
-export async function compile(queryString: string, options?: CompileOptions): Promise<MorphEngine> {
+export async function compile<Source = any, Target = any>(
+  queryString: string,
+  options?: CompileOptions
+): Promise<MorphEngine<Source, Target>> {
   // 1. Check Cache
   if (options?.cache) {
     const cachedCode = await options.cache.retrieve(queryString);
     if (cachedCode) {
-      return createEngine(cachedCode);
+      return createEngine<Source, Target>(cachedCode);
     }
   }
 
@@ -52,10 +55,10 @@ export async function compile(queryString: string, options?: CompileOptions): Pr
     await options.cache.save(queryString, code);
   }
 
-  return createEngine(code);
+  return createEngine<Source, Target>(code);
 }
 
-function createEngine(code: string): MorphEngine {
+function createEngine<Source, Target>(code: string): MorphEngine<Source, Target> {
   // Create the base transformation function
   const factory = new Function(code);
   const transform = factory() as (source: any, env: any) => any;
@@ -71,9 +74,9 @@ function createEngine(code: string): MorphEngine {
   };
 
   // Return the format-aware engine
-  const engine = ((input: any) => {
-    return transform(input, env);
-  }) as MorphEngine;
+  const engine = ((input: Source) => {
+    return transform(input, env) as Target;
+  }) as MorphEngine<Source, Target>;
 
   engine.code = code;
   return engine;
