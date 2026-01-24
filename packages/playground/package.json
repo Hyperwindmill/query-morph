@@ -32,7 +32,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.lib.json",
+    "build": "npm run build:lib && npm run build:app",
+    "build:lib": "vite build --config vite.config.lib.ts && tsc -p tsconfig.lib.json",
+    "build:app": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
