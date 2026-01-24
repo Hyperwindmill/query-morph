@@ -1,51 +1,53 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from "vitepress";
 
 export default defineConfig({
-  base: '/morphql/',
+  base: "/morphql/",
   title: "MorphQL",
-  description: "A high-performance engine that compiles transformation queries into optimized JavaScript functions.",
-  head: [['link', { rel: 'icon', href: '/favicon.png' }]],
+  description:
+    "A high-performance engine that compiles transformation queries into optimized JavaScript functions.",
+  head: [["link", { rel: "icon", href: "/favicon.png" }]],
   themeConfig: {
-    logo: '/logo.png',
+    logo: "/logo.png",
 
     nav: [
-      { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Reference', link: '/guide/language-reference' },
-      { text: 'Playground', link: '/playground/', target: '_blank' },
-      { text: 'GitHub', link: 'https://github.com/Hyperwindmill/morphql' }
+      { text: "Guide", link: "/guide/getting-started" },
+      { text: "Reference", link: "/guide/language-reference" },
+      { text: "Playground", link: "/playground/", target: "_blank" },
+      { text: "GitHub", link: "https://github.com/Hyperwindmill/morphql" },
     ],
 
     sidebar: [
       {
-        text: 'Introduction',
+        text: "Introduction",
         items: [
-          { text: 'Getting Started', link: '/guide/getting-started' },
-          { text: 'Why MorphQL?', link: '/guide/why-morphql' }
-        ]
+          { text: "Getting Started", link: "/guide/getting-started" },
+          { text: "Why MorphQL?", link: "/guide/why-morphql" },
+        ],
       },
       {
-        text: 'Core Concepts',
+        text: "Core Concepts",
         items: [
-          { text: 'Library (Core)', link: '/guide/library' },
-          { text: 'Language Reference', link: '/guide/language-reference' }
-        ]
+          { text: "Library (Core)", link: "/guide/library" },
+          { text: "Language Reference", link: "/guide/language-reference" },
+        ],
       },
       {
-        text: 'Tools',
+        text: "Tools",
         items: [
-          { text: 'CLI', link: '/guide/cli' },
-          { text: 'Server', link: '/guide/server' }
-        ]
-      }
+          { text: "CLI", link: "/guide/cli" },
+          { text: "Server", link: "/guide/server" },
+          { text: "IDE Extensions", link: "/guide/ide-extensions" },
+        ],
+      },
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Hyperwindmill/morphql' }
+      { icon: "github", link: "https://github.com/Hyperwindmill/morphql" },
     ],
 
     footer: {
-      message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2026'
-    }
-  }
-})
+      message: "Released under the MIT License.",
+      copyright: "Copyright © 2026",
+    },
+  },
+});
