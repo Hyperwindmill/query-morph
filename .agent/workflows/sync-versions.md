@@ -24,4 +24,7 @@ This script will update:
 - `package.json` in all `packages/*`
 - Internal `@morphql/*` dependencies in those files
 - `build.gradle.kts` in `packages/jetbrains-extension`
-- `index.ts` in packages/cli/src
+- `index.ts` in `packages/cli/src`
+- `Playground.tsx` in `packages/playground/src`
+
+**Note**: The script will print a reminder to run `npm install` at the root to update the `package-lock.json`.

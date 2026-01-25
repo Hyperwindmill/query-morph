@@ -73,10 +73,16 @@ if (fs.existsSync(cliIndexPath)) {
 }
 
 
-// 4. Update website package.json (optional, but keep it at 1.0.0 or sync it?)
-// User said "search & replace every time", so let's sync it if it's currently hardcoded to something close.
-// Actually website/package.json was 1.0.0, maybe better leave it.
+// 5. Update Playground version (src/Playground.tsx)
+const playgroundPath = path.join(packagesDir, 'playground', 'src', 'Playground.tsx');
+if (fs.existsSync(playgroundPath)) {
+  console.log(`Updating ${playgroundPath}`);
+  let content = fs.readFileSync(playgroundPath, 'utf8');
+  content = content.replace(/Version: \d+\.\d+\.\d+(?:-\w+)?/, `Version: ${targetVersion}`);
+  fs.writeFileSync(playgroundPath, content);
+}
 
 console.log('Version synchronization complete!');
+
 console.log('\x1b[33m%s\x1b[0m', 'IMPORTANT: Remember to run "npm install" at the root to update the lockfile.');
 
