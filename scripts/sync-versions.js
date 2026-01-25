@@ -63,8 +63,20 @@ if (fs.existsSync(jetbrainsGradlePath)) {
   fs.writeFileSync(jetbrainsGradlePath, content);
 }
 
+// 4. Update CLI version (src/index.ts)
+const cliIndexPath = path.join(packagesDir, 'cli', 'src', 'index.ts');
+if (fs.existsSync(cliIndexPath)) {
+  console.log(`Updating ${cliIndexPath}`);
+  let content = fs.readFileSync(cliIndexPath, 'utf8');
+  content = content.replace(/\.version\("[^"]+"\)/, `.version("${targetVersion}")`);
+  fs.writeFileSync(cliIndexPath, content);
+}
+
+
 // 4. Update website package.json (optional, but keep it at 1.0.0 or sync it?)
 // User said "search & replace every time", so let's sync it if it's currently hardcoded to something close.
 // Actually website/package.json was 1.0.0, maybe better leave it.
 
 console.log('Version synchronization complete!');
+console.log('\x1b[33m%s\x1b[0m', 'IMPORTANT: Remember to run "npm install" at the root to update the lockfile.');
+
