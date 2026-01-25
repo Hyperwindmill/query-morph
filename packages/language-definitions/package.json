@@ -1,6 +1,6 @@
 {
   "name": "@morphql/language-definitions",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Shared language definitions for MorphQL across VSCode, Monaco, and documentation",
   "type": "module",
   "publishConfig": {
@@ -33,8 +33,17 @@
     "vscode",
     "monaco"
   ],
-  "author": "",
+  "author": "Hyperwindmill",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyperwindmill/morphql.git",
+    "directory": "packages/language-definitions"
+  },
+  "bugs": {
+    "url": "https://github.com/Hyperwindmill/morphql/issues"
+  },
+  "homepage": "https://github.com/Hyperwindmill/morphql/tree/main/packages/language-definitions#readme",
   "devDependencies": {
     "tsup": "^8.0.0",
     "tsx": "^4.0.0",

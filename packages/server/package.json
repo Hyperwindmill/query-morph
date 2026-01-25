@@ -1,6 +1,6 @@
 {
   "name": "@morphql/server",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Stateless Transformation Engine API for MorphQL",
   "author": "Hyperwindmill",
   "private": false,
@@ -15,6 +15,15 @@
     "docker-compose.yml",
     "Dockerfile"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hyperwindmill/morphql.git",
+    "directory": "packages/server"
+  },
+  "bugs": {
+    "url": "https://github.com/Hyperwindmill/morphql/issues"
+  },
+  "homepage": "https://github.com/Hyperwindmill/morphql/tree/main/packages/server#readme",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
