@@ -55,7 +55,7 @@ Native support for IntelliJ IDEA, WebStorm, PhpStorm, and other JetBrains IDEs.
     ./gradlew build
     ```
 
-    The artifact will be created at `build/distributions/morphql-jetbrains-0.1.3.zip`.
+    The artifact will be created at `build/distributions/morphql-jetbrains-0.X.X.zip`.
 
 2.  **Install from Disk**:
     - Open **Settings/Preferences** > **Plugins**.

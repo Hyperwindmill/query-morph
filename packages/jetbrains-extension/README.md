@@ -28,7 +28,7 @@ If you have the source code, run the build command from the `packages/jetbrains-
 ```
 
 The artifact will be generated at:
-`build/distributions/morphql-jetbrains-0.1.3.zip`
+`build/distributions/morphql-jetbrains-0.1.X.zip`
 
 ### 2. Install from Disk
 
