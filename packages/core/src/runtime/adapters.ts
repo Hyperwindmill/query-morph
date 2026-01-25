@@ -48,7 +48,7 @@ registerAdapter('xml', {
     return parser.parse(content);
   },
   serialize: (data, options) => {
-    const rootTag = options?.rootGenerated ?? 'root';
+    const rootTag = options?.rootGenerated ?? options?.params?.[0] ?? 'root';
     const builder = options
       ? new XMLBuilder({
           ignoreAttributes: false,

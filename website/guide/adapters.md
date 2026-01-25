@@ -16,10 +16,16 @@ You can pass parameters to adapters directly in the `from` and `to` clauses, as 
 
 ### Positional Parameters
 
-A single string literal in parentheses is automatically mapped to the `rootGenerated` option (most commonly used by the XML adapter).
+You can pass one or more positional parameters (literals) to an adapter. These are forwarded to the adapter as an array in `options.params`.
+
+Built-in adapters like **XML** use the first positional parameter as the `rootGenerated` name if it's not explicitly provided as a named parameter.
 
 ```morphql
+// Equivalent to xml(rootGenerated="UserResponse")
 from object to xml("UserResponse")
+
+// Custom adapters can access all positional parameters
+from myFormat("param1", 42, true) to json
 ```
 
 ### Named Parameters
@@ -52,10 +58,24 @@ You can extend MorphQL by registering your own adapters. An adapter is an object
 
 ```typescript
 interface DataAdapter {
+  /**
+   * Parse input content into a JavaScript object.
+   * @param content The input string or object.
+   * @param options Dictionary of named parameters and a `params` array for positional ones.
+   */
   parse(content: string, options?: any): any;
+
+  /**
+   * Serialize a JavaScript object into the target format.
+   * @param data The object to serialize.
+   * @param options Dictionary of named parameters and a `params` array for positional ones.
+   */
   serialize(data: any, options?: any): string;
 }
 ```
+
+> [!TIP]
+> All positional parameters passed in the query (e.g., `myFormat("A", "B")`) are available in `options.params` as an array (e.g., `["A", "B"]`).
 
 ### Registering an Adapter
 

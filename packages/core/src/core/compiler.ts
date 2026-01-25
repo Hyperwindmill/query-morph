@@ -65,17 +65,15 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   typeFormat(ctx: any) {
     const id = this.visit(ctx.name);
-    const options: any = {};
+    const options: any = { params: [] };
     if (ctx.params) {
       ctx.params.forEach((p: any) => {
         const val = this.visit(p);
         if (typeof val === 'object' && 'key' in val) {
           options[val.key] = this.parseLiteral(val.value);
         } else {
-          // Positional parameter - map first to rootGenerated for compatibility
-          if (options.rootGenerated === undefined) {
-            options.rootGenerated = this.parseLiteral(val);
-          }
+          // Positional parameter - collect into params array
+          options.params.push(this.parseLiteral(val));
         }
       });
     }
