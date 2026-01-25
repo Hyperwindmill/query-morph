@@ -1,6 +1,6 @@
 {
   "name": "@morphql/server",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Stateless Transformation Engine API for MorphQL",
   "author": "Hyperwindmill",
   "private": false,
