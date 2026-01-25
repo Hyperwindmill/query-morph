@@ -1,0 +1,70 @@
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+const rootDir = path.resolve(__dirname, '..');
+const argVersion = process.argv[2];
+
+function getRootVersion() {
+  const pkg = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));
+  return pkg.version;
+}
+
+const targetVersion = argVersion || getRootVersion();
+
+console.log(`Syncing versions to: ${targetVersion}`);
+
+// 1. Update root package.json if arg was provided
+if (argVersion) {
+  const rootPkgPath = path.join(rootDir, 'package.json');
+  const rootPkg = JSON.parse(fs.readFileSync(rootPkgPath, 'utf8'));
+  rootPkg.version = targetVersion;
+  fs.writeFileSync(rootPkgPath, JSON.stringify(rootPkg, null, 2) + '\n');
+}
+
+// 2. Find all package.json files in packages/*
+const packagesDir = path.join(rootDir, 'packages');
+const packageDirs = fs.readdirSync(packagesDir);
+
+packageDirs.forEach(dir => {
+  const pkgPath = path.join(packagesDir, dir, 'package.json');
+  if (fs.existsSync(pkgPath)) {
+    console.log(`Updating ${pkgPath}`);
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    pkg.version = targetVersion;
+    
+    // Update internal dependencies
+    const updateDeps = (deps) => {
+      if (!deps) return;
+      Object.keys(deps).forEach(dep => {
+        if (dep.startsWith('@morphql/')) {
+          // If it's not "*" or "workspace:*", update it to the target version
+          if (deps[dep] !== '*' && !deps[dep].startsWith('workspace:') && !deps[dep].startsWith('file:')) {
+            deps[dep] = `^${targetVersion}`;
+          }
+        }
+      });
+    };
+    
+    updateDeps(pkg.dependencies);
+    updateDeps(pkg.devDependencies);
+    updateDeps(pkg.peerDependencies);
+    
+    fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+  }
+});
+
+// 3. Update JetBrains extension (build.gradle.kts)
+const jetbrainsGradlePath = path.join(packagesDir, 'jetbrains-extension', 'build.gradle.kts');
+if (fs.existsSync(jetbrainsGradlePath)) {
+  console.log(`Updating ${jetbrainsGradlePath}`);
+  let content = fs.readFileSync(jetbrainsGradlePath, 'utf8');
+  content = content.replace(/version = "[^"]+"/, `version = "${targetVersion}"`);
+  fs.writeFileSync(jetbrainsGradlePath, content);
+}
+
+// 4. Update website package.json (optional, but keep it at 1.0.0 or sync it?)
+// User said "search & replace every time", so let's sync it if it's currently hardcoded to something close.
+// Actually website/package.json was 1.0.0, maybe better leave it.
+
+console.log('Version synchronization complete!');
