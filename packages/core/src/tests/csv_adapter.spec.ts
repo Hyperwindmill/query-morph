@@ -98,4 +98,25 @@ describe('Morph Engine - CSV Adapter', async () => {
 
     expect(result).toBe('1;2\n3;4');
   });
+
+  it('should handle quoted strings in CSV', async () => {
+    const query = morphQL`
+      from csv to object
+      transform
+        section multiple data (
+          from object to object
+          transform
+            set first = A
+            set second = B
+        ) from rows
+    `;
+    const transform = await compile(query);
+    const input = '"quoted,field",normal\n"field with ""escaped"" quote",another';
+    const result = transform(input);
+
+    expect(result.data).toEqual([
+      { first: 'quoted,field', second: 'normal' },
+      { first: 'field with "escaped" quote', second: 'another' },
+    ]);
+  });
 });

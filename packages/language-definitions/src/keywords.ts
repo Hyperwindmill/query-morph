@@ -19,10 +19,10 @@ export const KEYWORDS: KeywordDef[] = [
         {
           name: "format",
           description:
-            "If used as first keyword: The starting format, one of `json`, `xml`, or `object`. When used after a section, defines its source",
+            "If used as first keyword: The starting format name (e.g., `json`, `xml`, `csv`, `object`). When used after a section, defines its source.",
         },
       ],
-      example: "from json to xml",
+      example: "from json to csv",
     },
   },
   {
@@ -32,9 +32,12 @@ export const KEYWORDS: KeywordDef[] = [
       signature: "to <format>",
       description: "Specifies the output data format.",
       parameters: [
-        { name: "format", description: "One of: `json`, `xml`, or `object`" },
+        {
+          name: "format",
+          description: "The name of one of the available adapters.",
+        },
       ],
-      example: "from json to xml",
+      example: "from csv to json",
     },
   },
   {
@@ -88,7 +91,7 @@ export const KEYWORDS: KeywordDef[] = [
         },
       ],
       example:
-        "section metadata(\n  from xml to object\n  transform\n    set name = root.productName\n) from xmlString",
+        "section items(\n  from csv to object\n  transform\n    set name = A\n) from csvString",
     },
   },
   {

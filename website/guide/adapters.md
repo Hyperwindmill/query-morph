@@ -4,12 +4,12 @@ Adapters are responsible for parsing input data and serializing the transformed 
 
 ## Built-in Adapters
 
-| Adapter    | Name     | Description                                               |
-| :--------- | :------- | :-------------------------------------------------------- |
-| **JSON**   | `json`   | Native JSON parsing and serialization.                    |
-| **XML**    | `xml`    | Fast XML parsing and serialization via `fast-xml-parser`. |
-| **CSV**    | `csv`    | CSV parsing and serialization via `papaparse`.            |
-| **Object** | `object` | Identity adapter for working with in-memory JS objects.   |
+| Adapter    | Name     | Description                                                                                                       |
+| :--------- | :------- | :---------------------------------------------------------------------------------------------------------------- |
+| **JSON**   | `json`   | Native JSON parsing and serialization.                                                                            |
+| **XML**    | `xml`    | Fast XML parsing and serialization via [fast-xml-parser](https://github.com/NaturalIntelligence/fast-xml-parser). |
+| **CSV**    | `csv`    | CSV parsing and serialization via [PapaParse](https://www.papaparse.com/).                                        |
+| **Object** | `object` | Identity adapter for working with in-memory JS objects.                                                           |
 
 ## Passing Parameters
 
@@ -53,7 +53,7 @@ The built-in XML adapter supports many options forwarded directly to `fast-xml-p
 
 ### CSV Options
 
-The CSV adapter uses `papaparse` and supports the following options:
+The CSV adapter uses [PapaParse](https://www.papaparse.com/) and supports the following options:
 
 - `delimiter` (string): The column delimiter (defaults to `,`). Can also be passed as the first positional parameter: `csv(";")`.
 - `skipEmptyLines` (boolean): Whether to skip empty lines (defaults to `true`).

@@ -1,6 +1,6 @@
 # Getting Started
 
-MorphQL (Morph Query Language) is a declarative DSL that transforms structural data—JSON, XML, or Objects—by compiling your queries into specialized, native JavaScript functions.
+MorphQL (Morph Query Language) is a declarative DSL that transforms structural data—JSON, XML, CSV, or Objects—by compiling your queries into specialized, native JavaScript functions.
 
 ## Installation
 
