@@ -7,6 +7,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   // Context for modify directive - determines whether to read from 'source' or 'target'
   private readFrom: 'source' | 'target' = 'source';
 
+  // Scope stack to track serialization context
+  private scopeStack: Array<{ format: string; options: any; isSerializationScope: boolean }> = [];
+
   constructor() {
     super();
     this.validateVisitor();
@@ -24,14 +27,22 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   }
 
   query(ctx: any) {
+    const sourceType = this.visit(ctx.sourceType);
+    const targetType = this.visit(ctx.targetType);
+
+    this.scopeStack.push({
+      format: targetType.name,
+      options: targetType.options,
+      isSerializationScope: true,
+    });
+
     const actions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
+
+    this.scopeStack.pop();
 
     if (!ctx.Transform) {
       actions.push('Object.assign(target, source);');
     }
-
-    const sourceType = this.visit(ctx.sourceType);
-    const targetType = this.visit(ctx.targetType);
 
     // Helper to serialize types for generated code
     const sourceTypeName = sourceType.name;
@@ -164,6 +175,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     if (ctx.defineRule) {
       return this.visit(ctx.defineRule);
     }
+    if (ctx.returnRule) {
+      return this.visit(ctx.returnRule);
+    }
   }
 
   deleteRule(ctx: any) {
@@ -211,6 +225,18 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     const left = this.visit(ctx.left);
     const right = this.visit(ctx.right);
     return `${this.genAccess('source', left)} = ${right};`;
+  }
+
+  returnRule(ctx: any) {
+    const expr = this.visitWithContext(ctx.expr, { readFrom: 'target' });
+    const scope = this.scopeStack[this.scopeStack.length - 1];
+
+    if (scope && scope.isSerializationScope) {
+      const options = JSON.stringify(scope.options);
+      return `return env.serialize('${scope.format}', ${expr}, ${options});`;
+    }
+
+    return `return ${expr};`;
   }
 
   expression(ctx: any) {
@@ -295,6 +321,12 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
         return id.name;
       }
       if (!id.quoted) {
+        if (id.name === 'target') {
+          return 'target';
+        }
+        if (id.name === 'source') {
+          return 'source';
+        }
         if (
           id.name === '_source' ||
           id.name.startsWith('_source.') ||
@@ -347,7 +379,6 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       followPathId.name === 'parent' ? 'source' : this.genAccess('source', followPathId);
 
     const isMultiple = !!ctx.Multiple;
-    const actions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
 
     // Check if this is a subquery section
     const isSubquery = !!ctx.subqueryFrom;
@@ -355,7 +386,15 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     if (isSubquery) {
       const subSourceType = this.visit(ctx.subquerySourceType);
       const subTargetType = this.visit(ctx.subqueryTargetType);
+
+      this.scopeStack.push({
+        format: subTargetType.name,
+        options: subTargetType.options,
+        isSerializationScope: true,
+      });
+
       const hasTransform = !!ctx.subqueryTransform;
+      const actions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
 
       if (!hasTransform) {
         // Pure format conversion - copy all fields
@@ -365,8 +404,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       const subSourceOptions = JSON.stringify(subSourceType.options);
       const subTargetOptions = JSON.stringify(subTargetType.options);
 
+      let result = '';
       if (isMultiple) {
-        return `
+        result = `
         if (${sourceAccess} && Array.isArray(${sourceAccess})) {
           ${sectionAccess} = ${sourceAccess}.map(item => {
             const subSource = env.parse('${subSourceType.name}', item, ${subSourceOptions});
@@ -378,7 +418,7 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
         }
         `;
       } else {
-        return `
+        result = `
         if (${sourceAccess}) {
           ${sectionAccess} = (function(innerSource) {
             const subSource = env.parse('${subSourceType.name}', innerSource, ${subSourceOptions});
@@ -390,32 +430,47 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
         }
         `;
       }
+
+      this.scopeStack.pop();
+      return result;
     }
 
-    // Regular section handling (unchanged)
+    // Regular section handling
+    this.scopeStack.push({
+      format: 'object',
+      options: {},
+      isSerializationScope: false,
+    });
+
+    const regularActions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
+
+    let regularResult = '';
     if (isMultiple) {
-      return `
+      regularResult = `
       if (${sourceAccess} && Array.isArray(${sourceAccess})) {
         ${sectionAccess} = ${sourceAccess}.map(item => {
           const source = item;
           const target = {};
-          ${actions.join('\n          ')}
+          ${regularActions.join('\n          ')}
           return target;
         });
       }
       `;
     } else {
-      return `
+      regularResult = `
       if (${sourceAccess}) {
         ${sectionAccess} = (function(innerSource) {
           const source = innerSource;
           const target = {};
-          ${actions.join('\n          ')}
+          ${regularActions.join('\n          ')}
           return target;
         })(${sourceAccess});
       }
       `;
     }
+
+    this.scopeStack.pop();
+    return regularResult;
   }
 }
 

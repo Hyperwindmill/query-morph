@@ -132,6 +132,23 @@ if (status == "active") (
 )
 ```
 
+### `return`
+
+Overwrites the target object and returns immediately from the current scope. Expressions inside `return` read from the **target** object by default.
+
+```morphql
+# Top level
+set greeting = "Hello " + name
+return greeting
+
+# Inside section
+section user(
+  set id = userId
+  set name = userName
+  return target
+)
+```
+
 ---
 
 ## Escaped Identifiers

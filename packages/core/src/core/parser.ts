@@ -76,7 +76,13 @@ export class MorphParser extends CstParser {
       { ALT: () => this.SUBRULE(this.deleteRule) },
       { ALT: () => this.SUBRULE(this.ifAction) },
       { ALT: () => this.SUBRULE(this.defineRule) },
+      { ALT: () => this.SUBRULE(this.returnRule) },
     ]);
+  });
+
+  private returnRule = this.RULE('returnRule', () => {
+    this.CONSUME(t.Return);
+    this.SUBRULE(this.expression, { LABEL: 'expr' });
   });
 
   private deleteRule = this.RULE('deleteRule', () => {
