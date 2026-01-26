@@ -128,4 +128,31 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     const [val] = args;
     return `(Array.isArray(${val}) ? ${val} : (${val} == null ? [] : [${val}]))`;
   },
+  spreadsheet: (args: string[]) => {
+    if (args.length !== 1) {
+      throw new Error('spreadsheet() requires exactly 1 argument');
+    }
+    const [val] = args;
+    return `((data)=>{
+      const spreadsheet = Array.isArray(data) ? data : (data == null ? [] : [data]);
+      const out = [];
+      const titles = [];
+      let keys = [];
+      for (let i = 0; i < spreadsheet.length; i++) {
+        const line = spreadsheet[i];
+        if (!line || typeof line !== 'object') continue;
+        if (i === 0) {
+          keys = Object.keys(line);
+          for (const k of keys) titles.push(line[k]);
+        } else {
+          const tempLine = {};
+          for (let j = 0; j < keys.length; j++) {
+            tempLine[titles[j]] = line[keys[j]];
+          }
+          out.push(tempLine);
+        }
+      }
+      return out;
+    })(${val})`;
+  }
 };
