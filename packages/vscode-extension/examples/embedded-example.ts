@@ -22,9 +22,9 @@ const complexQuery = morphQL`
     define discountThreshold = 100
     
     // Basic fields
-    set orderId = id
+    set orderId = xmlnode(id)
     set customerName = customer.firstName + " " + customer.lastName
-    
+    return orderId
     // Conditional logic
     if (total > discountThreshold) (
       set discount = total * 0.1
