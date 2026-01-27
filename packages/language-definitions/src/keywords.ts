@@ -197,6 +197,17 @@ export const KEYWORDS: KeywordDef[] = [
       example: "set total = price * quantity\nmodify total = total * 1.10",
     },
   },
+  {
+    name: "return",
+    category: "action",
+    doc: {
+      signature: "return <expression>",
+      description:
+        "Returns a value from the transformation, bypassing the default serialization. Reads from target context by default.",
+      parameters: [{ name: "expression", description: "The value to return" }],
+      example: "set computed = price * 1.1\nreturn computed",
+    },
+  },
 ];
 
 // Helper to get keywords by category

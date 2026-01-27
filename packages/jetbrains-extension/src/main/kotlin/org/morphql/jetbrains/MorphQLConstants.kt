@@ -18,7 +18,8 @@ object MorphQLConstants {
         "define",
         "if",
         "else",
-        "modify"
+        "modify",
+        "return"
     )
 
     val FUNCTIONS = setOf(
@@ -33,7 +34,8 @@ object MorphQLConstants {
         "xmlnode",
         "to_base64",
         "from_base64",
-        "aslist"
+        "aslist",
+        "spreadsheet"
     )
 
     val OPERATORS = setOf(

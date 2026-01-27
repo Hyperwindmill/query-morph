@@ -16,15 +16,15 @@ const transformQuery = morphQL`
 // Example 2: Complex transformation with all features
 const complexQuery = morphQL`
   from json to json
-  transform
+  transform unsafe
     // Define reusable values
     define \`taxRate\` = 0.22
     define discountThreshold = 100
-    
+    return orderId
     // Basic fields
-    set orderId = id
+    set orderId = xmlnode(id)
     set customerName = customer.firstName + " " + customer.lastName
-    
+    return orderId
     // Conditional logic
     if (total > discountThreshold) (
       set discount = total * 0.1
