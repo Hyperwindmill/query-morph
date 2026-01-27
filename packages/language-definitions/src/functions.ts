@@ -160,6 +160,18 @@ export const FUNCTIONS: FunctionDef[] = [
       example: "aslist(items)  // Always returns an array",
     },
   },
+  {
+    name: "spreadsheet",
+    doc: {
+      signature: "spreadsheet(data)",
+      description:
+        "Converts spreadsheet-style data (array of arrays) into an array of objects with named properties. First row is treated as headers.",
+      parameters: [{ name: "data", description: "Array of arrays (rows)" }],
+      returns: "array of objects",
+      example:
+        'spreadsheet(csvData)  // Converts [["name","age"],["John",30]] to [{name:"John",age:30}]',
+    },
+  },
 ];
 
 // Helper to get all function names

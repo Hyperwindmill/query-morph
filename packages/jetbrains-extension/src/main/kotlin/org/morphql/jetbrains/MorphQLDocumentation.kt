@@ -106,6 +106,13 @@ set totalWithTax = total * (1 + taxRate)</pre>
             <b>Example:</b><pre>set total = price * quantity
 modify total = total * 1.10</pre>
         """.trimIndent(),
+        "return" to """
+            <b>return <expression></b><br/>
+            Returns a value from the transformation, bypassing the default serialization. Reads from target context by default.<br/><br/>
+            <b>Parameters:</b><ul><li><b>expression:</b> The value to return</li></ul>
+            <b>Example:</b><pre>set computed = price * 1.1
+return computed</pre>
+        """.trimIndent(),
         "substring" to """
             <b>substring(str, start, [length])</b><br/>
             Extracts a portion of a string. Supports negative indices.<br/><br/>
@@ -178,6 +185,12 @@ substring("Hello World", -5)     // "World"</pre>
             Ensures a value is an array. Useful for input formats like XML that might return a single object or an array for the same field.<br/><br/>
             <b>Parameters:</b><ul><li><b>value:</b> The value to normalize</li></ul>
             <b>Example:</b><pre>aslist(items)  // Always returns an array</pre>
+        """.trimIndent(),
+        "spreadsheet" to """
+            <b>spreadsheet(data)</b><br/>
+            Converts spreadsheet-style data (array of arrays) into an array of objects with named properties. First row is treated as headers.<br/><br/>
+            <b>Parameters:</b><ul><li><b>data:</b> Array of arrays (rows)</li></ul>
+            <b>Example:</b><pre>spreadsheet(csvData)  // Converts [["name","age"],["John",30]] to [{name:"John",age:30}]</pre>
         """.trimIndent()
     )
 }
