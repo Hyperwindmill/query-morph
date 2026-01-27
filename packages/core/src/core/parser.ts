@@ -14,6 +14,9 @@ export class MorphParser extends CstParser {
     this.SUBRULE1(this.typeFormat, { LABEL: 'targetType' });
     this.OPTION(() => {
       this.CONSUME(t.Transform);
+      this.OPTION1(() => {
+        this.CONSUME(t.Unsafe);
+      });
       this.MANY(() => {
         this.SUBRULE(this.action);
       });
@@ -76,7 +79,13 @@ export class MorphParser extends CstParser {
       { ALT: () => this.SUBRULE(this.deleteRule) },
       { ALT: () => this.SUBRULE(this.ifAction) },
       { ALT: () => this.SUBRULE(this.defineRule) },
+      { ALT: () => this.SUBRULE(this.returnRule) },
     ]);
+  });
+
+  private returnRule = this.RULE('returnRule', () => {
+    this.CONSUME(t.Return);
+    this.SUBRULE(this.expression, { LABEL: 'expr' });
   });
 
   private deleteRule = this.RULE('deleteRule', () => {

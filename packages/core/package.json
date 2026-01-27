@@ -58,6 +58,7 @@
     "@eslint/js": "^9.39.2",
     "@types/js-beautify": "^1.14.3",
     "@types/node": "^25.0.9",
+    "@types/papaparse": "^5.5.2",
     "@typescript-eslint/eslint-plugin": "^8.53.0",
     "@typescript-eslint/parser": "^8.53.0",
     "eslint": "^9.39.2",
@@ -72,7 +73,8 @@
   "dependencies": {
     "chevrotain": "^11.1.0",
     "fast-xml-parser": "^5.3.3",
-    "js-beautify": "^1.15.4"
+    "js-beautify": "^1.15.4",
+    "papaparse": "^5.5.3"
   },
   "peerDependencies": {
     "ioredis": "^5.0.0"

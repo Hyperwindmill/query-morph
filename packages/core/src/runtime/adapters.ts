@@ -1,4 +1,5 @@
 import { XMLParser, XMLBuilder } from 'fast-xml-parser';
+import Papa from 'papaparse';
 
 export interface DataAdapter {
   parse(content: string, options?: any): any;
@@ -17,6 +18,16 @@ export function getAdapter(name: string): DataAdapter {
     throw new Error(`No adapter found for format: ${name}`);
   }
   return adapter;
+}
+
+// Helpers
+function indexToLetter(index: number): string {
+  let letter = '';
+  while (index >= 0) {
+    letter = String.fromCharCode((index % 26) + 65) + letter;
+    index = Math.floor(index / 26) - 1;
+  }
+  return letter;
 }
 
 // Default JSON Adapter
@@ -59,6 +70,51 @@ registerAdapter('xml', {
         })
       : xmlBuilder;
     return builder.build({ [rootTag]: data });
+  },
+});
+
+// CSV Adapter
+registerAdapter('csv', {
+  parse: (content, options) => {
+    if (typeof content !== 'string') return content;
+    const delimiter = options?.delimiter ?? options?.params?.[0] ?? ',';
+    const parsed = Papa.parse<any[]>(content, {
+      delimiter,
+      skipEmptyLines: true,
+      ...options,
+    }) as any;
+
+    const rows = parsed.data.map((row: any) => {
+      const obj: any = {};
+      if (Array.isArray(row)) {
+        row.forEach((val, i) => {
+          obj[indexToLetter(i)] = val;
+        });
+      }
+      return obj;
+    });
+
+    return { rows };
+  },
+  serialize: (data, options) => {
+    if (!data || !Array.isArray(data.rows)) return '';
+    const delimiter = options?.delimiter ?? options?.params?.[0] ?? ',';
+
+    const csvData = data.rows.map((row: any) => {
+      // Sort keys to ensure correct column order (A, B, C... Z, AA, AB...)
+      const sortedKeys = Object.keys(row)
+        .filter((k) => /^[A-Z]+$/.test(k))
+        .sort((a, b) => {
+          if (a.length !== b.length) return a.length - b.length;
+          return a.localeCompare(b);
+        });
+      return sortedKeys.map((k) => row[k]);
+    });
+
+    return Papa.unparse(csvData, {
+      delimiter,
+      ...options,
+    });
   },
 });
 

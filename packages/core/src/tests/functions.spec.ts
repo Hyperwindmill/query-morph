@@ -242,4 +242,25 @@ describe('Functions in expressions', async () => {
     expect(result.empty).toEqual([]);
     expect(result.notFound).toEqual([]);
   });
+
+  it('should transform array to spreadsheet format using spreadsheet function', async () => {
+    const query = morphQL`
+      from object to object
+      transform
+        set data = spreadsheet(rows)
+    `;
+    const engine = await compile(query);
+    const source = {
+      rows: [
+        { c0: 'ID', c1: 'Name', c2: 'Age' },
+        { c0: '1', c1: 'Alice', c2: '30' },
+        { c0: '2', c1: 'Bob', c2: '25' },
+      ],
+    };
+    const result = engine(source);
+    expect(result.data).toEqual([
+      { ID: '1', Name: 'Alice', Age: '30' },
+      { ID: '2', Name: 'Bob', Age: '25' },
+    ]);
+  });
 });

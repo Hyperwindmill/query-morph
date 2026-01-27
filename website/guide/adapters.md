@@ -4,11 +4,12 @@ Adapters are responsible for parsing input data and serializing the transformed 
 
 ## Built-in Adapters
 
-| Adapter    | Name     | Description                                               |
-| :--------- | :------- | :-------------------------------------------------------- |
-| **JSON**   | `json`   | Native JSON parsing and serialization.                    |
-| **XML**    | `xml`    | Fast XML parsing and serialization via `fast-xml-parser`. |
-| **Object** | `object` | Identity adapter for working with in-memory JS objects.   |
+| Adapter    | Name     | Description                                                                                                       |
+| :--------- | :------- | :---------------------------------------------------------------------------------------------------------------- |
+| **JSON**   | `json`   | Native JSON parsing and serialization.                                                                            |
+| **XML**    | `xml`    | Fast XML parsing and serialization via [fast-xml-parser](https://github.com/NaturalIntelligence/fast-xml-parser). |
+| **CSV**    | `csv`    | CSV parsing and serialization via [PapaParse](https://www.papaparse.com/).                                        |
+| **Object** | `object` | Identity adapter for working with in-memory JS objects.                                                           |
 
 ## Passing Parameters
 
@@ -49,6 +50,30 @@ The built-in XML adapter supports many options forwarded directly to `fast-xml-p
 - `ignoreAttributes` (boolean): Whether to ignore XML attributes.
 - `attributeNamePrefix` (string): Prefix used for attributes (default is `$`).
 - `format` (boolean): Whether to format/indent the output XML.
+
+### CSV Options
+
+The CSV adapter uses [PapaParse](https://www.papaparse.com/) and supports the following options:
+
+- `delimiter` (string): The column delimiter (defaults to `,`). Can also be passed as the first positional parameter: `csv(";")`.
+- `skipEmptyLines` (boolean): Whether to skip empty lines (defaults to `true`).
+
+#### Data Structure
+
+When parsing, the CSV adapter produces an object with a `rows` array. Each row is an object where columns are mapped to Excel-style letters (`A`, `B`, `C`, ..., `Z`, `AA`, ...).
+
+```morphql
+from csv to object
+transform
+  section multiple users (
+    from object to object
+    transform
+      set name = A
+      set email = B
+  ) from rows
+```
+
+When serializing, the adapter expects an object with a `rows` array containing objects with these lettered keys. The columns will be ordered alphabetically by their letter index.
 
 ## Custom Adapters
 
