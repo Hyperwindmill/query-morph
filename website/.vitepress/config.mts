@@ -7,7 +7,7 @@ export default defineConfig({
     "A high-performance engine that compiles transformation queries into optimized JavaScript functions.",
   head: [["link", { rel: "icon", href: "/favicon.png" }]],
   sitemap: {
-    hostname: "https://hyperwindmill.github.io/morphql",
+    hostname: "https://hyperwindmill.github.io/morphql/",
   },
   themeConfig: {
     logo: "/logo.png",
