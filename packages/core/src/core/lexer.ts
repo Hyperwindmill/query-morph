@@ -21,7 +21,7 @@ export const BlockComment = createToken({
 
 export const Identifier = createToken({
   name: 'Identifier',
-  pattern: /[a-zA-Z_$][a-zA-Z0-9_.\[\]]*/,
+  pattern: /[a-zA-Z_$][a-zA-Z0-9_.[\]]*/,
 });
 
 export const QuotedIdentifier = createToken({

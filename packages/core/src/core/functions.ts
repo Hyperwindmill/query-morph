@@ -80,9 +80,10 @@ export const functionRegistry: Record<string, FunctionHandler> = {
     const attributesList = [...args.slice(1)];
     let attributes = '';
     if (attributesList.length > 0) {
-      let [list, chunkSize] = [attributesList, 2];
+      const chunkSize = 2;
+      let list = [...attributesList];
       list = [...Array(Math.ceil(list.length / chunkSize))]
-        .map((_) => list.splice(0, chunkSize))
+        .map(() => list.splice(0, chunkSize))
         .map(([key, value]) => {
           let attrKey = key;
           if (key.startsWith('"') || key.startsWith("'")) {

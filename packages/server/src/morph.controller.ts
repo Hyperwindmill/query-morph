@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Controller,
@@ -92,7 +91,7 @@ export class MorphController {
     try {
       const start = performance.now();
       const engine = await compile(body.query, { cache });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
       const result = await engine(body.data);
       const end = performance.now();
 
