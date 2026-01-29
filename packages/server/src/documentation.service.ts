@@ -46,6 +46,13 @@ export class DocumentationService implements OnModuleInit {
     const sourceMime = this.getMimeType(query.analysis.sourceFormat);
     const targetMime = this.getMimeType(query.analysis.targetFormat);
 
+    if (sourceMime === 'application/xml') {
+      requestSchema.xml = { name: 'root' };
+    }
+    if (targetMime === 'application/xml') {
+      responseSchema.xml = { name: 'root' };
+    }
+
     return {
       paths: {
         [`/v1/q/${query.name}`]: {
