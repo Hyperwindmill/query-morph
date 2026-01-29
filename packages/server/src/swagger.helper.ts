@@ -56,6 +56,41 @@ export class SwaggerHelper {
     return schema;
   }
 
+  static schemaToSample(schema: any): any {
+    if (schema.example !== undefined) return schema.example;
+
+    if (schema.type === 'object') {
+      const obj: any = {};
+      if (schema.properties) {
+        for (const [key, value] of Object.entries(
+          schema.properties as Record<string, any>,
+        )) {
+          obj[key] = this.schemaToSample(value);
+        }
+      }
+      return obj;
+    }
+
+    if (schema.type === 'array') {
+      if (schema.items) {
+        return [this.schemaToSample(schema.items)];
+      }
+      return [];
+    }
+
+    const defaults: Record<string, any> = {
+      string: 'string',
+      number: 0,
+      boolean: true,
+    };
+
+    if (schema.type === undefined) {
+      return 'sample';
+    }
+
+    return defaults[schema.type] ?? null;
+  }
+
   private static applyMeta(
     schema: any,
     path: string,

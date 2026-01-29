@@ -1,4 +1,4 @@
-from json to xml
+from json to xml('User')
 transform
   section multiple profiles(
     set id = userId

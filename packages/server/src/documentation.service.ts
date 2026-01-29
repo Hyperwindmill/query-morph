@@ -27,13 +27,13 @@ export class DocumentationService implements OnModuleInit {
     );
 
     for (const query of queries) {
-      const spec = this.generateQuerySpec(query);
+      const spec = await this.generateQuerySpec(query);
       const filePath = path.join(this.docsDir, `${query.name}.json`);
       fs.writeFileSync(filePath, JSON.stringify(spec, null, 2));
     }
   }
 
-  private generateQuerySpec(query: any) {
+  private async generateQuerySpec(query: any) {
     const requestSchema = SwaggerHelper.schemaNodeToOpenAPI(
       query.analysis.source,
       query.meta,
@@ -42,6 +42,17 @@ export class DocumentationService implements OnModuleInit {
       query.analysis.target,
       query.meta,
     );
+
+    // Generate automatic response example
+    try {
+      const sampleInput = SwaggerHelper.schemaToSample(requestSchema);
+      const responseExample = await query.engine(sampleInput);
+      responseSchema.example = responseExample;
+    } catch (e) {
+      this.logger.warn(
+        `Failed to generate automatic response example for ${query.name}: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
 
     const sourceMime = this.getMimeType(query.analysis.sourceFormat);
     const targetMime = this.getMimeType(query.analysis.targetFormat);

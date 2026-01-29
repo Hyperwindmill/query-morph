@@ -88,14 +88,20 @@ describe('Staged Queries (e2e)', () => {
 
     // Check for overridden metadata in responses
     const profilesSchema =
-      pathSpec.responses['200'].content['application/xml'].schema.properties
-        .profiles;
-    expect(profilesSchema.items.properties.fullName.description).toBe(
-      'Combined first and last name',
-    );
-    expect(profilesSchema.items.properties.status.description).toBe(
-      'Activation status based on isActive flag',
-    );
+      pathSpec.responses['200'].content['application/xml'].schema;
+
+    expect(profilesSchema.properties.profiles).toBeDefined();
+
+    // Check for automatic response example
+    expect(profilesSchema.example).toContain('<profiles>');
+    expect(profilesSchema.example).toContain('<fullName>John Doe</fullName>');
+
+    expect(
+      profilesSchema.properties.profiles.items.properties.fullName.description,
+    ).toBe('Combined first and last name');
+    expect(
+      profilesSchema.properties.profiles.items.properties.status.description,
+    ).toBe('Activation status based on isActive flag');
   });
 
   it('should refresh documentation via /v1/admin/refresh-docs (POST)', async () => {
