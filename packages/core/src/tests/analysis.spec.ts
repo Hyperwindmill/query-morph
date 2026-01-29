@@ -2,12 +2,13 @@ import { describe, it, expect } from 'vitest';
 import { compile, morphQL } from '../index.js';
 
 describe('Integrated Analysis (compile with analyze: true)', async () => {
-  it('should extract simple mappings', async () => {
+  it('should extract simple mappings and infer correct types', async () => {
     const query = morphQL`
       from object to object
       transform
         set fullName = firstName + " " + lastName
         set age = number(rawAge)
+        set tags = asList(category)
     `;
     const engine = await compile(query, { analyze: true });
 
@@ -17,9 +18,26 @@ describe('Integrated Analysis (compile with analyze: true)', async () => {
     expect(source.properties?.firstName).toBeDefined();
     expect(source.properties?.lastName).toBeDefined();
     expect(source.properties?.rawAge).toBeDefined();
+    expect(source.properties?.category).toBeDefined();
 
     expect(target.properties?.fullName).toBeDefined();
+    expect(target.properties?.fullName.type).toBe('string');
+
     expect(target.properties?.age).toBeDefined();
+    expect(target.properties?.age.type).toBe('number');
+
+    expect(target.properties?.tags).toBeDefined();
+    expect(target.properties?.tags.type).toBe('array');
+  });
+
+  it('should infer number for addition of numbers', async () => {
+    const query = morphQL`
+      from object to object
+      transform
+        set sum = 1 + 2 + 3
+    `;
+    const engine = await compile(query, { analyze: true });
+    expect(engine.analysis.target.properties?.sum.type).toBe('number');
   });
 
   it('should collect fields from all paths of an if/else', async () => {

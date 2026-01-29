@@ -17,6 +17,7 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   // Analysis mode
   public isAnalyzing: boolean = false;
   public tracker: MappingTracker = new MappingTracker();
+  public lastInferredType: MorphType = 'any';
 
   constructor() {
     super();
@@ -166,14 +167,25 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   literal(ctx: any) {
     if (ctx.StringLiteral) {
+      this.lastInferredType = 'string';
       return ctx.StringLiteral[0].image;
     }
     if (ctx.NumericLiteral) {
+      this.lastInferredType = 'number';
       return ctx.NumericLiteral[0].image;
     }
-    if (ctx.True) return 'true';
-    if (ctx.False) return 'false';
-    if (ctx.Null) return 'null';
+    if (ctx.True) {
+      this.lastInferredType = 'boolean';
+      return 'true';
+    }
+    if (ctx.False) {
+      this.lastInferredType = 'boolean';
+      return 'false';
+    }
+    if (ctx.Null) {
+      this.lastInferredType = 'null';
+      return 'null';
+    }
   }
 
   action(ctx: any) {
@@ -245,30 +257,31 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   setRule(ctx: any) {
     const left = this.visit(ctx.left);
-    const rightType = this.visit(ctx.right); // We return type from expressions now
+    this.lastInferredType = 'any';
+    const right = this.visit(ctx.right);
     if (this.isAnalyzing) {
-      this.tracker.recordAssignment(left.name, rightType);
+      this.tracker.recordAssignment(left.name, this.lastInferredType);
     }
-    // We need to return the string for code generation, but visitor visits might return types
-    // Actually, MorphCompiler visit methods usually return strings for expressions
-    // I need to make sure I don't break the existing string return
-    // Wait, the expressions currently return strings. I should change them to return both or just track.
-    // Let's use a simpler approach: track access inside atomic/expression.
-    return `${this.genAccess('target', left, true)} = ${rightType};`;
+    return `${this.genAccess('target', left, true)} = ${right};`;
   }
 
   modifyRule(ctx: any) {
     const left = this.visit(ctx.left);
+    this.lastInferredType = 'any';
     const right = this.visitWithContext(ctx.right, { readFrom: 'target' });
     if (this.isAnalyzing) {
-      this.tracker.recordAssignment(left.name, 'any'); // Simplified
+      this.tracker.recordAssignment(left.name, this.lastInferredType);
     }
     return `${this.genAccess('target', left, true)} = ${right};`; // LHS = true
   }
 
   defineRule(ctx: any) {
     const left = this.visit(ctx.left);
+    this.lastInferredType = 'any';
     const right = this.visit(ctx.right);
+    if (this.isAnalyzing) {
+      this.tracker.recordAssignment(left.name, this.lastInferredType); // This tracks internal assignments? Actually define is for source.
+    }
     return `${this.genAccess('source', left, true)} = ${right};`; // LHS = true
   }
 
@@ -290,7 +303,8 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   logicalOr(ctx: any) {
     let result = this.visit(ctx.lhs);
-    if (ctx.rhs) {
+    if (ctx.rhs && ctx.rhs.length > 0) {
+      this.lastInferredType = 'boolean';
       for (let i = 0; i < ctx.rhs.length; i++) {
         const rhs = this.visit(ctx.rhs[i]);
         result = `${result} || ${rhs}`;
@@ -301,7 +315,8 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   logicalAnd(ctx: any) {
     let result = this.visit(ctx.lhs);
-    if (ctx.rhs) {
+    if (ctx.rhs && ctx.rhs.length > 0) {
+      this.lastInferredType = 'boolean';
       for (let i = 0; i < ctx.rhs.length; i++) {
         const rhs = this.visit(ctx.rhs[i]);
         result = `${result} && ${rhs}`;
@@ -313,6 +328,7 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   comparison(ctx: any) {
     let result = this.visit(ctx.lhs);
     if (ctx.rhs) {
+      this.lastInferredType = 'boolean';
       const op = ctx.ops[0].image;
       const rhs = this.visit(ctx.rhs[0]);
       result = `${result} ${op} ${rhs}`;
@@ -321,20 +337,33 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   }
 
   addition(ctx: any) {
-    let result = this.visit(ctx.lhs);
-    if (ctx.rhs) {
+    const lhs = this.visit(ctx.lhs);
+    const lhsType = this.lastInferredType;
+    let result = lhs;
+    if (ctx.rhs && ctx.rhs.length > 0) {
+      // If any operand is a string, the result is likely a string (concatenation)
+      let hasString = lhsType === 'string';
+      let allNumbers = lhsType === 'number';
       for (let i = 0; i < ctx.rhs.length; i++) {
         const op = ctx.ops[i].image;
         const rhs = this.visit(ctx.rhs[i]);
+        if (this.lastInferredType === 'string') hasString = true;
+        if (this.lastInferredType !== 'number') allNumbers = false;
         result = `${result} ${op} ${rhs}`;
       }
+      if (hasString) this.lastInferredType = 'string';
+      else if (allNumbers) this.lastInferredType = 'number';
+      else this.lastInferredType = 'any';
+    } else {
+      this.lastInferredType = lhsType;
     }
     return result;
   }
 
   multiplication(ctx: any) {
     let result = this.visit(ctx.lhs);
-    if (ctx.rhs) {
+    if (ctx.rhs && ctx.rhs.length > 0) {
+      this.lastInferredType = 'number';
       for (let i = 0; i < ctx.rhs.length; i++) {
         const op = ctx.ops[i].image;
         const rhs = this.visit(ctx.rhs[i]);
@@ -348,6 +377,8 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     const atomic = this.visit(ctx.atomic);
     if (ctx.sign) {
       const op = ctx.sign[0].image;
+      if (op === '!') this.lastInferredType = 'boolean';
+      if (op === '-') this.lastInferredType = 'number';
       return `${op}${atomic}`;
     }
     return atomic;
@@ -361,7 +392,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       return this.visit(ctx.functionCall);
     }
     if (ctx.anyIdentifier) {
+      this.lastInferredType = 'any';
       const id = this.visit(ctx.anyIdentifier);
+
       if (['true', 'false', 'null'].includes(id.name) && !id.quoted) {
         return id.name;
       }
@@ -424,6 +457,27 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
     const handler = functionRegistry[name];
     if (handler) {
+      // Inferred types for built-in functions
+      if (
+        [
+          'substring',
+          'text',
+          'replace',
+          'uppercase',
+          'lowercase',
+          'to_base64',
+          'from_base64',
+        ].includes(name)
+      ) {
+        this.lastInferredType = 'string';
+      } else if (['number', 'extractnumber'].includes(name)) {
+        this.lastInferredType = 'number';
+      } else if (['aslist'].includes(name)) {
+        this.lastInferredType = 'array';
+      } else if (name === 'asobject') {
+        this.lastInferredType = 'object';
+      }
+
       return handler(args);
     }
 
@@ -436,11 +490,7 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
     const sectionAccess = this.genAccess('target', sectionId, true); // LHS = true (being assigned to)
 
     const followPathId = ctx.followPath ? this.visit(ctx.followPath) : sectionId;
-    const followPath = followPathId.name === 'parent' ? '' : '.' + followPathId.name;
-    // Note: followPath currently only supports simple paths or 'parent'.
-    // If it's a quoted identifier, genAccess would return target["name"].
-    // But section handling uses '.' + followPath.
-    // I should probably use genAccess here too for consistency, but it needs to be relative to 'source'.
+    // Note: followPathId is used below in sourceAccess and tracker calls.
     const sourceAccess =
       followPathId.name === 'parent' ? 'source' : this.genAccess('source', followPathId);
 
