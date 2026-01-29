@@ -16,6 +16,7 @@ export class DocumentationService implements OnModuleInit {
   }
 
   async refresh() {
+    await this.stagedQueriesService.waitReady();
     if (!fs.existsSync(this.docsDir)) {
       fs.mkdirSync(this.docsDir, { recursive: true });
     }

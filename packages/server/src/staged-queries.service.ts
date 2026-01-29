@@ -16,12 +16,24 @@ export class StagedQueriesService implements OnModuleInit {
   private readonly stagedQueries: Map<string, StagedQuery> = new Map();
   private readonly queriesDir =
     process.env.MORPHQL_QUERIES_DIR || path.join(process.cwd(), 'queries');
+  private loadingPromise: Promise<void> | null = null;
 
   async onModuleInit() {
     await this.loadQueries();
   }
 
+  async waitReady() {
+    if (this.loadingPromise) {
+      await this.loadingPromise;
+    }
+  }
+
   async loadQueries() {
+    this.loadingPromise = this.internalLoad();
+    await this.loadingPromise;
+  }
+
+  private async internalLoad() {
     if (!fs.existsSync(this.queriesDir)) {
       this.logger.warn(`Queries directory not found: ${this.queriesDir}`);
       return;

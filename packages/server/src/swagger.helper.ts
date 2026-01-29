@@ -1,32 +1,36 @@
-import { SchemaNode, MorphType } from '@morphql/core';
+import { SchemaNode } from '@morphql/core';
 
 export class SwaggerHelper {
   static schemaNodeToOpenAPI(node: SchemaNode): any {
-    const typeMap: Record<MorphType, string> = {
+    if (node.type === 'any') {
+      return {}; // Represents "any" in OpenAPI 3.0
+    }
+
+    const typeMap: Record<string, string> = {
       string: 'string',
       number: 'number',
       boolean: 'boolean',
       object: 'object',
       array: 'array',
-      any: 'object', // Fallback for any
-      null: 'string', // Nullable is handled differently in OpenAPI
     };
 
-    const schema: any = {
-      type: typeMap[node.type] || 'object',
-    };
+    const schema: any = {};
 
     if (node.type === 'null') {
       schema.nullable = true;
+    } else {
+      schema.type = typeMap[node.type] || 'object';
     }
 
-    if (node.type === 'object' || node.type === 'any') {
-      if (node.properties) {
+    if (node.type === 'object') {
+      if (node.properties && Object.keys(node.properties).length > 0) {
         schema.properties = {};
         for (const [key, childNode] of Object.entries(node.properties)) {
           schema.properties[key] = this.schemaNodeToOpenAPI(childNode);
         }
-      } else if (node.isOpen) {
+      }
+
+      if (node.isOpen) {
         schema.additionalProperties = true;
       }
     }
