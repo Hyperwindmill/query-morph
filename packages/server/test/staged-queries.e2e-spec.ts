@@ -9,13 +9,19 @@ import { AppModule } from './../src/app.module.js';
 import { describe, it, expect, beforeEach, beforeAll } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('Staged Queries (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeAll(() => {
     // Ensure the queries directory exists and has our test query
-    const queriesDir = path.join(process.cwd(), 'queries');
+    const queriesDir = path.resolve(__dirname, './../queries');
+    process.env.MORPHQL_QUERIES_DIR = queriesDir;
+
     if (!fs.existsSync(queriesDir)) {
       fs.mkdirSync(queriesDir, { recursive: true });
     }
@@ -31,36 +37,34 @@ describe('Staged Queries (e2e)', () => {
   });
 
   it('should execute a staged query /v1/q/user-profiles (POST)', async () => {
-    const testData = {
-      users: [
-        {
-          userId: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          rawAge: '30',
-          isActive: true,
-        },
-        {
-          userId: '2',
-          firstName: 'Jane',
-          lastName: 'Smith',
-          rawAge: '25',
-          isActive: false,
-        },
-      ],
-    };
-
     const response = await request(app.getHttpServer())
       .post('/v1/q/user-profiles')
-      .send(testData)
-      .expect(201);
+      .send({
+        users: [
+          {
+            userId: 1,
+            firstName: 'John',
+            lastName: 'Doe',
+            rawAge: '30',
+            isActive: true,
+          },
+        ],
+      });
 
-    expect(response.body.success).toBe(true);
-    // When target is XML, the engine returns a string
-    expect(typeof response.body.result).toBe('string');
-    expect(response.body.result).toContain('<profiles>');
-    expect(response.body.result).toContain('<fullName>John Doe</fullName>');
-    expect(response.body.result).toContain('<status>active</status>');
+    if (response.status !== 201) {
+      console.log(
+        'FAILURE RESPONSE:',
+        response.status,
+        response.body,
+        response.text,
+      );
+    }
+    expect(response.status).toBe(201);
+
+    expect(response.get('Content-Type')).toContain('application/xml');
+    expect(response.text).toContain('<User>');
+    expect(response.text).toContain('<fullName>John Doe</fullName>');
+    expect(response.text).toContain('<status>active</status>');
   });
 
   it('should generate documentation fragments in staged-docs/ with metadata overrides', () => {

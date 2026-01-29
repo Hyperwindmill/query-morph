@@ -5,6 +5,7 @@ import {
   Get,
   Body,
   Param,
+  Res,
   UseGuards,
   BadRequestException,
   InternalServerErrorException,
@@ -118,32 +119,42 @@ export class MorphController {
 
   @Post('q/:name')
   @ApiOperation({ summary: 'Execute a staged transformation' })
-  @ApiResponse({ status: 200, type: ExecuteResponseDto })
+  @ApiResponse({ status: 200 })
   async executeStaged(
     @Param('name') name: string,
     @Body() data: Record<string, unknown>,
-  ): Promise<ExecuteResponseDto> {
+    @Res({ passthrough: true }) res: any,
+  ) {
     const staged = this.stagedQueriesService.getQuery(name);
     if (!staged) {
       throw new BadRequestException(`Staged query not found: ${name}`);
     }
 
     try {
-      const start = performance.now();
       const result = await staged.engine(data);
-      const end = performance.now();
-
-      return {
-        success: true,
-        result,
-        executionTime: end - start,
-      };
+      const mimeType = this.detectMimeType(result);
+      res.setHeader('Content-Type', mimeType);
+      return result;
     } catch (e: unknown) {
       console.error('Staged Execute Error:', e);
       const message =
         e instanceof Error ? e.message : 'Unknown execution error';
       throw new InternalServerErrorException(message);
     }
+  }
+
+  private detectMimeType(result: any): string {
+    if (typeof result === 'string') {
+      const trimmed = result.trim();
+      if (
+        trimmed.startsWith('<?xml') ||
+        (trimmed.startsWith('<') && trimmed.endsWith('>'))
+      ) {
+        return 'application/xml';
+      }
+      return 'text/plain';
+    }
+    return 'application/json';
   }
 
   @Post('admin/refresh-docs')
