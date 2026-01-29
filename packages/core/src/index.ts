@@ -10,10 +10,12 @@ import beautify from 'js-beautify';
 export interface MorphEngine<Source = any, Target = any> {
   (source: Source): Promise<Target> | Target;
   code: string;
+  analysis?: any;
 }
 
 export interface CompileOptions {
   cache?: MorphQLCache;
+  analyze?: boolean;
 }
 
 export async function compile<Source = any, Target = any>(
@@ -42,7 +44,8 @@ export async function compile<Source = any, Target = any>(
     throw new Error(`Parsing errors: ${parser.errors[0].message}`);
   }
 
-  const { code: rawCode } = compiler.visit(cst);
+  compiler.isAnalyzing = !!options?.analyze;
+  const { code: rawCode, analysis } = compiler.visit(cst);
 
   const code = beautify.js(rawCode, {
     indent_size: 2,
@@ -55,7 +58,11 @@ export async function compile<Source = any, Target = any>(
     await options.cache.save(queryString, code);
   }
 
-  return createEngine<Source, Target>(code);
+  const engine = createEngine<Source, Target>(code);
+  if (analysis) {
+    engine.analysis = analysis;
+  }
+  return engine;
 }
 
 function createEngine<Source, Target>(code: string): MorphEngine<Source, Target> {

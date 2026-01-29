@@ -1,5 +1,6 @@
 import { parser } from './parser.js';
 import { functionRegistry } from './functions.js';
+import { MappingTracker, MorphType } from './mapping-tracker.js';
 
 const BaseCstVisitor = parser.getBaseCstVisitorConstructor();
 
@@ -12,6 +13,10 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   // Safe mode - use optional chaining for property access
   public safeMode: boolean = true;
+
+  // Analysis mode
+  public isAnalyzing: boolean = false;
+  public tracker: MappingTracker = new MappingTracker();
 
   constructor() {
     super();
@@ -30,6 +35,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   }
 
   query(ctx: any) {
+    if (this.isAnalyzing) {
+      this.tracker = new MappingTracker();
+    }
     const sourceType = this.visit(ctx.sourceType);
     const targetType = this.visit(ctx.targetType);
 
@@ -83,6 +91,7 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       code,
       sourceType,
       targetType,
+      analysis: this.isAnalyzing ? this.tracker.getResult() : undefined,
     };
   }
 
@@ -196,6 +205,9 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
 
   deleteRule(ctx: any) {
     const field = this.visit(ctx.field);
+    if (this.isAnalyzing) {
+      this.tracker.recordDelete(field.name);
+    }
     return `delete ${this.genAccess('target', field, true)};`; // LHS = true
   }
 
@@ -216,24 +228,41 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
   cloneRule(ctx: any) {
     if (ctx.fields) {
       const identifiers = ctx.fields.map((f: any) => this.visit(f));
+      if (this.isAnalyzing) {
+        this.tracker.recordClone(identifiers.map((id: any) => id.name));
+      }
       return identifiers
         .map(
           (id: any) => `${this.genAccess('target', id, true)} = ${this.genAccess('source', id)};`
         ) // LHS = true for target
         .join('\n        ');
     }
+    if (this.isAnalyzing) {
+      this.tracker.recordClone();
+    }
     return `Object.assign(target, source);`;
   }
 
   setRule(ctx: any) {
     const left = this.visit(ctx.left);
-    const right = this.visit(ctx.right);
-    return `${this.genAccess('target', left, true)} = ${right};`; // LHS = true
+    const rightType = this.visit(ctx.right); // We return type from expressions now
+    if (this.isAnalyzing) {
+      this.tracker.recordAssignment(left.name, rightType);
+    }
+    // We need to return the string for code generation, but visitor visits might return types
+    // Actually, MorphCompiler visit methods usually return strings for expressions
+    // I need to make sure I don't break the existing string return
+    // Wait, the expressions currently return strings. I should change them to return both or just track.
+    // Let's use a simpler approach: track access inside atomic/expression.
+    return `${this.genAccess('target', left, true)} = ${rightType};`;
   }
 
   modifyRule(ctx: any) {
     const left = this.visit(ctx.left);
     const right = this.visitWithContext(ctx.right, { readFrom: 'target' });
+    if (this.isAnalyzing) {
+      this.tracker.recordAssignment(left.name, 'any'); // Simplified
+    }
     return `${this.genAccess('target', left, true)} = ${right};`; // LHS = true
   }
 
@@ -340,10 +369,12 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
         // Check for explicit context prefixes (source.field or target.field)
         if (id.name.startsWith('source.') || id.name.startsWith('source[')) {
           // User explicitly specified source context - don't prepend
+          if (this.isAnalyzing) this.tracker.recordAccess(id.name.substring(7), 'any', false);
           return id.name;
         }
         if (id.name.startsWith('target.') || id.name.startsWith('target[')) {
           // User explicitly specified target context - don't prepend
+          if (this.isAnalyzing) this.tracker.recordAccess(id.name.substring(7), 'any', true);
           return id.name;
         }
 
@@ -361,6 +392,7 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
           id.name.startsWith('_source.') ||
           id.name.startsWith('_source[')
         ) {
+          if (this.isAnalyzing) this.tracker.recordAccess(id.name.substring(7) || '', 'any', false); // Simplified root tracking
           return `_rootSource${id.name.substring(7)}`;
         }
         if (
@@ -368,10 +400,14 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
           id.name.startsWith('_target.') ||
           id.name.startsWith('_target[')
         ) {
+          if (this.isAnalyzing) this.tracker.recordAccess(id.name.substring(7) || '', 'any', true);
           return `_rootTarget${id.name.substring(7)}`;
         }
       }
       // No explicit context - use current readFrom context
+      if (this.isAnalyzing) {
+        this.tracker.recordAccess(id.name, 'any', this.readFrom === 'target');
+      }
       return this.genAccess(this.readFrom, id);
     }
     if (ctx.expression) {
@@ -472,7 +508,15 @@ export class MorphCompiler extends (BaseCstVisitor as any) {
       isSerializationScope: false,
     });
 
+    if (this.isAnalyzing) {
+      this.tracker.pushSection(sectionName, followPathId.name, isMultiple);
+    }
+
     const regularActions = ctx.action ? ctx.action.map((a: any) => this.visit(a)) : [];
+
+    if (this.isAnalyzing) {
+      this.tracker.popSection(followPathId.name, isMultiple);
+    }
 
     let regularResult = '';
     if (isMultiple) {
